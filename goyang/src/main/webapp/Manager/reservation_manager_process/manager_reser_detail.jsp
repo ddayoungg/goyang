@@ -22,7 +22,7 @@
 	<meta name="keywords" content="bootstrap, bootstrap4" />
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.gstatic.com" >
 	<link
 		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 		rel="stylesheet">
@@ -39,13 +39,6 @@
 	<style type="text/css">
 		
 	</style>
-	<script type="text/javascript">
-/* 	$(function (){
-		$("searchMember").click(function (){
-			$("#popupdetal").submit();
-		})
-	}) */
-	</script>
 
 	<title>관리자화면-예약관리</title>
 </head>
@@ -134,7 +127,7 @@
 					<input type="submit" value="검색" class="mainBtn">
 				</div>
 				</form>
-				<form id="popupFrm" action="manager_reser_all.jsp"> 
+			<!-- 	<form action=""> -->
 				<table class="member" style="width: 100%">
 					<tr>
 						<th>예약번호</th>
@@ -149,7 +142,6 @@
 			ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
 			ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva();
 			ReservaManagerVO reVO =new ReservaManagerVO();
-			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
@@ -168,66 +160,45 @@
 				} else {
 					cancelReas="취소사유";
 				}
-				
-	
 			%>
 					
 					<tr>
-						<td><%= reserVO.getReserNum()%></td>					
-		 <td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
-						<td><%= reserVO.getReserRegist()%></td>
+						<td><%= reserVO.getReserNum()%></td>
+				 <td><a href="#"><span onclick="location.href='manager_reser_search.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
+					
+						<td><%= reserVO.getReserDate() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
 						<td><%= reserVO.getReserFlag %></td>
-						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
+						<td><a href="#void"><span onclick="showPopup(true,'popupCancel')"><%= cancelReas %></span></a></td>
 					</tr>
 			<%
-				}	
+				}					
 			%>
 				</table>
-			</form> 
 			</div>
 	
+		
+			
+
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<div>
-				<form action="manager_reser_flags.jsp" method="post">
-					<select name="reserFlags" style="height: 32px; min-width: 120px;">
-						<option value="0" >상태 검색</option>
-						<option value="2" >예약확정</option>
-						<option value="1">예약대기</option>
-						<option value="4">취소확정</option>
-						<option value="3">취소요청</option>
+				<form action="manager_reservation_search.jsp" method="post">
+					<select name="state" style="height: 32px; min-width: 120px;">
+						<option value="">상태 검색</option>
+						<option value="1">예약확정</option>
+						<option value="2">예약대기</option>
+						<option value="3">취소확정</option>
+						<option value="4">취소요청</option>
 					</select>
-					<input type="submit"  value="검색" style="height: 32px" class="mainBtn">
+					<input type="submit" value="검색" style="height: 32px" class="mainBtn">
 				</form>
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-	<%-- 			<%
-				String temPage = request.getParameter("page");
-				
-				if (tempPage == null || temPage.length() ==0){
-					cPage =1;
-				}
-				try {
-					cPage = Integer.parseInt(empPage);
-				} catch ( NumberFormatException e) {
-					cPage = 1;
-				}
-				%> --%>
-					<input class="pagination" type="button" value="">
-					<div class="pagination" >
-					<%-- <%
-					int lastpage = Math.ceil(total/10)+1;
-					%> --%>
-					<%
-					for(int i=1; i<=2; i++)  {
-						out.print(i+" ");
-					}
-					%>
-					</div>
-					<!-- <input class="pagination pageNow" type="button" value="1"> -->
-					<input class="pagination" type="button" value="">
+					<input class="pagination" type="button" value="<">
+					<input class="pagination pageNow" type="button" value="1">
+					<input class="pagination" type="button" value=">">
 				</div>
 
 				<div>
@@ -290,14 +261,16 @@
 		</div>
 	</div>
 	<!-- 팝업창 : manager_reservation_detail -->
-	<div id="popupDetail" class="hide popup">
-<%-- 	<% 
+	<form id="popupFrm">
+	<div id="popupDetail" class="popup">
+	<%
 	 int num = Integer.parseInt(request.getParameter("reserNum"));  
-	System.out.println("reserNum : " +num);
-	ReservaManagerVO reserVO = reserDAO.selectReserva(num); 
-%> --%>
-	 <div class="content">
+	ReservaManagerVO reserVO = new ReservaManagerVO();
+	reserVO = reserDAO.selectReserva(num);
+	%>
+		<div class="content">
 			<div style="width: 800px;">
+	<!-- <form method="post"> -->
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
 		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">예약 상세
 				</div>
@@ -306,39 +279,39 @@
 					<table class="member" style="width: 100%">
 						<tr>
 							<th>예약자명</th>
-						<td>dd</td> 
+						<td><%=reserVO.getName() %></td> 
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td>dd</td>
+							<td><%=reserVO.getEmail()%></td>
 						</tr>
 						<tr>
 							<th>휴대폰 번호</th>
-							<td>dd</td>
+							<td><%=reserVO.getPhone()%></td>
 						</tr>
 						<tr>
 							<th>날짜</th>
-							<td>dd</td>
+							<td><%=reserVO.getReserDate()%></td>
 						</tr>
 						<tr>
 							<th>투어코스</th>
-							<td>dd</td>
+							<td><%=reserVO.getTourName()%></td>
 						</tr>
 						<tr>
 							<th>인원수 </th>
-							<td>dd<br>dd</td>
+							<td>성인(<%=reserVO.getAdultFee()%>원) : <%=reserVO.getAdultCnt()%>명<br>기타(<%=reserVO.getOtherFee() %>원) : <%=reserVO.getOtherCnt() %>명</td>
 						</tr>
 						<tr>
 							<th>예약한 좌석 번호</th>
-							<td>dd</td>
+							<td><%=reserVO.getSeatNum()%></td>
 						</tr>
 					</table>
 				</div>
-
+			<!-- 	</form> -->
 
 				<div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
 					<input type="button" value="예약확정" class="popupBtn" onclick="showPopup(true,'popupConfirm_1')">
-					<input type="button" value="확인" class="popupBtn" onclick="closePopup('popupDetail')">
+					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_reservation.jsp'">
 				</div>
 			</div>
 		</div>
@@ -347,8 +320,8 @@
 	<!-- 팝업창 : manager_reservation_cancel -->
 	<div id="popupCancel" class="hide popup">
 <%-- 	<%
-	
-	reserDAO.selectDelReserva(reVO.getReserNum());
+	 int num = Integer.parseInt(request.getParameter("reserNum"));  
+	 reserVO = reserDAO.selectReserva(num);
 	%> --%>
 		<div class="content">
 			<div style="width: 800px;">
@@ -360,35 +333,35 @@
 					<table class="member" style="width: 100%">
 						<tr>
 							<th>예약자명</th>
-							<td>dd</td>
+							<td><%=reserVO.getName() %></td>
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td>dd</td>
+							<td><%=reserVO.getEmail()%></td>
 						</tr>
 						<tr>
 							<th>휴대폰 번호</th>
-							<td>dd</td>
+							<td><%=reserVO.getPhone()%></td>
 						</tr>
 						<tr>
 							<th>날짜</th>
-							<td>dd</td>
+							<td><%=reserVO.getReserDate()%></td>
 						</tr>
 						<tr>
 							<th>투어코스</th>
-							<td>dd</td>
+							<td><%=reserVO.getTourName()%></td>
 						</tr>
 						<tr>
 							<th>인원수 </th>
-						<td>dd<br>dd</td>
+						<td>성인(<%=reserVO.getAdultFee()%>원) : <%=reserVO.getAdultCnt()%>명<br>기타(<%=reserVO.getOtherFee() %>원) : <%=reserVO.getOtherCnt() %>명</td>
 						</tr>
 						<tr>
 							<th>예약한 좌석 번호</th>
-							<td>dd</td>
+							<td><%=reserVO.getSeatNum()%></td>
 						</tr>
 						<tr>
 							<th>취소 사유</th>
-							<td>dd</td>
+							<td><%=reserVO.getCancelReas() %></td>
 						</tr>
 					</table>
 				</div>
@@ -452,7 +425,7 @@
 			align-items: center; height: 70px ;background-color: #f0f6f9;">예약 확정하시겠습니까?</div>
 
 					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popupConfirm_2')">
+						<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_reser_detail_up.jsp?reserNum=<%=reserVO.getReserNum()%>'">
 						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popupConfirm_1')">
 					</div>
 				</div>
@@ -479,6 +452,7 @@
 			</div>
 		</div>
 	</div>
+	</form>
 
 	<script src="../../js/jquery-3.4.1.min.js"></script>
 	<script src="../../js/popper.min.js"></script>

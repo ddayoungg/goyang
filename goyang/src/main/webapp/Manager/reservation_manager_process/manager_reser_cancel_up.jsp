@@ -22,7 +22,7 @@
 	<meta name="keywords" content="bootstrap, bootstrap4" />
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preconnect" href="https://fonts.gstatic.com" >
 	<link
 		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 		rel="stylesheet">
@@ -39,13 +39,6 @@
 	<style type="text/css">
 		
 	</style>
-	<script type="text/javascript">
-/* 	$(function (){
-		$("searchMember").click(function (){
-			$("#popupdetal").submit();
-		})
-	}) */
-	</script>
 
 	<title>관리자화면-예약관리</title>
 </head>
@@ -134,7 +127,7 @@
 					<input type="submit" value="검색" class="mainBtn">
 				</div>
 				</form>
-				<form id="popupFrm" action="manager_reser_all.jsp"> 
+			<!-- 	<form action=""> -->
 				<table class="member" style="width: 100%">
 					<tr>
 						<th>예약번호</th>
@@ -149,7 +142,6 @@
 			ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
 			ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva();
 			ReservaManagerVO reVO =new ReservaManagerVO();
-			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
@@ -157,9 +149,9 @@
 				} else if ( reVO.getReserFlag() == 2 ) {
 					reVO.getReserFlag="예약확정";
 				} else if ( reVO.getReserFlag() == 3) {
-					reVO.getReserFlag="취소요청"; 
+					reVO.getReserFlag="취소요청";
 				} else if ( reVO.getReserFlag() == 4) {
-					reVO.getReserFlag="취소확정"; 
+					reVO.getReserFlag="취소확정";
 				}
 				
 				String cancelReas = reVO.getCancelReas();
@@ -168,66 +160,45 @@
 				} else {
 					cancelReas="취소사유";
 				}
-				
-	
 			%>
 					
 					<tr>
-						<td><%= reserVO.getReserNum()%></td>					
-		 <td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
-						<td><%= reserVO.getReserRegist()%></td>
+						<td><%= reserVO.getReserNum()%></td>
+				 <td><a href="#"><span onclick="location.href='manager_reser_search.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
+					
+						<td><%= reserVO.getReserDate() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
 						<td><%= reserVO.getReserFlag %></td>
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 					</tr>
 			<%
-				}	
+				}					
 			%>
 				</table>
-			</form> 
 			</div>
 	
+		
+			
+
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<div>
-				<form action="manager_reser_flags.jsp" method="post">
-					<select name="reserFlags" style="height: 32px; min-width: 120px;">
-						<option value="0" >상태 검색</option>
-						<option value="2" >예약확정</option>
-						<option value="1">예약대기</option>
-						<option value="4">취소확정</option>
-						<option value="3">취소요청</option>
+				<form action="manager_reservation_search.jsp" method="post">
+					<select name="state" style="height: 32px; min-width: 120px;">
+						<option value="">상태 검색</option>
+						<option value="1">예약확정</option>
+						<option value="2">예약대기</option>
+						<option value="3">취소확정</option>
+						<option value="4">취소요청</option>
 					</select>
-					<input type="submit"  value="검색" style="height: 32px" class="mainBtn">
+					<input type="submit" value="검색" style="height: 32px" class="mainBtn">
 				</form>
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-	<%-- 			<%
-				String temPage = request.getParameter("page");
-				
-				if (tempPage == null || temPage.length() ==0){
-					cPage =1;
-				}
-				try {
-					cPage = Integer.parseInt(empPage);
-				} catch ( NumberFormatException e) {
-					cPage = 1;
-				}
-				%> --%>
-					<input class="pagination" type="button" value="">
-					<div class="pagination" >
-					<%-- <%
-					int lastpage = Math.ceil(total/10)+1;
-					%> --%>
-					<%
-					for(int i=1; i<=2; i++)  {
-						out.print(i+" ");
-					}
-					%>
-					</div>
-					<!-- <input class="pagination pageNow" type="button" value="1"> -->
-					<input class="pagination" type="button" value="">
+					<input class="pagination" type="button" value="<">
+					<input class="pagination pageNow" type="button" value="1">
+					<input class="pagination" type="button" value=">">
 				</div>
 
 				<div>
@@ -290,14 +261,16 @@
 		</div>
 	</div>
 	<!-- 팝업창 : manager_reservation_detail -->
+	<form id="popupFrm">
 	<div id="popupDetail" class="hide popup">
-<%-- 	<% 
+<%-- 	<%
 	 int num = Integer.parseInt(request.getParameter("reserNum"));  
-	System.out.println("reserNum : " +num);
-	ReservaManagerVO reserVO = reserDAO.selectReserva(num); 
-%> --%>
-	 <div class="content">
+	ReservaManagerVO reserVO = new ReservaManagerVO();
+	reserVO = reserDAO.selectReserva(num);
+	%> --%>
+		<div class="content">
 			<div style="width: 800px;">
+	<!-- <form method="post"> -->
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
 		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">예약 상세
 				</div>
@@ -334,7 +307,7 @@
 						</tr>
 					</table>
 				</div>
-
+			<!-- 	</form> -->
 
 				<div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
 					<input type="button" value="예약확정" class="popupBtn" onclick="showPopup(true,'popupConfirm_1')">
@@ -346,9 +319,10 @@
 	
 	<!-- 팝업창 : manager_reservation_cancel -->
 	<div id="popupCancel" class="hide popup">
-<%-- 	<%
-	
-	reserDAO.selectDelReserva(reVO.getReserNum());
+<%-- 	<% 
+	 int cancel= Integer.parseInt(request.getParameter("reserNum"));  
+	ReservaManagerVO reserVO = new ReservaManagerVO();
+	 reserVO = reserDAO.selectDelReserva(cancel);
 	%> --%>
 		<div class="content">
 			<div style="width: 800px;">
@@ -420,7 +394,12 @@
 		</div>
 	</div>
 	<!-- 팝업창 : manager_reservation_cancel_2 -->
-	<div id="popupCancel_2" class="hide popup">
+	<div id="popupCancel_2" class="popup">
+<%
+	int flag = Integer.parseInt(request.getParameter("reserNum"));
+	ReservaManagerVO reserVO = new ReservaManagerVO();
+	 reserVO = reserDAO.updateDelReserva(flag); 
+	%> 
 		<div class="content">
 			<div style="width: 412px;">
 				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
@@ -479,6 +458,7 @@
 			</div>
 		</div>
 	</div>
+	</form>
 
 	<script src="../../js/jquery-3.4.1.min.js"></script>
 	<script src="../../js/popper.min.js"></script>
