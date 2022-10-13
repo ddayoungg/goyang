@@ -1,0 +1,200 @@
+<!-- /*
+* Template Name: Tour
+* Template Author: Untree.co
+* Tempalte URI: https://untree.co/
+* License: https://creativecommons.org/licenses/by/3.0/
+*/ -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Untree.co">
+<link rel="shortcut icon" href="favicon.png">
+
+<meta name="description" content="" />
+<meta name="keywords" content="bootstrap, bootstrap4" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
+	rel="stylesheet">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/owl.carousel.min.css">
+<link rel="stylesheet" href="css/owl.theme.default.min.css">
+<link rel="stylesheet" href="css/jquery.fancybox.min.css">
+<link rel="stylesheet" href="fonts/icomoon/style.css">
+<link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
+<link rel="stylesheet" href="css/daterangepicker.css">
+<link rel="stylesheet" href="css/aos.css">
+<link rel="stylesheet" href="css/style.css">
+
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f6338db1122d739b1c3456d31b157d11"></script>
+<script type="text/javascript">
+window.onload=function(){
+	mapFunc();
+	
+}
+
+function mapFunc(){
+	var container = document.getElementById('map');
+	var options = {
+		center: new kakao.maps.LatLng(33.450701, 126.570667),
+		level: 3
+	};
+
+	var map = new kakao.maps.Map(container, options);
+}
+
+</script>
+
+<title>Tour Free Bootstrap Template for Travel Agency by
+	Untree.co</title>
+</head>
+
+<body>
+
+
+	<div class="site-mobile-menu site-navbar-target">
+		<div class="site-mobile-menu-header">
+			<div class="site-mobile-menu-close">
+				<span class="icofont-close js-menu-toggle"></span>
+			</div>
+		</div>
+		<div class="site-mobile-menu-body"></div>
+	</div>
+
+	<nav class="site-nav">
+		<div class="container">
+			<div class="site-navigation">
+				<a href="index.html" class="logo m-0">고양<span
+					class="text-primary">.</span></a>
+
+				<ul
+					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
+					<li class="active"><a href="index.html">dash board</a></li>
+					<li><a href="services.html">회원관리</a></li>
+					<li><a href="about.html">투어관리</a></li>
+					<li><a href="contact.html">예약관리</a></li>
+					<li><a href="contact.html">관광지 관리</a></li>
+					<li><a href="contact.html">후기관리</a></li>
+				</ul>
+
+				<ul
+					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
+					<li></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="contact.html">로그아웃</a></li>
+				</ul>
+				
+				<a href="#"
+					class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light"
+					data-toggle="collapse" data-target="#main-navbar"> <span></span>
+				</a>
+
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="hero hero-inner">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6 mx-auto text-center">
+					<div class="intro-wrap">
+						<h1 class="mb-0">관리자 화면</h1>
+						<!-- <p class="text-white">로그인을 해주세요.</p> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!--  여기사이에 구상하시면 됩니다!!! -->
+	<div class="container">
+		<form>
+			<div style="padding-bottom: 15px; border-bottom:1px solid grey; font-size: 23px;margin: 50px 0px 10px 0px;display: flex;justify-content: space-between;">
+				<div> 화요나들이(벽제)</div>
+			</div>
+			
+			<div id="map" style="width:500px;height:400px;"></div>
+			
+			<div style="display: flex; justify-content: end; margin: 20px 0 100px 0;">
+				<input type="button" value="다음" onclick="showPopup(true,'popup')" style="width: 80px; height: 32px;">
+			</div>
+			
+		</form>
+	</div>
+
+	<div class="site-footer">
+		<div class="inner first">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-lg-4" >
+						<div class="widget">
+							<p style="font-size: 20px;font-weight: bold; color: red;font-style:inherit;" >매주 월요일은 정기 휴무입니다.</p>
+								<p style="font-size: 60px;font-weight: bold;">Goyan Tour</p>
+						</div>
+					</div>
+					<div class="col-md-6 col-lg-4 " style="margin: 0 0 0 auto">
+						<div class="widget">
+							<h3 class="heading">고양시티투어</h3>
+							<ul class="list-unstyled quick-info links">
+								<li class="email"><a href="#">goyang@com</a></li>
+								<li class="phone"><a href="#">010-1234-5678</a></li>
+								<li class="address"><a href="#">경기도 고양시 일산동구 장항동</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="inner dark">
+			<div class="container">
+				<div class="row text-center">
+					<div class="col-md-8 mb-3 mb-md-0 mx-auto">
+						<p>
+							Copyright &copy;
+							<script>document.write(new Date().getFullYear());</script>
+							. All Rights Reserved. &mdash; Designed with love by <a
+								href="https://untree.co" class="link-highlight">Untree.co</a>
+							<!-- License information: https://untree.co/license/ -->
+						</p>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="overlayer"></div>
+	<div class="loader">
+		<div class="spinner-border" role="status">
+			<span class="sr-only">Loading...</span>
+		</div>
+	</div>
+
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="js/popper.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/owl.carousel.min.js"></script>
+	<script src="js/jquery.animateNumber.min.js"></script>
+	<script src="js/jquery.waypoints.min.js"></script>
+	<script src="js/jquery.fancybox.min.js"></script>
+	<script src="js/aos.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/daterangepicker.js"></script>
+
+	<script src="js/typed.js"></script>
+
+	<script src="js/custom.js"></script>
+
+</body>
+
+</html>
