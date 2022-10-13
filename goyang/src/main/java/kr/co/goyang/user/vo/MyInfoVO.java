@@ -6,20 +6,21 @@ import java.util.Arrays;
 public class MyInfoVO {
 
 	 int commendNum, reviewNum, tourNum, reserNum, spotsNum,
-	 	adultCnt, otherCnt, adultFee, otherFee, reserFlag;
+	 	adultCnt, otherCnt, adultFee, otherFee, reserFlag, startPS, lenPS;
 	 int[] seatNum;
-	 String id, name, password, email, phone, addr,deAddr, tourName, 
-	 	cancelReas, title, revContent,zipcode,reviewImg,reserDate;
-	 Date writeDate;
-	 
-	public MyInfoVO() {
+	 String id, name, password, email, phone, addr, deAddr, tourName, 
+	 	cancelReas, title, revContent,zipcode, reviewImg,reserDate, comContent, outReas;
+	 Date revWriteDate, comWriteDate, reserRegist;
+	
+	 public MyInfoVO() {
 		super();
 	}
 
 	public MyInfoVO(int commendNum, int reviewNum, int tourNum, int reserNum, int spotsNum, int adultCnt, int otherCnt,
-			int adultFee, int otherFee, int reserFlag, int[] seatNum, String id, String name, String password,
-			String email, String phone, String addr, String deAddr, String tourName, String cancelReas, String title,
-			String revContent, String zipcode, String reviewImg, String reserDate, Date writeDate) {
+			int adultFee, int otherFee, int reserFlag, int startPS, int lenPS, int[] seatNum, String id, String name,
+			String password, String email, String phone, String addr, String deAddr, String tourName, String cancelReas,
+			String title, String revContent, String zipcode, String reviewImg, String reserDate, String comContent,
+			String outReas, Date revWriteDate, Date comWriteDate, Date reserRegist) {
 		super();
 		this.commendNum = commendNum;
 		this.reviewNum = reviewNum;
@@ -31,6 +32,8 @@ public class MyInfoVO {
 		this.adultFee = adultFee;
 		this.otherFee = otherFee;
 		this.reserFlag = reserFlag;
+		this.startPS = startPS;
+		this.lenPS = lenPS;
 		this.seatNum = seatNum;
 		this.id = id;
 		this.name = name;
@@ -46,7 +49,11 @@ public class MyInfoVO {
 		this.zipcode = zipcode;
 		this.reviewImg = reviewImg;
 		this.reserDate = reserDate;
-		this.writeDate = writeDate;
+		this.comContent = comContent;
+		this.outReas = outReas;
+		this.revWriteDate = revWriteDate;
+		this.comWriteDate = comWriteDate;
+		this.reserRegist = reserRegist;
 	}
 
 	public int getCommendNum() {
@@ -127,6 +134,22 @@ public class MyInfoVO {
 
 	public void setReserFlag(int reserFlag) {
 		this.reserFlag = reserFlag;
+	}
+
+	public int getStartPS() {
+		return startPS;
+	}
+
+	public void setStartPS(int startPS) {
+		this.startPS = startPS;
+	}
+
+	public int getLenPS() {
+		return lenPS;
+	}
+
+	public void setLenPS(int lenPS) {
+		this.lenPS = lenPS;
 	}
 
 	public int[] getSeatNum() {
@@ -249,12 +272,44 @@ public class MyInfoVO {
 		this.reserDate = reserDate;
 	}
 
-	public Date getWriteDate() {
-		return writeDate;
+	public String getComContent() {
+		return comContent;
 	}
 
-	public void setWriteDate(Date writeDate) {
-		this.writeDate = writeDate;
+	public void setComContent(String comContent) {
+		this.comContent = comContent;
+	}
+
+	public String getOutReas() {
+		return outReas;
+	}
+
+	public void setOutReas(String outReas) {
+		this.outReas = outReas;
+	}
+
+	public Date getRevWriteDate() {
+		return revWriteDate;
+	}
+
+	public void setRevWriteDate(Date revWriteDate) {
+		this.revWriteDate = revWriteDate;
+	}
+
+	public Date getComWriteDate() {
+		return comWriteDate;
+	}
+
+	public void setComWriteDate(Date comWriteDate) {
+		this.comWriteDate = comWriteDate;
+	}
+
+	public Date getReserRegist() {
+		return reserRegist;
+	}
+
+	public void setReserRegist(Date reserRegist) {
+		this.reserRegist = reserRegist;
 	}
 
 	@Override
@@ -262,11 +317,12 @@ public class MyInfoVO {
 		return "MyInfoVO [commendNum=" + commendNum + ", reviewNum=" + reviewNum + ", tourNum=" + tourNum
 				+ ", reserNum=" + reserNum + ", spotsNum=" + spotsNum + ", adultCnt=" + adultCnt + ", otherCnt="
 				+ otherCnt + ", adultFee=" + adultFee + ", otherFee=" + otherFee + ", reserFlag=" + reserFlag
-				+ ", seatNum=" + Arrays.toString(seatNum) + ", id=" + id + ", name=" + name + ", password=" + password
-				+ ", email=" + email + ", phone=" + phone + ", addr=" + addr + ", deAddr=" + deAddr + ", tourName="
-				+ tourName + ", cancelReas=" + cancelReas + ", title=" + title + ", revContent=" + revContent
-				+ ", zipcode=" + zipcode + ", reviewImg=" + reviewImg + ", reserDate=" + reserDate + ", writeDate="
-				+ writeDate + "]";
+				+ ", startPS=" + startPS + ", lenPS=" + lenPS + ", seatNum=" + Arrays.toString(seatNum) + ", id=" + id
+				+ ", name=" + name + ", password=" + password + ", email=" + email + ", phone=" + phone + ", addr="
+				+ addr + ", deAddr=" + deAddr + ", tourName=" + tourName + ", cancelReas=" + cancelReas + ", title="
+				+ title + ", revContent=" + revContent + ", zipcode=" + zipcode + ", reviewImg=" + reviewImg
+				+ ", reserDate=" + reserDate + ", comContent=" + comContent + ", outReas=" + outReas + ", revWriteDate="
+				+ revWriteDate + ", comWriteDate=" + comWriteDate + ", reserRegist=" + reserRegist + "]";
 	}
-	 
+	
 }//class

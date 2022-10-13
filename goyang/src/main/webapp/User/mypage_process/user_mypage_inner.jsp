@@ -30,12 +30,56 @@
 <link rel="stylesheet" href="../../css/daterangepicker.css">
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
+<!-- google jquery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
-	<title>고양 시티투어</title>
+<script type="text/javascript">    
+$(function(){
+	$("#confirmBtn").click(function(){
+		passChk();//패스워드 입력 사항 체크
+	});//click
+	
+})//reday
+
+function passChk() {
+	
+	if($("#password").val().trim()==""){//비밀번호를 입력 안할 경우
+		$("#passMsg").html("비밀번호를 입력해 주세요.");
+		$("#password").val("");//초기화
+		$("#password").focus();
+		return;
+	}//end if
+	
+	$("#passFrm").submit();
+}//passChk
+
+           
+/* function changePage(value){                     
+	if(value == "0"){ 								// HOME 버튼 클릭시 첫화면으로 이동                          
+		location.href="../main/index.jsp";            
+	}else if(value == "1"){						// 로그아웃 버튼 클릭시 로그아웃 처리            
+		location.href="member/pro/LogoutPro.jsp";            
+	}else if(value == "2"){   					// 마이페이지 버튼 클릭시 회원정보 보여주는 화면으로 이동                          
+		location.href="user_mypage_inner.jsp";            
+	}       
+}     */
+</script>
+
+<title>고양 시티투어</title>
 </head>
 
 <body>
 
+<%
+String id="user";
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==null){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	return;
+}//end if
+%>
 
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
@@ -84,19 +128,22 @@
 
  <div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 36px; margin-bottom: 36px;">
 	<div style="background:#eff0f2; width:30%">
+		<form action="user_mypage_pass_process.jsp" method="get" id="passFrm">
 			<div style="margin-top:15px;display:flex; flex-direction:column; align-items:center; ">
 				<span style="font-size:20px;  padding-bottom:15px; "><strong>비밀번호 확인</strong></span>
 				
-				<input type="password" name="pass" value="비밀번호를 입력해주세요." 
-				style="font-size: 20px; display: flex; justify-content: center; align-items: center; height: 40px;">
+				
+				<input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요."
+				style="font-size: 20px; display: flex; justify-content: center; align-items: center; height: 40px;"><br/>
+				<span id="passMsg"></span>
 			</div>
 		
 			<div style="display: flex; align-items: center; justify-content: center; padding-top: 15px; padding-bottom: 15px;">
-				<input type="submit" value="확인" class="mainBtn" onclick="location.href='user_mypage.jsp'">
+				<input type="button" value="확인" class="mainBtn" id="confirmBtn">
 			</div>
-			
-		</div>
+		</form>
 	</div>
+</div>
  
 	
   <div class="site-footer">

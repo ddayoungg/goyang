@@ -1,5 +1,9 @@
+<%@page import="kr.co.goyang.user.vo.MyInfoVO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.MyInfoDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- /*
 * Template Name: Tour
 * Template Author: Untree.co
@@ -30,16 +34,39 @@
 <link rel="stylesheet" href="../../css/daterangepicker.css">
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
-<style type="text/css">
+<!-- google jquery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+<style type="text/css">
 	
 </style>
+
+<script type="text/javascript">               
+/* function changePage(value){                     
+	if(value == "0"){ 								// HOME 버튼 클릭시 첫화면으로 이동                          
+		location.href="../main/index.jsp";            
+	}else if(value == "1"){						// 로그아웃 버튼 클릭시 로그아웃 처리            
+		location.href="member/pro/LogoutPro.jsp";            
+	}else if(value == "2"){   					// 마이페이지 버튼 클릭시 회원정보 보여주는 화면으로 이동                          
+		location.href="user_mypage_inner.jsp";            
+	}       
+}    */ 
+</script>
 
 	<title>고양 시티투어</title>
 </head>
 
 <body>
-
+<%
+String id="tester";//로그인한 아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==null){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	return;
+}//end if
+%>
 
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
@@ -132,42 +159,105 @@
 						<th>작성일</th>
 						<th>          </th>
 					</tr>
+					<%
+					//페이징 시작
+					int cPage=1;//현재 페이지
+					int totalRows=0;//전체 행 수
+					int totalPages=0;//전체 페이지 수
+					int lenPS=5;//한 페이지 보여줄 행 수
+					int startPS=0;//페이지의 시작 지점
+					
+					MyInfoDAO miDAO=MyInfoDAO.getInstance();
+					MyInfoVO miVO=new MyInfoVO();
+					
+					try {
+						 cPage=Integer.parseInt(request.getParameter("page"));
+					}catch(NumberFormatException nfe) {//파라미터가 null이 나올 경우
+						cPage=1;
+					}//end catch
+					
+					//전체 데이터 개수
+					totalRows=miDAO.selectMyCommTotal(id);
+					//총 페이지 수
+					totalPages = totalRows % lenPS == 0 ? totalRows/lenPS : (totalRows/lenPS) + 1;
+					if(totalPages==0) {
+						totalPages = 1;
+					}//end if
+					
+					if(cPage > totalPages) {
+						cPage = 1;
+					}//end if
+					
+					startPS = (cPage - 1) * lenPS;//각 페이지의 시작 지점
+					
+					//VO set
+					miVO.setId(id);
+					miVO.setStartPS(startPS);
+					miVO.setLenPS(lenPS);
+					
+					List<MyInfoVO> commList=miDAO.selectMyCommList(miVO);
+					
+					pageContext.setAttribute("commList", commList);
+					%>
+					<% if(commList.size() != 0) { %>
+					<c:forEach var="myComm" items="${ commList }">
 					<tr>
-						<td>8</td>
-						<td><a href="#void"></a>가족들끼리 아주 즐거운 여행~</td>
-						<td><a href="#void"></a>댓글1</td>
-						<td>2022.09.13</td>
-						<td><input type="button" value="수정" class="mainBtn" onclick="location.href='#void'"style="width:80px; height:32px;"></td>
+						<td>${ myComm.commendNum }</td>
+						<td><a href="#void"></a>${ myComm.revContent }</td>
+						<td><a href="#void"></a>${ myComm.comContent }</td>
+						<td>${ myComm.comWriteDate }</td>
+						<td><input type="button" value="수정" class="mainBtn" onclick="location.href='#void${ myComm.commendNum }'"style="width:80px; height:32px;"></td>
 					</tr>
+					</c:forEach>
+					<% }else { %>
 					<tr>
-						<td>6</td>
-						<td><a href="#void"></a>가족들끼리 아주 즐거운 여행~</td>
-						<td><a href="#void"></a>댓글2</td>
-						<td>2022.09.11</td>
-						<td><input type="button" value="수정" class="mainBtn" onclick="location.href='#void'"style="width:80px; height:32px;"></td>
+						<td colspan="4">데이터가 존재하지 않습니다.</td>
 					</tr>
-					<tr>
-						<td>4</td>
-						<td><a href="#void"></a>가족들끼리 아주 즐거운 여행~</td>
-						<td><a href="#void"></a>댓글3</td>
-						<td>2022.09.09</td>
-						<td><input type="button" value="수정" class="mainBtn" onclick="location.href='#void'"style="width:80px; height:32px;"></td>
-					</tr>
-					<tr>
-						<td>2</td>
-						<td><a href="#void"></a>가족들끼리 아주 즐거운 여행~</td>
-						<td><a href="#void"></a>댓글4</td>
-						<td>2022.09.07</td>
-						<td><input type="submit" value="수정" class="mainBtn" onclick="location.href='#void'"style="width:80px; height:32px;"></td>
-					</tr>
+					<% }//end else %>
 				</table>
 			</div>
 			
-			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
+			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;"><!-- 페이지 블럭 -->
+			<%
+				//페이지 블럭
+				int pageLength=5;//페이지 블록 길이 1~5페이지
+				int currentBlock=cPage % pageLength == 0 ? cPage / pageLength : (cPage / pageLength) +1;//현재 페이지가 어디 블럭에 속해있는지 알려줌.
+				int startPage = (currentBlock - 1) * pageLength + 1;
+				int endPage = startPage + pageLength - 1;
+				//마지막 페이지 묶음에서 총 페이지 수를 넘어가면 끝 페이즈를 마지막 페이지 숫자로 지정
+				if(endPage > totalPages) {
+					endPage = totalPages;
+				}//end if
+			%>
+			 <nav>
+			  <ul class="pagination justify-content-center">
+			   <% if(startPage != 1 ) {%>
+			   <li class="page-item"><a class="page-link"
+			   		href="user_my_comment.jsp?page=<%= startPage - 1 %>" tabindex="-1"
+			   		aria-disabled="true">&lt;<!-- < --></a></li>
+			   <% }//end if %>
+			   <% for(int i=startPage;i<=endPage;i++) { %>
+			   	<li class="page-item">
+			   	<a class="page-link" href="user_my_comment.jsp?page=<%= i %>"><%= i %></a></li>
+			   <% }//end for %>
+			   <%
+			   	//마지막 페이지 숫자와 startPage에서 pageLength 더해준 값이 일치할 때
+			   	//즉, 마지막 페이지 블록일 때
+			   	if(totalPages != endPage) {
+			   %>
+			   	<li class="page-item">
+			   		<a class="page-link" href="user_my_comment.jsp?page=<%=endPage + 1 %>">&gt;<!-- > --></a>
+			   	</li>
+			   <% }//end if %>
+			  </ul> 
+			 </nav>
+			</div>
+			
+			<%-- <div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
 				<input class="pagination" type="button" value="<">
 				<input class="pagination pageNow" type="button" value="1">
 				<input class="pagination" type="button" value=">">
-			</div>
+			</div> --%>
 			
 		</form>
 	</div>	
