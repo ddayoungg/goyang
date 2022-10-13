@@ -17,6 +17,9 @@
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 	rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
 <link rel="stylesheet" href="../../css/owl.carousel.min.css">
@@ -30,13 +33,20 @@
 <style type="text/css">
 	
 </style>
+<script type="text/javascript">
+$(function(){
+	$("#logBtn").click(function() {
+		$("#logFrm").submit();
+	})
+})
+</script>
 
 <title>고양 시티투어</title>
 </head>
 
 <body>
 
-
+	
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
 			<div class="site-mobile-menu-close">
@@ -94,6 +104,7 @@
 	</div>
 	
 	<!--  여기사이에 구상하시면 됩니다!!! -->
+	
 	<div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 36px; margin-bottom: 36px;">
 	<div style="background:white; width:100%">
 		<header>
@@ -101,29 +112,36 @@
 				<span style="font-size:30px;"><strong>Goyang Citytour</strong></span>
 			</div>
 		</header>
+
+		<form action="user_signInAction.jsp" method="post" id="logFrm">
 		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
 			<div style="width: 465px; height:48px; border: solid 1px gray; 
 			background: white;">	
-				<input placeholder="Username" type="text" style="border:none; width:430px;
+				
+				<!-- 아이디 -->
+				<input placeholder="Username" type="text" id="id" name="id" style="border:none; width:430px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
 			<div style="width:465px; height:48px; border:solid 1px gray; 
 			background: white; margin-top:13px;">	
-				<input placeholder="Password" type="password" style="border:none; width:430px;
+				<input placeholder="Password" type="password" id="password" name="password" style="border:none; width:430px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
 			<div style="margin-top:12px;">
 			<a href="#" onclick="location.href='user_signUp.jsp'">회원가입</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="location.href='user_findProfile.jsp'">아이디|비밀번호 찾기</a>
 			</div>
 			<div style="padding-top:13px;">
-				<button style="width:465px; height:48px; font-size:18px;
-				border:solid 1px #333;" class="btn btn-primary btn-block" onclick="location.href='../main/index.jsp'">Sign in</button>
+				<input type="button" id="logBtn" style="width:465px; height:48px; font-size:18px;
+				border:solid 1px #333;" class="btn btn-primary btn-block" value="Sign In" >
 			</div>
 			<div style="width:465px; height:48px;">
 			</div>
 		</section>
+		</form>
+		
 	</div>
 	</div>
+
 
 	<div class="site-footer">
 		<div class="inner first">

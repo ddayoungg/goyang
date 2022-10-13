@@ -37,7 +37,7 @@ public class DbConnection {
 			e.printStackTrace();
 		}
 		//2.Connection 얻기
-		String url="jdbc:oracle:thin:@localhost:1521:orcl";
+		String url="jdbc:oracle:thin:@211.63.89.140:1521:orcl";
 		String id="goyang";
 		String pass="tour";
 		con=DriverManager.getConnection(url, id, pass);

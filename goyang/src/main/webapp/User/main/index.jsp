@@ -1,7 +1,3 @@
-<%@page import="kr.co.goyang.user.vo.ReviewMainVO"%>
-<%@page import="kr.co.goyang.user.vo.TourMainVO"%>
-<%@page import="java.util.List"%>
-<%@page import="kr.co.goyang.user.dao.TourMainDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -100,13 +96,30 @@ marker.setMap(map);
 					<li><a href="../review_process/user_review.jsp">관광지후기</a></li>
 					<li><a href="../mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
 				</ul>
+				
+				
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
+				<%
+					Object id=session.getAttribute("id");
+				
+				%>
 					<li></li>
+				<%
+					if(id==null){
+				%>
 					<li style="font-size: 5px; font-weight: bold;"><a
 						href="../login_process/user_signIn.jsp">로그인</a></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
 						href="../login_process/user_signUp.jsp">회원가입</a></li>
+				<%
+					}else{
+				%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_logout.jsp">로그아웃</a></li>
+				<%
+					}
+				%>
 				</ul>
 
 				<a href="#"
@@ -279,26 +292,61 @@ marker.setMap(map);
 			</div>
 
 			<div class="owl-carousel owl-3-slider">
-			
-			<%
-				TourMainDAO tmDAO = TourMainDAO.getInstance();
-				List<TourMainVO> mainList=tmDAO.selectMainTour();
-			
-				for(int i=0;i<mainList.size();i++){
-					TourMainVO tmVO=new TourMainVO();
-					tmVO=mainList.get(i);
-					System.out.println(tmVO.getThum_img());
-			%>
+
 				<div class="item">
 					<a class="media-thumb" href="user_introduceDay.html">
 						<div class="media-text">
-							<h3><%=tmVO.getTourName() %></h3>
-						</div> <img src="../../images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
+							<h3>화요나들이</h3>
+							<span class="location">벽제</span>
+						</div> <img src="../../images/tues.jpg" alt="Image" class="img-fluid">
 					</a>
 				</div>
-				
-			<%}
-			%>
+
+				<div class="item">
+					<a class="media-thumb" href="user_introduceDay.html">
+						<div class="media-text">
+							<h3>수요나들이</h3>
+							<span class="location">행주</span>
+						</div> <img src="../../images/wed.jpg" alt="Image" class="img-fluid">
+					</a>
+				</div>
+
+				<div class="item">
+					<a class="media-thumb" href="user_introduceDay.html">
+						<div class="media-text">
+							<h3>목요나들이</h3>
+							<span class="location">일산</span>
+						</div> <img src="../../images/thur.jpg" alt="Image" class="img-fluid">
+					</a>
+				</div>
+
+
+				<div class="item">
+					<a class="media-thumb" href="user_introduceDay.html">
+						<div class="media-text">
+							<h3>금요나들이</h3>
+							<span class="location">고양관광특구</span>
+						</div> <img src="../../images/fri.jpg" alt="Image" class="img-fluid">
+					</a>
+				</div>
+
+				<div class="item">
+					<a class="media-thumb" href="user_introduceDay.html">
+						<div class="media-text">
+							<h3>토요나들이</h3>
+							<span class="location">왕릉</span>
+						</div> <img src="../../images/satur.jpg" alt="Image" class="img-fluid">
+					</a>
+				</div>
+
+				<div class="item">
+					<a class="media-thumb" href="user_introduceDay.html">
+						<div class="media-text">
+							<h3>일요나들이</h3>
+							<span class="location">패밀리</span>
+						</div> <img src="../../images/sun.jpg" alt="Image" class="img-fluid">
+					</a>
+				</div>
 
 			</div>
 
@@ -366,24 +414,27 @@ marker.setMap(map);
 							<th>글쓴이</th>
 							<th>작성일</th>
 						</tr>
-						<%
-							List<ReviewMainVO> reviewVO=tmDAO.selectMainReivew();
-							
-							for(int i=0;i<reviewVO.size();i++){
-								ReviewMainVO rmVO=new ReviewMainVO();
-								rmVO=reviewVO.get(i);
-								
-						%>
 						<tr>
-							<td><%=rmVO.getReviewNum() %></td>
-							<td><%=rmVO.getTourName() %></td>
-							<td><%=rmVO.getTitle() %></td>
-							<td><%=rmVO.getId() %></td>
-							<td><%=rmVO.getRevDate() %></td>
+							<td>1</td>
+							<td>화요나들이(백제)</td>
+							<td>화요날들이 재밌어요~!!</td>
+							<td>김*현</td>
+							<td>2022.09.07</td>
 						</tr>
-						<%
-							}
-						%>
+						<tr>
+							<td>2</td>
+							<td>금요나들이(고양관광특구)</td>
+							<td>금요나들이 다들 추천해요!! 알찬 코스~~</td>
+							<td>김*희</td>
+							<td>2022.09.07</td>
+						</tr>
+						<tr>
+							<td>3</td>
+							<td>일요나들이</td>
+							<td>가족들끼리 아주 즐거운여행!!</td>
+							<td>홍*영</td>
+							<td>2022.09.07</td>
+						</tr>
 					</table>
 				</div>
 			</div>

@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+        <%@ page import="kr.co.goyang.user.dao.UserDAO" %>
+    <%@ page import="java.io.PrintWriter" %>
+    <% request.setCharacterEncoding("UTF-8"); %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -28,10 +31,16 @@
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
 <style type="text/css">
-	
+
 	
 </style>
-
+<script type="text/javascript">
+$(function(){
+	$("#login").click(function(){
+		document.location.href="user_signIn.jsp"
+	})
+})
+</script>
 <title>고양시티투어</title>
 </head>
 
@@ -95,6 +104,12 @@
 	</div>
 	
 	<!--  여기사이에 구상하시면 됩니다!!! -->
+	<%
+	String name= request.getParameter("name");
+	String email= request.getParameter("email");
+	UserDAO userDAO=new UserDAO();
+	String result = userDAO.selectFindId(name, email);
+	%>
 	<div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 36px; margin-bottom: 36px;">
 	<div style="background:white; width:100%">
 		<header>
@@ -102,20 +117,44 @@
 				<span style="font-size:30px;"><strong>Goyang Citytour</strong></span>
 			</div>
 		</header>
+		<form method="post">
+		<%
+		if(result!=null){
+		%>
 		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
 			<div style="width: 465px; height:148px; border: solid 1px gray; 
 			background: white; ">	
-				<label style=" font-size:25px; padding:55px 80px 55px 80px; ">아이디</label>
-				<span style="text-align:right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;가입:yyyy-mm-dd</span>
+			<label style="font-size:18px; padding-left:10px;">회원님의 아이디는</label>
+			<label style=" font-size:25px; padding:55px 80px 55px 80px; "><%=result %></label>
+			<label style="font-size:18px;">입니다.</label>
 			</div>
 			
 			<div style="padding-top:13px;">
 				<button style="width:465px; height:48px; font-size:18px;
-				border:solid 1px #333;" class="btn btn-primary btn-block" onclick="location.href='user_signIn.jsp'">로그인 하기</button>
+				border:solid 1px #333;" class="btn btn-primary btn-block" type="submit" onclick="javascript:form.action='user_signIn.jsp'">로그인 하기</button>
 			</div>
 			<div style="width:465px; height:48px;">
 			</div>
 		</section>
+		<%
+		}else{
+		%>
+		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
+			<div style="width: 465px; height:148px; border: solid 1px gray; 
+			background: white; ">	
+			<h4>등록된 정보가 없습니다.</h4>
+			</div>
+			<div style="padding-top:13px;">
+				<button style="width:465px; height:48px; font-size:18px;
+				border:solid 1px #333;" class="btn btn-primary btn-block" type="submit" onclick="javascript:form.action='user_findProfile.jsp'">다시 찾기</button>
+			</div>
+			<div style="width:465px; height:48px;">
+			</div>
+		</section>
+		<%
+		}
+		%>
+		</form>
 	</div>
 	</div>
 

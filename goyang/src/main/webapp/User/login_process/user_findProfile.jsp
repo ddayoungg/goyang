@@ -30,7 +30,47 @@
 <style type="text/css">
 	
 </style>
+<script type="text/javascript">
 
+
+function id_search(){
+	var frm=document.idfrm;
+	
+	if(frm.name.value==""){
+		
+		alert("이름을 입력해주세요")
+		frm.name.focus();
+		return;
+	}
+	if(frm.email.value==""){
+		alert("이메일을 입력해주세요")
+		frm.email.focus();
+		return;
+	}
+	$("#idfrm").submit();
+}
+
+function pass_search(){
+	var frm=document.passfrm;
+	
+	if(frm.id.value==""){
+		alert("아이디를 입력해주세요")
+		frm.id.focus();
+		return;
+	}
+	if(frm.name.value==""){
+		alert("이름을 입력해주세요")
+		frm.name.focus();
+		return;
+	}
+	if(frm.email.value==""){
+		alert("이메일을 입력해주세요")
+		frm.email.focus();
+		return;
+	}
+	$("#passfrm").submit();
+}
+</script>
 <title>고양시티투어</title>
 </head>
 
@@ -100,6 +140,7 @@
     	box-shadow:10px black; border-radius:10px;">
             <div style="width:50%; border-radius:10px 0px 0px 10px; display:flex; flex-direction:column;
     		align-items:center; padding:40px; background:white;  ">
+    		
    			<div style="margin-top:15px; display:flex; flex-direction:column; justify-content:flex-start; width:100% ">
 				<span style="font-size:30px;"><strong>아이디 찾기</strong></span>
 			</div>
@@ -107,20 +148,23 @@
 				<span style="font-size:14px;"><strong>회원가입 시, 입력하신 이름+이메일로 아이디를 확인하실 수 있습니다.</strong></span>
 			</div>
    			<section style="width:430px; padding-top:60px; display:flex; flex-direction:column; align-items:center;">
+			<form method="post" id="idfrm" name="idfrm" action="user_findID.jsp">
 			<div style="width: 350px; height:48px; border: solid 1px gray; 
 			background: white;">	
-				<input placeholder="Username" type="text" style="border:none; width:330px;
+				<input placeholder="Username" type="text" id="name" name="name" style="border:none; width:330px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
 			<div style="width:350px; height:48px; border:solid 1px gray; 
 			background: white; margin-top:13px;">	
-				<input placeholder="Password" type="password" style="border:none; width:330px;
+				<input placeholder="Email" type="text" id="email" name="email" style="border:none; width:330px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
+			</form>
 			<div style="padding-top:13px;">
 				<button style="width:350px; height:48px; font-size:18px;"
-				class="btn btn-primary btn-block" onclick="location.href='user_findID.jsp'">아이디 찾기</button>
+				class="btn btn-primary btn-block" id="findBtn" onclick="id_search()">아이디 찾기</button>
 			</div>
+			
 			<div style="display:flex; justify-content:flex-start; align-items:center; width:400px; margin-top:40px; ">
                     <button style=" width:115px; font-size:13px; " 
                     class="btn btn-primary btn-block" onclick="location.href='user_signIn.jsp'">
@@ -138,24 +182,26 @@
 				<span style="font-size:14px;"><strong>회원가입 시, 입력하신 이름+이메일+아이디로 비밀번호를 변경하실 수 있습니다.</strong></span>
 			</div>
    			<section style="width:430px; padding-top:10px; display:flex; flex-direction:column; align-items:center;">
+			<form method="post" id="passfrm" name="passfrm" action="user_updatePass.jsp">
 			<div style="width: 350px; height:48px; border: solid 1px gray; 
 			background: white;">	
-				<input placeholder="id" type="text" style="border:none; width:330px;
+				<input placeholder="id" type="text" id="id" name="id" style="border:none; width:330px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
 			<div style="width:350px; height:48px; border:solid 1px gray; 
 			background:white; margin-top:8px;">	
-				<input placeholder="Username" type="text" style="border:none; width:330px;
+				<input placeholder="Username" type="text" id="name" name="name" style="border:none; width:330px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
 			<div style="width:350px; height:48px; border:solid 1px gray; 
 			background:white; margin-top:8px;">	
-				<input placeholder="Password" type="password" style="border:none; width:330px;
+				<input placeholder=Email type="text" id="email" name="email" style="border:none; width:330px;
 				margin-top:10px; font-size:14px; margin-left:10px"></input>
 			</div>
+			</form>
 			<div style="padding-top:13px;">
 				<button style="width:350px; height:48px; font-size:18px;"
-				class="btn btn-primary btn-block" onclick="location.href='user_findPass.jsp'">비밀번호 변경</button>
+				class="btn btn-primary btn-block" onclick="pass_search()">비밀번호 변경</button>
 			</div>
 			<div style="display:flex; justify-content:flex-end; align-items:center; width:400px; margin-top:40px; ">
                     <span style="color:black; font-size:11px; padding-right:15px; ">

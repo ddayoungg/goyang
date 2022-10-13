@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-   <%@ page import="kr.co.goyang.manager.dao.ReviewManagerDAO" %>
-   <%@ page import="kr.co.goyang.manager.vo.ReviewManagerVO" %>
-   <%@ page import="java.util.ArrayList" %>
+        <%@ page import="kr.co.goyang.user.dao.UserDAO" %>
+    <%@ page import="java.io.PrintWriter" %>
+    <% request.setCharacterEncoding("UTF-8"); %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -15,8 +16,8 @@
 <meta name="description" content="" />
 <meta name="keywords" content="bootstrap, bootstrap4" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 	rel="stylesheet">
@@ -30,13 +31,17 @@
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
-
 <style type="text/css">
-
+	
 	
 </style>
+<script>
 
-<title>관리자화면-후기관리</title>
+</script>
+
+
+
+<title>고양시티투어</title>
 </head>
 
 <body>
@@ -54,31 +59,25 @@
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="../dashboard_process/manager_dashboard.jsp" class="logo m-0">고양<span
+				<a href="../main/index.jsp" class="logo m-0">고양<span
 					class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
-					<li class="active"><a href="../dashboard_process/manager_dashboard.jsp">dash board</a></li>
-					<li><a href="../user_manager_process/manager_member_popup.jsp">회원관리</a></li>
-					<li><a href="../tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
-					<li><a href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
-					<li><a href="../spot_manager_process/manager_spot_list.jsp">관광지 관리</a></li>
-					<li><a href="manager_review.jsp">후기관리</a></li>
+					<li class="active"><a href="../main/index.jsp">home</a></li>
+					<li><a href="../reservation_process/user_reservation_course.jsp">투어예약</a></li>
+					<li><a href="../spot_process/user_introduceTour.jsp">관광지소개</a></li>
+					<li><a href="../review_process/user_review.jsp">관광지후기</a></li>
+					<li><a href="../mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
 				</ul>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
-				<%
-					int pageNumber = 1;
-					if(request.getParameter("pageNumber")!=null){
-						pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
-					}
-				%>
 					<li></li>
-				
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_process/user_logout.jsp">로그아웃</a></li>
+						href="../login_process/user_signIn.jsp">로그인</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
 				</ul>
 				
 				<a href="#"
@@ -96,7 +95,7 @@
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">후기관리</h1>
+						<h1 class="mb-0">로그인</h1>
 						<!-- <p class="text-white">로그인을 해주세요.</p> -->
 					</div>
 				</div>
@@ -105,75 +104,80 @@
 	</div>
 	
 	<!--  여기사이에 구상하시면 됩니다!!! -->
+	<%
 	
-	<!-- 대제목 -->
-	<div class="container" style="margin-top: 20px;">
-		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
-	</div>
-	<!-- 대제목 끝 -->
-	
-		<div class="container">
-		<form>
-			<div style="font-size: 23px;margin: 10px 0px 10px 0px;display: flex;justify-content: space-between;">
-				<div style="font-weight: bold;"> 관광 후기</div>
-				<div style="font-size: 13px;display: flex;align-items: end;">목록보기</div>
+	String id=request.getParameter("id");
+	String name= request.getParameter("name");
+	String email= request.getParameter("email");
+	String passowrd=request.getParameter("password");
+	UserDAO userDAO=new UserDAO();
+	String result = userDAO.selectFindPass(id, name, email);
+	System.out.println("확인============="+id);
+	%>
+	<div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 36px; margin-bottom: 36px;">
+	<div style="background:white; width:100%">
+		<header>
+			<div style="margin-top:15px;display:flex; flex-direction:column; align-items:center; ">
+				<span style="font-size:30px;"><strong>Goyang Citytour</strong></span>
 			</div>
-
-			<div>
-				<table class="member" style="width: 100%">
-					<tr>
-						<th>번호</th>
-						<th>제목</th>
-						<th style="min-width: 500px;">내용</th>
-						<th>사진</th>
-						<th>작성일</th>
-						<th>아이디</th>
-						<th>투어</th>
-					</tr>
-					<%
-						ReviewManagerDAO dao = new ReviewManagerDAO(); 
-						ArrayList<ReviewManagerVO> list = dao.getList(pageNumber);
-						for(int i=0; i<list.size(); i++){
-					%>					
-					<tr>
-						<td><%= list.get(i).getReviewNum() %></td>
-						<td><%= list.get(i).getTitle() %></td>
-						<td><a href="manager_reviewDetail.jsp?ReviewNum=<%=list.get(i).getReviewNum() %>"><%= list.get(i).getRevContent() %></a></td>
-						<td><%= list.get(i).getReviewImg() %></td>
-						<td><%= list.get(i).getRevWriteDate() %></td>
-						<td><%= list.get(i).getId()%></td>
-						<td><%= list.get(i).getTourNum() %></td>
-					</tr>
-					<%
-						}
-					%>
-					
-				</table>
-			</div>
+		</header>
+		<form method="post" action="user_updatePassAction.jsp?id=<%=id%>">
+		<%
+		if(result!=null){
+		%>
+		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
+		
+			<input type="text" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
+			 placeholder="새 비밀번호" id="password" name="password"></input><br>
+			<input type="text" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
+			 placeholder="새 비밀번호 확인" id="conpassword" name="conpassword"></input><br>
 			
-			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
-				<input class="pagination" type="button" value="<">
-				<input class="pagination pageNow" type="button" value="1">
-				<input class="pagination" type="button" value=">">
+			<div style="padding-top:13px;">
+				<button style="width:465px; height:48px; font-size:18px;
+				border:solid 1px #333;" class="btn btn-primary btn-block" >비밀번호 변경</button>
 			</div>
-			
-				
-			<div style="display: flex; justify-content: center; margin-bottom: 50px; height: 32px;">
-				<select>
-					<option>코스 선택</option>
-					<option>화요나들이(벽제)</option>
-					<option>수요나들이(행주)</option>
-					<option>목요나들이(일산)</option>
-					<option>금요나들이(고양관광특구)</option>
-					<option>토요나들이(왕릉)</option>
-					<option>일요나들이(패밀리)</option>
-				</select>
-				<input type="text" placeholder="검색어를 입력하세요." style="margin: 0px 10px 0px 10px; min-width: 300px;">
-				<input type="button" value="검색" class="mainBtn" style="width: 80px;">
+			<div style="width:465px; height:48px;">
 			</div>
+		</section>
+		<%
+		}else{
+		%>
+		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
+			<div style="width: 465px; height:148px; border: solid 1px gray; 
+			background: white; ">	
+			<h4>등록된 정보가 없습니다.</h4>
+			</div>
+			<div style="padding-top:13px;">
+				<button style="width:465px; height:48px; font-size:18px;
+				border:solid 1px #333;" class="btn btn-primary btn-block" onclick="javascript:form.action='user_findProfile.jsp'">다시 찾기</button>
+			</div>
+			<div style="width:465px; height:48px;">
+			</div>
+		</section>
+		<%
+		}
+		%>
 		</form>
 	</div>
+	</div>
 
+<div id="popup" class="hide popup">
+<div class="content">
+	<div>
+		<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 확인</div>
+		
+		<div style="background-color: #f0f6f9;">
+			<div style="font-size: 16px; display: flex; justify-content: center; 
+			align-items: center; height: 70px ;background-color: #f0f6f9;">비밀번호 변경되었습니다.</div>
+			
+			<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+				<input type="button" value="확인" class="popupBtn" onclick="location.href='user_signIn.jsp'">
+			</div>
+		</div>
+	</div>
+</div>
+</div>
 
 	<div class="site-footer">
 		<div class="inner first">
@@ -225,8 +229,7 @@
 			<span class="sr-only">Loading...</span>
 		</div>
 	</div>
-
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script> 
 
 <!-- 	<script src="js/jquery-3.4.1.min.js"></script> -->
 	<script src="../../js/popper.min.js"></script>
@@ -242,6 +245,24 @@
 	<script src="../../js/typed.js"></script>
 
 	<script src="../../js/custom.js"></script>
+<script type="text/javascript">
+		function showPopup(hasFilter) {
+			const popup = document.querySelector('#popup');
+		  
+		  if (hasFilter) {
+		  	popup.classList.add('has-filter');
+		  } else {
+		  	popup.classList.remove('has-filter');
+		  }
+		  
+		  popup.classList.remove('hide');
+		}
+		
+		function closePopup() {
+			const popup = document.querySelector('#popup');
+		  popup.classList.add('hide');
+		}
+	</script>
 </body>
 
 </html>
