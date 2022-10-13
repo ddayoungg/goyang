@@ -3,17 +3,17 @@ package kr.co.goyang.user.vo;
 import java.sql.Date;
 
 public class TourReviewVO {
-	int tourNum, commendNum, reviewNum;
-	String tourName, title, reviewImg, comContent, revContent, id, listSearch, textSearch;
-	Date comWriteDate, revWriteDate;
-	
+	private int tourNum, commendNum, reviewNum;
+	private String tourName, title, reviewImg, comContent, revContent, id, listSearch, textSearch, comDelFlag;
+	private Date comWriteDate, revWriteDate;
+
 	public TourReviewVO() {
-		super();
+
 	}
 
 	public TourReviewVO(int tourNum, int commendNum, int reviewNum, String tourName, String title, String reviewImg,
-			String comContent, String revContent, String id, String listSearch, String textSearch, Date comWriteDate,
-			Date revWriteDate) {
+			String comContent, String revContent, String id, String listSearch, String textSearch, String comDelFlag,
+			Date comWriteDate, Date revWriteDate) {
 		super();
 		this.tourNum = tourNum;
 		this.commendNum = commendNum;
@@ -26,6 +26,7 @@ public class TourReviewVO {
 		this.id = id;
 		this.listSearch = listSearch;
 		this.textSearch = textSearch;
+		this.comDelFlag = comDelFlag;
 		this.comWriteDate = comWriteDate;
 		this.revWriteDate = revWriteDate;
 	}
@@ -118,6 +119,14 @@ public class TourReviewVO {
 		this.textSearch = textSearch;
 	}
 
+	public String getComDelFlag() {
+		return comDelFlag;
+	}
+
+	public void setComDelFlag(String comDelFlag) {
+		this.comDelFlag = comDelFlag;
+	}
+
 	public Date getComWriteDate() {
 		return comWriteDate;
 	}
@@ -139,9 +148,8 @@ public class TourReviewVO {
 		return "TourReviewVO [tourNum=" + tourNum + ", commendNum=" + commendNum + ", reviewNum=" + reviewNum
 				+ ", tourName=" + tourName + ", title=" + title + ", reviewImg=" + reviewImg + ", comContent="
 				+ comContent + ", revContent=" + revContent + ", id=" + id + ", listSearch=" + listSearch
-				+ ", textSearch=" + textSearch + ", comWriteDate=" + comWriteDate + ", revWriteDate=" + revWriteDate
-				+ "]";
+				+ ", textSearch=" + textSearch + ", comDelFlag=" + comDelFlag + ", comWriteDate=" + comWriteDate
+				+ ", revWriteDate=" + revWriteDate + "]";
 	}
 
-	
-}//class
+}// class

@@ -3,32 +3,33 @@ package kr.co.goyang.manager.vo;
 import java.util.Date;
 
 public class UserManagerVO {
-	private String id, email, name, addr, deaddr, phone, courseName;
-	private int zipcode, tournum, outflag;
-	private Date joindate=new Date();
-	private Date outdate=new Date();
-	
+	private String id, email, name, addr, deAddr, phone, tourName, zipcode, outReas, listSearch, textSearch;
+	private int tourNum, outFlag;
+	private Date joinDate, outDate;
+
 	public UserManagerVO() {
-		
 	}
 
-	public UserManagerVO(String id, String email, String name, String addr, String deaddr, String phone,
-			String courseName, int zipcode, int tournum, int outflag, Date joindate, Date outdate) {
+	public UserManagerVO(String id, String email, String name, String addr, String deAddr, String phone,
+			String tourName, String zipcode, String outReas, String listSearch, String textSearch, int tourNum,
+			int outFlag, Date joinDate, Date outDate) {
 		super();
 		this.id = id;
 		this.email = email;
 		this.name = name;
 		this.addr = addr;
-		this.deaddr = deaddr;
+		this.deAddr = deAddr;
 		this.phone = phone;
-		this.courseName = courseName;
+		this.tourName = tourName;
 		this.zipcode = zipcode;
-		this.tournum = tournum;
-		this.outflag = outflag;
-		this.joindate = joindate;
-		this.outdate = outdate;
+		this.outReas = outReas;
+		this.listSearch = listSearch;
+		this.textSearch = textSearch;
+		this.tourNum = tourNum;
+		this.outFlag = outFlag;
+		this.joinDate = joinDate;
+		this.outDate = outDate;
 	}
-
 
 	public String getId() {
 		return id;
@@ -62,12 +63,12 @@ public class UserManagerVO {
 		this.addr = addr;
 	}
 
-	public String getDeaddr() {
-		return deaddr;
+	public String getDeAddr() {
+		return deAddr;
 	}
 
-	public void setDeaddr(String deaddr) {
-		this.deaddr = deaddr;
+	public void setDeAddr(String deAddr) {
+		this.deAddr = deAddr;
 	}
 
 	public String getPhone() {
@@ -78,57 +79,84 @@ public class UserManagerVO {
 		this.phone = phone;
 	}
 
-	public String getCourseName() {
-		return courseName;
+	public String getTourName() {
+		return tourName;
 	}
 
-	public void setCourseName(String courseName) {
-		this.courseName = courseName;
+	public void setTourName(String tourName) {
+		this.tourName = tourName;
 	}
 
-	public int getZipcode() {
+	public String getZipcode() {
 		return zipcode;
 	}
 
-	public void setZipcode(int zipcode) {
+	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
 
-	public int getTournum() {
-		return tournum;
+	public String getOutReas() {
+		return outReas;
 	}
 
-	public void setTournum(int tournum) {
-		this.tournum = tournum;
+	public void setOutReas(String outReas) {
+		this.outReas = outReas;
 	}
 
-	public int getOutflag() {
-		return outflag;
+	public String getListSearch() {
+		return listSearch;
 	}
 
-	public void setOutflag(int outflag) {
-		this.outflag = outflag;
+	public void setListSearch(String listSearch) {
+		this.listSearch = listSearch;
 	}
 
-	public Date getJoindate() {
-		return joindate;
+	public String getTextSearch() {
+		return textSearch;
 	}
 
-	public void setJoindate(Date joindate) {
-		this.joindate = joindate;
+	public void setTextSearch(String textSearch) {
+		this.textSearch = textSearch;
 	}
 
-	public Date getOutdate() {
-		return outdate;
+	public int getTourNum() {
+		return tourNum;
 	}
 
-	public void setOutdate(Date outdate) {
-		this.outdate = outdate;
+	public void setTourNum(int tourNum) {
+		this.tourNum = tourNum;
 	}
+
+	public int getOutFlag() {
+		return outFlag;
+	}
+
+	public void setOutFlag(int outFlag) {
+		this.outFlag = outFlag;
+	}
+
+	public Date getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Date joinDate) {
+		this.joinDate = joinDate;
+	}
+
+	public Date getOutDate() {
+		return outDate;
+	}
+
+	public void setOutDate(Date outDate) {
+		this.outDate = outDate;
+	}
+
 	@Override
 	public String toString() {
-		return "UserManagerVO [id=" + id + ", email=" + email + ", name=" + name + ", addr=" + addr + ", deaddr="
-				+ deaddr + ", phone=" + phone + ", courseName=" + courseName + ", zipcode=" + zipcode + ", tournum="
-				+ tournum + ", outflag=" + outflag + ", joindate=" + joindate + ", outdate=" + outdate + "]";
+		return "UserManagerVO [id=" + id + ", email=" + email + ", name=" + name + ", addr=" + addr + ", deAddr="
+				+ deAddr + ", phone=" + phone + ", tourName=" + tourName + ", zipcode=" + zipcode + ", outReas="
+				+ outReas + ", listSearch=" + listSearch + ", textSearch=" + textSearch + ", tourNum=" + tourNum
+				+ ", outFlag=" + outFlag + ", joinDate=" + joinDate + ", outDate=" + outDate + "]";
 	}
+
 }

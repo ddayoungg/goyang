@@ -1,5 +1,8 @@
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourReviewDAO"%>
+<%@page import="kr.co.goyang.user.vo.TourReviewVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" isELIgnored="false"%>
 <!-- /*
 * Template Name: Tour
 * Template Author: Untree.co
@@ -19,7 +22,7 @@
 <meta name="keywords" content="bootstrap, bootstrap4" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 	rel="stylesheet">
@@ -33,7 +36,6 @@
 <link rel="stylesheet" href="../../css/daterangepicker.css">
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
-<!-- 인화 수정 시작1 -->
 <style type="text/css">
 #container{width:1000px;margin: 0px auto;}
 .imgSize{width: 300px; height: 200px; border:1px solid #333;}
@@ -46,17 +48,49 @@ td{
 	padding-left: 10px;
 }
 </style>
+<!-- jQuery google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript">
-function fileInput(fileInput, output){
-	var file = document.getElementById(fileInput);
-	var fReader = new FileReader();
-	fReader.readAsDataURL(file.files[0]);
-	fReader.onloadend = function(event) {
-		document.getElementById(output).src=event.target.result;
-	}//end onloadend
-}//fileInput
+
+	$(function () {
+		<%
+		/* String name=(String)session.getAttribute("name"); */
+		String id = "tester";
+		
+		TourReviewDAO trDAO = TourReviewDAO.getInstance();
+		TourReviewVO reviewVO = new TourReviewVO();
+		String selectedTourName = "코스 선택";
+		String process = "등록";
+		
+		String reviewNumber = request.getParameter("reviewNum");
+		if(reviewNumber != null){
+			int reviewNum = Integer.valueOf(reviewNumber);
+			reviewVO = trDAO.selectReview(reviewNum);
+			process = "수정";
+		}else{
+			reviewVO.setRevContent("");
+			reviewVO.setTitle("");
+		}
+		
+		List<String> tourNames = trDAO.selectTourName();
+		%>
+		
+		$("#reviewRegi").click(function () {
+			$("#reviewFrm").submit();
+		})
+		
+	})
+
+	function fileInput(fileInput, output){
+		var file = document.getElementById(fileInput);
+		var fReader = new FileReader();
+		fReader.readAsDataURL(file.files[0]);
+		fReader.onloadend = function(event) {
+			document.getElementById(output).src=event.target.result;
+		}//end onloadend
+	}//fileInput
+	
 </script>
-<!-- 인화 수정 끝1  -->
 <title>고양 시티투어</title>
 </head>
 
@@ -133,8 +167,12 @@ function fileInput(fileInput, output){
 	</div>
 	<!-- 대제목 끝 -->
 	
+	
 	<div class="container">
-		<form>
+		<form id="reviewFrm" name="reviewFrm" action="user_review_insert_process.jsp" enctype="multipart/form-data" method="post">
+			<input type="hidden" name="id" value="<%=id%>">
+			<input type="hidden" name="reviewNum" value="<%= reviewNumber%>">
+			
 			<div style="font-size: 23px;padding: 10px 0px 10px 0px;display: flex;justify-content: space-between; border-bottom: 2px solid #bbbbbb;">
 				<div style="font-weight: bold;"> 관광 후기</div>
 			</div>
@@ -148,52 +186,127 @@ function fileInput(fileInput, output){
 					<tbody>
 						<tr>
 							<th>아이디</th>
-							<td>thgus***</td>
+							<td><%=id.substring(0, id.length()/2) %>****</td>
 						</tr>
 						<tr>
 							<th>코스</th>
 							<td>
-								<select style="width: 100%; height: 32px; border: 1px solid #ddd;">
-									<option>코스 선택</option>
-									<option>화요나들이</option>
-									<option>수요나들이</option>
-									<option>목요나들이</option>
-									<option>금요나들이</option>
-									<option>토요나들이</option>
-									<option>일요나들이</option>
+								<select name="selTour" style="width: 100%; height: 32px; border: 1px solid #ddd;">
+									<option value=-1>코스 선택</option>
+									<% for(int i=0; i<tourNames.size(); i++){ selectedTourName = tourNames.get(i);%>
+									<option value="<%= i %>"><%= tourNames.get(i) %></option>
+									<% } %>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<th>제목</th>
 							<td>
-								<input type="text" placeholder="제목을 입력해주세요." style="border: 1px solid #ddd; width: 100%; height: 32px;">
+								<input name="title" type="text" value="<%= reviewVO.getTitle() %>" placeholder="제목을 입력해주세요." style="border: 1px solid #ddd; width: 100%; height: 32px;">
 							</td>
 						</tr>
 						<tr>
 							<th>내용</th>
 							<td style="padding-bottom: 0px;">
-								<textarea placeholder="내용을 입력해주세요." style="width: 100%; height: 280px; border: 1px solid #ddd;"></textarea>
+								<textarea name="revContent" placeholder="내용을 입력해주세요." style="width: 100%; height: 280px; border: 1px solid #ddd;"><%= reviewVO.getRevContent() %></textarea>
 							</td>
 						</tr>
 						<tr>
 							<th>사진</th>
 							<td style="padding-top:0px;">
-							<!-- 인화 수정 시작2 -->
-   							  <input type='file' id='potoFileInput' onchange="fileInput('potoFileInput', 'potoOutput')">
-   							  <div class="imgSize"><img class="imgSize" id="potoOutput" src=""/></div>
-   							  <!-- 인화 수정 끝2 -->	
+   							<input type='file' name="photoFileInput" id='photoFileInput' onchange="fileInput('photoFileInput', 'photoOutput')">
+   							<div class="imgSize">
+   								<img class="imgSize" id="photoOutput" src="img.png"/>
+   								<input type="hidden" value="img.png" name="reviewImg">
+   							</div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 				
 				<div style="justify-content: end;display: flex;align-items: center; margin-bottom: 100px; margin-top: 10px;">
-					<input type="button" value="등록" class="mainBtn" onclick="showPopup(true,'popup')">
+					<input type="button" value="<%= process %>" class="mainBtn" onclick="showPopup(true,'popup')">
 					<input type="button" value="취소" style="margin-left: 15px;" class="mainBtn" onclick="showPopup(true,'popup3')">
 				</div>
 			</div>
-
+			
+			<!-- 팝업창 : user_review_post -->
+			<div id="popup" class="hide popup">
+				<div class="content">
+					<div style="width: 412px;">
+						<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+						display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 <%= process %> 확인</div>
+						
+						<div style="background-color: #f0f6f9;">
+							<div style="font-size: 16px; display: flex; justify-content: center; 
+							align-items: center; height: 70px ;background-color: #f0f6f9;">게시글을 <%= process %> 하시겠습니까?</div>
+							
+							<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+								<input type="button" value="<%= process %>" class="mainBtn" onclick="showPopup(true,'popup2')">
+								<input type="button" value="취소" class="mainBtn" onclick="closePopup('popup')">
+							</div>
+						</div>
+					</div>
+			  </div>
+			</div>
+			
+			<!-- 팝업창 : user_review_post -->
+			<div id="popup2" class="hide popup">
+				<div class="content">
+					<div style="width: 412px;">
+						<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+						display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 <%= process %> 확인</div>
+						
+						<div style="background-color: #f0f6f9;">
+							<div style="font-size: 16px; display: flex; justify-content: center; 
+							align-items: center; height: 70px ;background-color: #f0f6f9;">게시글이 <%= process %> 되었습니다.</div>
+							
+							<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+								<input type="button" value="확인" class="mainBtn" id="reviewRegi">
+							</div>
+						</div>
+					</div>
+			  </div>
+			</div>
+			
+			<!-- 팝업창 : user_review_post -->
+			<div id="popup3" class="hide popup">
+				<div class="content">
+					<div style="width: 412px;">
+						<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+						display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 취소 확인</div>
+						
+						<div style="background-color: #f0f6f9;">
+							<div style="font-size: 16px; display: flex; justify-content: center; 
+							align-items: center; height: 70px ;background-color: #f0f6f9;">게시글 등록을 취소하시겠습니까?</div>
+							
+							<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+								<input type="button" value="확인" class="mainBtn" onclick="showPopup(true,'popup4')">
+								<input type="button" value="취소" class="mainBtn" onclick="closePopup('popup3')">
+							</div>
+						</div>
+					</div>
+			  </div>
+			</div>
+			
+			<!-- 팝업창 : user_review_post -->
+			<div id="popup4" class="hide popup">
+				<div class="content">
+					<div style="width: 412px;">
+						<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+						display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 취소 확인</div>
+						
+						<div style="background-color: #f0f6f9;">
+							<div style="font-size: 16px; display: flex; justify-content: center; 
+							align-items: center; height: 70px ;background-color: #f0f6f9;">게시글 등록이 취소되었습니다.</div>
+							
+							<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+								<input type="button" value="확인" class="mainBtn" onclick="location.href='user_review.jsp'">
+							</div>
+						</div>
+					</div>
+			  </div>
+			</div>
 		</form>
 	</div>
 
@@ -249,83 +362,7 @@ function fileInput(fileInput, output){
 		</div>
 	</div>
 	
-	<!-- 팝업창 : user_review_post -->
-	<div id="popup" class="hide popup">
-		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 확인</div>
-				
-				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글을 등록 하시겠습니까?</div>
-					
-					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="mainBtn" onclick="showPopup(true,'popup2')">
-						<input type="button" value="취소" class="mainBtn" onclick="closePopup('popup')">
-					</div>
-				</div>
-			</div>
-	  </div>
-	</div>
 	
-	<!-- 팝업창 : user_review_post -->
-	<div id="popup2" class="hide popup">
-		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 확인</div>
-				
-				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글이 등록 되었습니다.</div>
-					
-					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="mainBtn" onclick="location.href='user_review.jsp'">
-					</div>
-				</div>
-			</div>
-	  </div>
-	</div>
-	
-	<!-- 팝업창 : user_review_post -->
-	<div id="popup3" class="hide popup">
-		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 취소 확인</div>
-				
-				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글 등록을 취소하시겠습니까?</div>
-					
-					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="mainBtn" onclick="showPopup(true,'popup4')">
-						<input type="button" value="취소" class="mainBtn" onclick="closePopup('popup3')">
-					</div>
-				</div>
-			</div>
-	  </div>
-	</div>
-	
-	<!-- 팝업창 : user_review_post -->
-	<div id="popup4" class="hide popup">
-		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 등록 취소 확인</div>
-				
-				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글 등록이 취소되었습니다.</div>
-					
-					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="mainBtn" onclick="location.href='user_review.jsp'">
-					</div>
-				</div>
-			</div>
-	  </div>
-	</div>
 
 	<script src="../../js/jquery-3.4.1.min.js"></script>
 	<script src="../../js/popper.min.js"></script>

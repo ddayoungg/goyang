@@ -1,5 +1,11 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.sql.Date"%>
+<%@page import="oracle.jdbc.proxy.oracle$1jdbc$1replay$1driver$1NonTxnReplayableOthers$2java$1sql$1SQLOutput$$$Proxy"%>
+<%@page import="kr.co.goyang.user.vo.TourReviewVO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourReviewDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" isELIgnored="false"%>
 <!-- /*
 * Template Name: Tour
 * Template Author: Untree.co
@@ -19,7 +25,7 @@
 <meta name="keywords" content="bootstrap, bootstrap4" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com">
 <link
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 	rel="stylesheet">
@@ -36,6 +42,84 @@
 <style type="text/css">
 
 </style>
+
+<!-- jQuery google CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+	$(function () {
+		<%
+		int reviewNum = Integer.valueOf(request.getParameter("reviewNum"));
+		String upComContent = request.getParameter("comContent");
+		String upCommendNum = request.getParameter("commendNum");
+		String upComWriteDate = request.getParameter("comWriteDate");
+		
+		if(upComContent == null){
+			upComContent="";
+		}
+		
+		TourReviewDAO trDAO = TourReviewDAO.getInstance();
+		TourReviewVO reviewVO = trDAO.selectReview(reviewNum);
+		List<TourReviewVO> commList = trDAO.selectCommend(reviewNum);
+		
+		String id="";
+		
+		TourReviewVO trVO = new TourReviewVO();
+		List<TourReviewVO> trList = trDAO.selectSearchReview(trVO);
+		List<Integer> reviewNumList = new ArrayList<Integer>();
+		for(int i=0; i<trList.size(); i++){
+			trVO = trList.get(i);
+			reviewNumList.add(trVO.getReviewNum());
+		}
+		int reviewIdx = reviewNumList.indexOf(reviewNum);
+		%>
+		
+		//세션에 존재하는 값을 얻는다.
+		//String id=(String)session.getAttribute("id");
+		<%-- String id="";
+		if( id == null ){//세션에 값이 없음.(1.interval이 초과, 2.직접 요청(비정상적 요청).)
+			//redirect 페이지 이동.
+			response.sendRedirect("로그인페이지.jsp");
+			return;
+		}//end if
+		if(id.equals(reviewVO.getId())){%>
+		document.querySelector("#corBtn").classList.remove('hide');
+		document.querySelector("#corBtn").classList.remove('popup');
+		document.querySelector("#corBtn").classList.remove('hide');
+		document.querySelector("#delBtn").classList.remove('popup'); 
+		<%}%>--%>
+		
+		
+		$("#commBtn").click(function () {
+			$("#detailFrm").submit();
+		})
+		
+	})
+	
+	function showPopup(hasFilter,id) {
+		const popup = document.querySelector("#"+id);
+		
+		if(id=='popup2'){
+			document.querySelector('#popup').classList.add('hide');
+		}
+		
+		if (hasFilter) {
+			popup.classList.add('has-filter');
+		} else {
+			popup.classList.remove('has-filter');
+		}
+			
+		popup.classList.remove('hide');
+	}
+	
+	function closePopup(id) {
+		const popup = document.querySelector("#"+id);
+		popup.classList.add('hide');
+	}
+	
+	
+	
+</script>
 
 <title>고양 시티투어</title>
 </head>
@@ -115,55 +199,68 @@
 	<!-- 대제목 끝 -->
 	
 	<div class="container">
-		<form>
+		<form name="detailFrm" id="detailFrm" action="user_commend_insert_process.jsp">
 			<div style="font-size: 23px;padding: 10px 0px 10px 0px;display: flex;justify-content: space-between; border-bottom: 2px solid #bbbbbb;">
 				<div> 관광 후기</div>
 			</div>
 			
-			<div style="display:flex; align-items:center;justify-content:space-between; font-size: 20px; height: 70px; width: 100%; padding: 24px 0; border-bottom: 1px solid #ebebeb;">
-				<div>화요나들이 재밌어요~!</div>
-				<div style="font-size: 14px; font-weight: lighter;">ekdud*** | 2022.09.07</div>
+			<div style="display:flex; align-items:center; justify-content:space-between; font-size: 20px; height: 70px; width: 100%; padding: 24px 0; border-bottom: 1px solid #ebebeb;">
+				<input type="hidden" name="reviewNum" value="<%=reviewVO.getReviewNum()%>">
+				<input type="hidden" name="id" value="<%= reviewVO.getId()%>">
+				<div><%= reviewVO.getTitle() %></div>
+				<div style="font-size: 14px; font-weight: lighter;"><span><%= reviewVO.getId().substring(0,reviewVO.getId().length()/2) %>****</span> | <span><%= reviewVO.getRevWriteDate() %></span></div>
 			</div>
 			
 			<div>
 				<div style="width: 100%; padding: 24px 0; ">
-					화요나들이 정말 재밌어요~!<br>
-					가족들과 함께 놀러가기 좋아요<br>
-					엄마도 좋아하셨어요<br>
-					아빠도 좋아하셨어요<br>
-					추천합니다!!
+					<%= reviewVO.getRevContent() %>
 				</div>
-				<div><img src="../../images/gal_1.jpg"></div>
+				<div><img src="../upload/<%= reviewVO.getReviewImg() %>"></div>
 			</div>
 			
-			<div style="font-size: 15px; margin: 50px 0px 10px 10px;">댓글 <strong>1</strong></div>
+			<div style="font-size: 15px; margin: 50px 0px 10px 10px;">댓글 <strong><%= commList.size() %></strong></div>
 			
-			<div id="comment" style="padding: 30px; border-top: 1px solid #ebebeb; background-color: #fafafa">
-				<div style="margin-bottom: 10px;">
-					<div style="display: flex; justify-content: space-between; font-size: 13px;">
-						<div>thgu**** <span>2022.09.08</span></div>
-						<div style="display: flex;"><div onclick="update()">수정</div> | <div>삭제</div></div>
+			<%-- 수정 --%>
+			<div style="padding: 30px; border-top: 1px solid #ebebeb; background-color: #fafafa">
+				<%for(int i=0; i<commList.size(); i++){
+						TourReviewVO commVO = commList.get(i);%>
+					<div id="comm<%=commVO.getCommendNum()%>" style="margin-bottom: 10px;">
+						<div style="display: flex; justify-content: space-between; font-size: 13px;">
+							<div><%= commVO.getId().substring(0, commVO.getId().length()/2) %>**** <span><%= commVO.getComWriteDate() %></span></div>
+							<%-- <%if(id.equals(commVO.getId())){%>
+							<div class="hide popup">
+							<%}else{ %> --%>
+							<div>
+							<%-- <%} %> --%>
+								<a href="user_commend_update_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comDelFlag=0&comContent=<%=commVO.getComContent()%>&comWriteDate=<%=commVO.getComWriteDate()%>">수정</a> | <a href="user_commend_delete_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comDelFlag=0&comContent=<%=commVO.getComContent()%>">삭제</a>
+							</div>
+						</div>
+						<div style="min-height: 50px; padding: 7px 0 20px 0;"><%= commVO.getComContent() %></div>
 					</div>
-					<div id="comment-contents" style="min-height: 50px; padding: 7px 0 20px 0;">저도 다녀와봤는데 정말 추천합니다~</div>
-				</div>
+				<%} %>
+		
 				<div style="display: flex; height: 100px; min-width: 885px;">
-					<textarea id="write-comment" placeholder="내용을 입력해주세요." style="width: 100%; border: 1px solid #ebebeb;"></textarea>
-					<input id="comment-button" type="button" value="댓글 입력" style="border: 1px solid #ebebeb;">
+					<input type="hidden" name="upCommendNum" value="<%=upCommendNum%>">
+					<input type="hidden" name="upComWriteDate" value="<%=upComWriteDate%>">
+					<textarea name="comContent" id="comContent" placeholder="내용을 입력해주세요." style="width: 100%; border: 1px solid #ebebeb;"><%=upComContent%></textarea>
+					<input id="commBtn" type="button" value="댓글 입력" style="border: 1px solid #ebebeb;">
 				</div>
 			</div>
 			
 			<div style="display: flex; justify-content: space-between; margin-bottom: 100px; margin: 20px 0px 20px; width: 100%; height: 32px;">
 				<div>
-					<input type="button" value="이전 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222">
-					<input type="button" value="다음 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222">
+					<%if(reviewIdx>0){ %>
+					<input type="button" value="이전 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='user_review_detail.jsp?reviewNum=<%= reviewNumList.get(reviewIdx-1) %>'">
+					<%}if(reviewIdx<reviewNumList.size()-1){ %>
+					<input type="button" value="다음 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='user_review_detail.jsp?reviewNum=<%= reviewNumList.get(reviewIdx+1) %>'">
+					<%} %>
 				</div>
 				<div style="display: flex;">
 					<input type="button" value="목록" class="mainBtn button222" style="width: 70px;" onclick="location.href='user_review.jsp'">
-					<input type="button" value="수정" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='user_review_write.jsp'">
-					<input type="button" value="삭제" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="showPopup(true,'popup')">
+					<input id="corBtn" type="button" value="수정" style="margin-left: 10px; width: 70px;" class="mainBtn button222 hide popup" onclick="location.href='user_review_write.jsp?reviewNum=<%= reviewNum %>'">
+					<input id="delBtn" type="button" value="삭제" style="margin-left: 10px; width: 70px;" class="mainBtn button222 hide popup" onclick="showPopup(true,'popup')">
 				</div>
 			</div>
-
 		</form>
 	</div>
 
@@ -251,7 +348,7 @@
 					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글이 삭제 되었습니다.</div>
 					
 					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="mainBtn" onclick="location.href='user_review.jsp'">
+						<input type="button" value="확인" class="mainBtn" onclick="location.href='user_review_delete_process.jsp?reviewNum=<%=reviewNum%>'">
 					</div>
 				</div>
 			</div>
@@ -272,36 +369,6 @@
 	<script src="../../js/typed.js"></script>
 
 	<script src="../../js/custom.js"></script>
-
-	<!-- 수정 -->
-	<script type="text/javascript">
-		function showPopup(hasFilter,id) {
-			const popup = document.querySelector("#"+id);
-			
-			if(id=='popup2'){
-				document.querySelector('#popup').classList.add('hide');
-			}
-			
-			if (hasFilter) {
-				popup.classList.add('has-filter');
-			} else {
-				popup.classList.remove('has-filter');
-			}
-				
-			popup.classList.remove('hide');
-		}
-		
-		function closePopup(id) {
-			const popup = document.querySelector("#"+id);
-			popup.classList.add('hide');
-		}
-		
-		function update() {
-			var comment = document.querySelector("#comment");
-			console.log(comment);
-		}
-		
-	</script>
 </body>
 
 </html>
