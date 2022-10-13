@@ -1,3 +1,4 @@
+<%@page import="javax.tools.DocumentationTool.Location"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!doctype html>
@@ -43,44 +44,153 @@
 
 </style>
 
+<!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <script type="text/javascript">
+
+<%
+//초기값
+//String id=null;//로그인 하지 않은 경우
+String id="admin";//로그인 한 경우
+%>
+
+<%
+//로그인 여부(권한여부)
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==null){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
+	return;
+}//end if
+%>
+
 tableCnt=0;
 $(function(){
-	tableCnt=$("#tableAction tr").length;
 	
-	$('#btn-add-row').click(function() {
+	$("#thumImgFile").change(function(){//대표 사진 세팅
+		setFile();
+	})//change
+	
+	tableCnt=$("#tableAction tr").length;//생성된 테이블의 행의 수
+	
+	$("#btn-add-row").click(function() {
 		if($('#tableAction tr').length>12){
 			return;
-		}
-		var tableTemp ="<tr><td>"+ tableCnt++ +"</td><td><input type='text' value=''></td>";
-		tableTemp+="<td><input type='text' value=''></td>";
-		tableTemp+="<td><input type='text' value=''></td></tr>";
+		}//end if
+		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly'/></td>";
+		tableTemp +="<td><input type='text' name='spotNameIn' value=''/></td>";
+		tableTemp +="<td><input type='text' name='startHourIn' value='' size=3 maxlength='20'/></td>";
+		tableTemp +="<td><input type='text' name='endHourIn' value='' size=3 maxlength='20'/></td>";
+		tableTemp +="<td><input type='text' name='mapSpoLatiIn' value='' size=3 maxlength='20'/></td>";
+		tableTemp +="<td><input type='text' name='mapSpoLongIn' value='' size=3 maxlength='20'/></td></tr>";
 		
 		$("#tableAction").last().append(tableTemp);
 	  });
 	
 	$("#btn-delete-row").click(function(){
-		if($('#tableAction tr').length<3){
+		if($('#tableAction tr').length<4){//테이블 행 최소 수는 3행까지
 			return;
 		}
 		$("#tableAction tr").last().remove();
 		tableCnt--;
 		if(tableCnt == -1){tableCnt=0;}
 	});//click
-})
+	
+	$("#addBtn").click(function() { //추가하기 유효성 검사 후 submit
+		chkNull(); // 입력 여부 유효성 검사
+		
+	});//click
+	
+});//ready
 
-function fileInput(fileInput, output){
-	var file = document.getElementById(fileInput);
+function chkNull(){
+	if($("#tourName").val().trim()=="") {
+		alert("코스명을 입력해주세요.");
+		$("#tourName").val("");//화이트 스페이스 초기화
+		$("#tourName").focus();//커서 이동
+		return;
+	}//end if
+	
+	if($("#explain").val().trim()=="") {
+		alert("요약설명을 입력해주세요.");
+		$("#explain").val("");//화이트 스페이스 초기화
+		$("#explain").focus();//커서 이동
+		return;
+	}//end if
+	
+	var spotNameFlag=false;
+	$("input[name=spotNameIn]").each(function(index, item){
+		if($(item).val().trim()=="") {
+			spotNameFlag=true;
+		}//end if
+	});//each
+	
+	if(spotNameFlag) {//관광지명이 하나라도 빈 칸이 있을 경우
+		alert("관광지명을 입력해주세요.");
+		return;
+	}//end if
+	
+	if($("#adultFee").val().trim()=="") {
+		alert("성인 가격을 입력해주세요.");
+		$("#adultFee").val("");//화이트 스페이스 초기화
+		$("#adultFee").focus();//커서 이동
+		return;
+	}//end if
+	
+	if($("#otherFee").val().trim()=="") {
+		alert("기타 가격을 입력해주세요.");
+		$("#otherFee").val("");//화이트 스페이스 초기화
+		$("#otherFee").focus();//커서 이동
+		return;
+	}//end if
+	
+	var imgFlag=chkImg(); // 선택한 파일이 이미지 형식인지 검사
+	
+	if(!imgFlag){
+		alert("이미지파일만 업로드 가능");
+		return;
+	}//end if
+	
+	showPopup(true,'popup');
+	
+}//chkNull
+
+function chkImg(){
+	//확장자가 jpg, gif, jpeg, png, bmp만 업로드 가능하도록 JS 코드 작성
+	
+	var fileName=$("#thumImgFile").val();
+	var blockExt="jpg,gif,jpeg,png,bmp".split(",");
+	var flag=false;
+	
+	/* if(fileName==""){
+		alert("업로드할 파일을 선택해주세요.");
+		return;
+	}//end if */
+	
+	var fileExt=fileName.substring(fileName.lastIndexOf(".")+1);
+	for(var i=0; i < blockExt.length; i++){
+		if(blockExt[i] == fileExt){
+			flag=true;
+		}//end if
+	}//end for
+	
+	return flag;
+	
+}//chkImg
+
+function setFile(){
 	var fReader = new FileReader();
-	fReader.readAsDataURL(file.files[0]);
+	fReader.readAsDataURL($("#thumImgFile")[0].files[0]);
 	fReader.onloadend = function(event) {
-		document.getElementById(output).src=event.target.result;
+		console.log(event.target.result);
+	$("#thumImgOutput").attr("src", event.target.result);
 	}//end onloadend
-}//fileInput
+}//setFile
 
 </script>
+
 </head>
 
 <body>
@@ -141,8 +251,6 @@ function fileInput(fileInput, output){
 		</div>
 	</div>
 
-
-
   <!-- container -->
   
   <!-- 대제목 -->
@@ -164,36 +272,36 @@ function fileInput(fileInput, output){
   <div class="container">
   <!-- <div style="font-size: 20px; margin: 50px 0px 10px 0px">투어 정보 추가</div>
   <hr> -->
+  <div class="container">
+  <form id="addFrm" action="manager_tour_add_process.jsp" method="post" enctype="multipart/form-data">
   <div class="margin20"><!-- 코스명, 요약 설명, 사진, 맵 -->
-   <div class="margin20">
     <span><strong>코스명</strong></span><br/>
-    <input type="text" class="textSize" value="" placeholder="코스명을 입력하세요." maxlength=20/><br/>
+    <input type="text" class="textSize" name="tourName" id="tourName" value="" placeholder="코스명을 입력하세요." maxlength=20/><br/>
     </div>
     <div class="margin20">
     <span><strong>요약 설명</strong></span><br/>
-    <input type="text" class="textSize" value="" placeholder="내용을 입력하세요." maxlength=30/>
+    <input type="text" class="textSize" name="explain" id="explain" value="" placeholder="내용을 입력하세요." maxlength=30/>
+   </div>
+   
+   
+   <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
+   
+    <div class="margin20"><!-- 중심 위도 경도 -->
+    <span><strong>중심 위도</strong></span>
+    <input type="text" name="mapCenLati" class="margin20" /><br/>
+    <span><strong>중심 경도</strong></span>
+    <input type="text" name="mapCenLong" class="margin20" /><br/>
    </div>
    
    <div class="margin20"><!-- 대표 사진 -->
    <span><strong>대표 사진</strong></span><br/>
    <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
     <div>
-     <input type='file' id='potoFileInput' onchange="fileInput('potoFileInput', 'potoOutput')">
+     <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="">
     </div>
-     <div class="imgSize"><img class="imgSize" id="potoOutput" src=""/></div>
+     <div class="imgSize"><img class="imgSize" id="thumImgOutput" src=""/></div>
     </div>
    </div>
-   
-   <div class="margin20"><!-- MAP -->
-    <span><strong>MAP</strong></span><br/>
-   <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
-    <div>
-     <input type='file' id='mapFileInput' onchange="fileInput('mapFileInput', 'mapOutput')">
-    </div>
-     <div class="imgSize"><img class="imgSize" id="mapOutput" src=""/></div>
-   </div>
-   </div>
-   
   </div>
   
   
@@ -205,25 +313,37 @@ function fileInput(fileInput, output){
   		<th>경유지명/내용</th>
   		<th>시작 시간</th>
   		<th>끝나는 시간</th>
+  		<th>위도</th>
+  		<th>경도</th>
   	</tr>
+  	
   	<tr>
-  		<td>1</td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
+  		<td><input type="text" name="tourOrderIn" value="1" size=1 readonly="readonly"/></td>
+  		<td><input type="text" name="spotNameIn" value=""/></td>
+  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="mapSpoLatiIn" value="" size=3/></td>
+  		<td><input type="text" name="mapSpoLongIn" value="" size=3/></td>
   	</tr>
+  	
   	<tr>
-  		<td>2</td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
+  		<td><input type="text" name="tourOrderIn" value="2" size=1 readonly="readonly"/></td>
+  		<td><input type="text" name="spotNameIn" value=""/></td>
+  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
   	</tr>
+  	
   	<tr>
-  		<td>3</td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
-  		<td><input type="text" value=""></td>
+  		<td><input type="text" name="tourOrderIn" value="3" size=1 readonly="readonly"/></td>
+  		<td><input type="text" name="spotNameIn" value=""/></td>
+  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
+  		<td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
   	</tr>
+  	
   </table>
    <div style="display: flex; justify-content: space-evenly;">
     <input type="button" value="항목추가" class="mainBtn" id="btn-add-row"/>
@@ -233,11 +353,13 @@ function fileInput(fileInput, output){
   
   <div class="margin20"> <!-- 탑승료, 종료하기/수정하기 버튼 -->
    <div class="margin20"><strong>탑승료</strong></div>
-   <div class="margin20"><strong>성인:</strong><input type="text" value=""/></div>
-   <div class="margin20"><strong>기타:</strong><input type="text" value=""/></div>
+   <div class="margin20"><strong>성인:</strong><input type="text" name="adultFee" id="adultFee" value=""/></div>
+   <div class="margin20"><strong>기타:</strong><input type="text" name="otherFee" id="otherFee" value=""/></div>
    <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-    <div class="marginLR10"></div><div class="marginLR10"><input type="button" value="추가하기" class="mainBtn" onclick="showPopup(true, 'popup')"/></div>
+    <div class="marginLR10"></div><div class="marginLR10"><input type="button" id="addBtn" value="추가하기" class="mainBtn"/></div>
    </div>
+  </div>
+  </form>
   </div>
   </div>
   
@@ -294,23 +416,23 @@ function fileInput(fileInput, output){
 		</div>
 	</div>
 	
-	<!-- 팝업창 -->
+	<!-- 투어 추가 확인 팝업 popup -->
 	<div id="popup" class="hide popup">
-	  <div class="content">
-		<div style="width: 412px;">
-			<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-			display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 추가</div>
-			
-			<div style="background-color: #f0f6f9;">
-				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">해당 투어를 추가하시겠습니까?</div>
+		<div class="content">
+			<div style="width: 450px;">
+				<div style="font-size: 12px; width: 450px; height: 30px; padding-left: 10px;
+				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 수정 확인</div>
 				
-				<div style="display: flex; align-items: center; justify-content: space-evenly; padding-bottom: 10px;">
-					<input type="button" value="예" class="popupBtn" onclick="windowMove('popup')">
-					<input type="button" value="아니오" class="popupBtn" onclick="closePopup('popup')">
+				<div style="background-color: #f0f6f9;">
+					<div style="font-size: 16px; display: flex; justify-content: center; 
+					align-items: center; height: 70px ;background-color: #f0f6f9;">해당 투어를 추가하시겠습니까?</div>
+					
+					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+						<input type="button" value="확인" class="popupBtn" onclick="windowMove('popup')">
+						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup')">
+					</div>
 				</div>
 			</div>
-		</div>
 	  </div>
 	</div>
 	
@@ -333,10 +455,6 @@ function fileInput(fileInput, output){
 		function showPopup(hasFilter,id) {
 			const popup = document.querySelector("#"+id);
 			
-			if(id=='popup2'){
-				document.querySelector('#popup').classList.add('hide');
-			}
-			
 			if (hasFilter) {
 				popup.classList.add('has-filter');
 			} else {
@@ -353,8 +471,7 @@ function fileInput(fileInput, output){
 		
 		function windowMove(id) {
 			closePopup(id);
-			alert("해당 투어가 추가되었습니다.");
-			location.href='manager_tour_manager.jsp';
+			$("#addFrm").submit();//form submit
 		}//windowMove()
 		
 	</script>

@@ -1,3 +1,6 @@
+<%@page import="kr.co.goyang.user.vo.TourReservaVO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourReservaDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!-- /*
@@ -37,27 +40,6 @@
 <!-- datapicker 시작 -->
  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( "#datepicker" ).datepicker({
-    	  dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
-    	  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ]
-    ,
-    beforeShowDay: function(date){
-		var day = date.getDay();
-		return [(day == 2)];
-    },
-    onSelect:function(selectDay){
-        var arr=selectDay.split("/");
-        var month=arr[0];
-        var day=arr[1];
-        $("#month").text(month);
-        $("#day").text(day);
-    }
-    });
-  } );
-  </script>
-<!-- datapicker 끝 -->
 
 <style type="text/css">
 .ui-datepicker-inline{
@@ -79,12 +61,133 @@
 
 </style>
 
+<%
+//로그인 여부(권한여부)
+//String id=null;//로그인 하지 않은 경우
+String id="tester";//로그인 한 경우
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==null){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	return;
+}//end if
+//투어를 선택 하지 않고 주소로 들어갈 경우
+int tourNum=0;
+if(request.getParameter("tourNum") !=null){//투어번호 가져오기.
+	tourNum = Integer.parseInt(request.getParameter("tourNum"));
+}//end if
+if(tourNum==0){//투어를 지정하지 않을 경우
+	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_course.jsp");
+	return;
+}//end if
+
+TourReservaDAO trDAO = TourReservaDAO.getInstance();
+
+int[] seatNum=null;
+TourReservaVO trVO=null;
+String reserDate=request.getParameter("reserDate");
+if( reserDate != null){
+	trVO=new TourReservaVO();
+	trVO.setReserDate(reserDate);
+	trVO.setTourNum(tourNum);
+	
+	seatNum=trDAO.selectSeatNum(trVO);
+
+}//end if
+
+%>
+<script type="text/javascript">
+
+$( function() {
+    $( "#datepicker" ).datepicker({
+    	  dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+    	  dayNamesMin: [ "일", "월", "화", "수", "목", "금", "토" ],
+    	  monthNames: [ "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월" ],
+    	  dateFormat: "yy-mm-dd",
+    	  minDate: 0
+   	, 
+    beforeShowDay: function(date){
+		var day = date.getDay();
+		return [(day == <%= (tourNum+1)%7 %>)];
+    },
+    onSelect:function(selectDay){
+	                               
+	    $("#hiddenReserDate1").val(selectDay); // DateFrm의 히든 값 세팅
+	    $("#frmHidden").submit(); //자기 자신에게 파라미터 값 보내기
+	    
+    }//onSelect
+    });//datepicker
+    
+    var reserDate= "<%= reserDate %>";
+    
+    if(reserDate!=null){
+	    setDate(reserDate);// 파라미터 Date 값을 datepicker 세팅
+    }//end if
+    
+    //지정한 날짜 셋팅 끝
+    
+      $("#nextBtn").click(function(){ // 다음 버튼 누를 시
+    	  
+    	  chkNull();//일정 선택, 인원 선택, 예약 가능한 인원 유효성 검사
+    	  
+      });//click
+      
+  });//ready
+
+function setDate(reserDate){
+	 
+	  
+	 $( "#datepicker" ).datepicker('setDate', reserDate); //지정한 날짜
+	    
+	    //지정한 날짜 셋팅 시작
+	    var arr=reserDate.split("-");
+	    var month=arr[1];
+	    var day=arr[2];
+	    $("#month").text(month);
+	    $("#day").text(day);
+}//end setDate
+
+function chkNull(){
+	  var adultCnt=$("#selAdultCnt").val();
+	  var otherCnt=$("#selOtherCnt").val();
+	  var reserDate= <%= reserDate %>;
+	  
+	  if(reserDate==null){//일정 선택하지 않을 경우
+		  showPopup(true,'popup');
+		  return;
+	  }//end if
+	  
+	  if(parseInt($("#possibleCnt").val())<(adultCnt+otherCnt)) {//예약 가능한 인원 수보다 많을 경우
+		  alert("예약 가능한 인원 수보다 많습니다.")
+		  return;
+	  }//end if
+	  
+	  if(adultCnt==0 && otherCnt==0) { //성인과 기타 인원 둘 다 0일 경우
+		  showPopup(true,'popup2');
+	  	  return;
+	  }//end if
+	  
+	  //nextFrm의 hidden 세팅
+	  $("#hiddenAdultCnt").val(adultCnt); //선택한 성인 인원 수 hidden에 값 세팅
+	  $("#hiddenOtherCnt").val(otherCnt); //선택한 기타 인원 수 hidden에 값 세팅
+	  $("#hiddenReserDate2").val("<%= reserDate %>"); //선택한 예약일 hidden에 값 세팅 
+	  
+	  $("#nextFrm").submit();
+}//chkNull
+  </script>
+<!-- datapicker 끝 -->
+
 <title>고양시티투어</title>
 </head>
 
 <body>
+<form action="http://localhost/goyang/User/reservation_process/user_reservation_date.jsp" method="get" id="frmHidden">
+<!-- 캘린더 날짜 누를 시 자기 자신의 파라미터를 불러오기 위함 -->
+<input type="hidden" name="tourNum" value="<%= tourNum %>"/> <!-- frm 투어번호 -->
+<input type="hidden" name="reserDate" id="hiddenReserDate1"/> <!-- frm 예약일 -->
 
-
+</form>
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
 			<div class="site-mobile-menu-close">
@@ -143,19 +246,20 @@
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
 		<ul class="list_sub_menu">
-			<li class="_sub"><a href="user_reservation_course.jsp"> <span>정기코스</span>
-			</a></li>
-			<li class="_sub"><a href="user_reservation_date.jsp"> <span>투어 일정</span>
-			</a></li>
+			<li class="_sub"><a href="user_reservation_course.jsp"> <span>정기코스</span></a></li>
+			<li class="_sub"><strong><span>투어 일정</span></strong></li>
 			</ul>
 			</div>
 	<!-- 상단 투어 메뉴 끝 -->
-	
+	<%
+	TourReservaVO tourInfo=trDAO.selectTourInfo(tourNum);//투어 번호에 대한 투어 정보 출력하는 메소드
+	pageContext.setAttribute("tourInfo", tourInfo);
+	%>
 		<!-- 대제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt="image">
-		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">화요나들이(벽제)</p>
+		
+		<p style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">${ tourInfo.tourName }</p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -177,7 +281,6 @@
 	<!-- 소제목 끝 -->
 	
 	<div class="container">
-		<form>
 		<!-- 	<div style="padding-bottom: 15px; border-bottom:1px solid grey; font-size: 23px;margin: 50px 0px 10px 0px;display: flex;justify-content: space-between;">
 				<div> 화요나들이(벽제)</div>
 			</div>
@@ -185,6 +288,8 @@
 			<div style="padding-bottom: 15px; border-bottom:1px solid grey; font-size: 18px;margin: 50px 0px 50px 0px;display: flex;justify-content: space-between;">
 				<div> 일정 및 인원 선택</div>
 			</div> -->
+			<!-- 다음 form 시작 -->
+			<form action="user_reservation_seat.jsp" method="get" id="nextFrm">
 			
 			<div style="display: flex; justify-content: space-around; padding: 0 130px;">
 				<div>
@@ -192,32 +297,34 @@
 				</div>
 				<div style="display: flex; flex-direction: column; justify-content: space-around;">
 					<div>
-						<div style="font-size: 15px;"><span id="month">10</span>월 <span id="day">5</span>일 <span>화</span>요일 10:00 ~ 16:00</div>
+						<div style="font-size: 15px;"><span id="month"></span>월 <span id="day"></span>일 <!-- <span id="dayName"></span>요일 --> 10:00 ~ 16:00</div>
 						<div style="color: red; font-size: 13px;">*시간은 10:00 ~ 16:00으로 고정 입니다.</div>
 					</div>
 					<div>
-						<div style="font-size: 17px; margin-bottom: 25px; padding-left: 10px;">예약 가능한 인원 수 : <span>20</span>명</div>
+						<div style="font-size: 17px; margin-bottom: 25px; padding-left: 10px;">예약 가능한 인원 수 : <span id="possibleCnt"><%= (seatNum!=null?28-seatNum.length:"") %></span>명</div>
 						<div style="display: flex; align-items: center; padding-bottom: 15px;">
-							<div style="padding-right: 20px;">성인 : 6,000원</div>
+							<div style="padding-right: 20px;">성인 : ${ tourInfo.adultFee }원</div>
 							<div>
-								<select style="width: 120px; height: 30px;">
-									<option>1명</option>
-									<option>2명</option>
-									<option>3명</option>
-									<option>4명</option>
-									<option>5명</option>
+								<select id="selAdultCnt" style="width: 120px; height: 30px;">
+									<option value="0">인원 선택</option>
+									<option value="1">1명</option>
+									<option value="2">2명</option>
+									<option value="3">3명</option>
+									<option value="4">4명</option>
+									<option value="5">5명</option>
 								</select>
 							</div>
 						</div>
 						<div style="display: flex; align-items: center;">
-							<div style="padding-right: 20px;">기타 : 4,000원</div>
+							<div style="padding-right: 20px;">기타 : ${ tourInfo.otherFee }원</div>
 							<div>
-								<select style="width: 120px; height: 30px;">
-									<option>1명</option>
-									<option>2명</option>
-									<option>3명</option>
-									<option>4명</option>
-									<option>5명</option>
+								<select id="selOtherCnt" style="width: 120px; height: 30px;">
+									<option value="0">인원 선택</option>
+									<option value="1">1명</option>
+									<option value="2">2명</option>
+									<option value="3">3명</option>
+									<option value="4">4명</option>
+									<option value="5">5명</option>
 								</select>
 							</div>
 						</div>
@@ -226,10 +333,17 @@
 			</div>
 			
 			<div style="display: flex; justify-content: end; margin: 20px 0 100px 0;">
-				<input type="button" value="다음" class="mainBtn" onclick="showPopup(true,'popup')" style="width: 80px; height: 32px;">
+			
+			<input type="hidden" name="tourNum" value="<%= tourNum %>"/> <!-- 다음 frm 투어 번호-->
+			<input type="hidden" name="reserDate" id="hiddenReserDate2"/> <!-- 다음 frm 예약일 -->
+			<input type="hidden" name="adultCnt" id="hiddenAdultCnt" value="0" /> <!-- 다음 frm 성인 인원 수 -->
+			<input type="hidden" name="otherCnt" id="hiddenOtherCnt" value="0" /> <!-- 다음 frm 기타 인원 수 -->
+			<input type="hidden" name="seatNum" id="hiddenSeatNum" value="0" /> <!-- 다음 frm 예약된 좌석번호 -->
+				<input type="button" value="다음" class="mainBtn" id="nextBtn">
 			</div>
 			
 		</form>
+		<!-- 다음 form 끝 -->
 	</div>
 
 
@@ -313,7 +427,7 @@
 				align-items: center; height: 70px ;background-color: #f0f6f9;">인원 수를 선택해주세요.</div>
 				
 				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="closePopup2('popup2')">
+					<input type="button" value="확인" class="popupBtn" onclick="closePopup('popup2')">
 				</div>
 			</div>
 		</div>

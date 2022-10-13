@@ -1,5 +1,10 @@
+<%@page import="java.io.Console"%>
+<%@page import="kr.co.goyang.manager.dao.TourManagerDAO"%>
+<%@page import="kr.co.goyang.manager.vo.TourManagerVO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html>
 <head>
@@ -40,6 +45,39 @@
 .margin20{margin: 20px;}
 .marginLR10{margin : 10px 0px 10px 20px}
 </style>
+
+<!-- google jquery CDN -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+<%
+//로그인 여부(권한여부)
+//String id=null;//로그인 하지 않은 경우
+String id="admin";//로그인 한 경우
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==null){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
+	return;
+}//end if
+
+//투어를 선택 하지 않고 주소로 들어갈 경우
+int tourNum=0;
+if(request.getParameter("tourNum") !=null){//세션에서 아이디 가져오기.
+	tourNum = Integer.parseInt(request.getParameter("tourNum"));
+}//end if
+if(tourNum==0){//투어를 지정하지 않을 경우
+	response.sendRedirect("http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp");
+	return;
+}//end if
+%>
+
+$(function(){
+	
+});//ready
+
+</script>
 </head>
 
 <body>
@@ -123,27 +161,35 @@
   <div class="container">
   <!-- <div style="font-size: 20px; margin: 50px 0px 10px 0px">투어 정보 상세보기</div>
   <hr> -->
+  <%
+  TourManagerDAO tmDAO=TourManagerDAO.getInstance();
+  TourManagerVO tourInfo=tmDAO.selectTour(tourNum);
+  
+  pageContext.setAttribute("tourInfo", tourInfo);
+  %>
+  <div class="container">
   <div class="margin20"><!-- 코스명, 요약 설명, 사진, 맵 -->
    <div class="margin20">
     <span><strong>코스명</strong></span><br/>
-    <input type="text" class="textSize" value="화요나들이(백제)" readonly="readonly" maxlength=20/><br/>
+    <input type="text" name="tourName" class="textSize" value="${ tourInfo.tourName }" readonly="readonly" /><br/>
     </div>
     <div class="margin20">
     <span><strong>요약 설명</strong></span><br/>
-    <input type="text" class="textSize" value="고양에서 즐기는 또 다른 문화 여행" readonly="readonly" maxlength=30/>
+    <input type="text" name="explain" class="textSize" value="${ tourInfo.explain }" readonly="readonly" />
    </div>
    <div style="display: flex; justify-content: left; margin-bottom: 5px; margin-top: 20px;">
+   <div class="margin20"><!-- 중심 위도 경도 -->
+    <span><strong>중심 위도</strong></span>
+    <input type="text" name="mapCenLati" value="${ tourInfo.mapCenLati }" readonly="readonly" class="margin20" /><br/>
+    <span><strong>중심 경도</strong></span>
+    <input type="text" name="mapCenLong" value="${ tourInfo.mapCenLong }" readonly="readonly" class="margin20" /><br/>
+   </div>
     <div class="margin20"><!-- 대표 사진 -->
      <span>대표 사진</span><br/>
-     <div class="imgSize"><img class="imgSize" src="http://localhost/GOYANG_prj/images/hero-slider-2.jpg"></div>
+     <div class="imgSize"><img class="imgSize" name="thumImg" src="http://localhost/goyang/images/${ tourInfo.thumImg }"></div>
     </div>
-   <div class="margin20"><!-- MAP -->
-    <span>MAP</span><br/>
-    <div class="imgSize"><img class="imgSize" src="http://localhost/GOYANG_prj/images/hero-slider-4.jpg"></div>
-   </div>
    </div>
   </div>
-  
   
   <div class="margin20"><!-- 코스 테이블 -->
   <span class="margin20"><strong>코스</strong></span><br/>
@@ -152,59 +198,35 @@
   		<th>순번</th>
   		<th>경유지명/내용</th>
   		<th>시간</th>
+  		<th>위도</th>
+  		<th>경도</th>
   	</tr>
+  	<%
+  	List<TourManagerVO> tourSportList=tmDAO.selectTourSpots(tourNum);
+  	pageContext.setAttribute("tourSportList", tourSportList);
+  	%>
+	<c:forEach var="tourSport" items="${ tourSportList }">	
   	<tr>
-  		<td>1</td>
-  		<td>고양관광정보센터 둘러보기</td>
-  		<td>10:00-10:30</td>
+  		<td>${ tourSport.tourOrder }</td>
+  		<td>${ tourSport.spotName }</td>
+  		<td>${ tourSport.startHour }-${ tourSport.endHour }</td>
+  		<td>${ tourSport.mapSpoLati }</td>
+  		<td>${ tourSport.mapSpoLong }</td>
   	</tr>
-  	<tr>
-  		<td>2</td>
-  		<td>이동</td>
-  		<td>10:30-11:00</td>
-  	</tr>
-  	<tr>
-  		<td>3</td>
-  		<td>중남미문화원</td>
-  		<td>11:00-12:00</td>
-  	</tr>
-  	<tr>
-  		<td>4</td>
-  		<td>(중식 타코체험/체험비별도)</td>
-  		<td>12:00-13:00</td>
-  	</tr>
-  	<tr>
-  		<td>5</td>
-  		<td>고양학교, 벽제관지(경유)</td>
-  		<td>13:00-14:00</td>
-  	</tr>
-  	<tr>
-  		<td>6</td>
-  		<td>이동</td>
-  		<td>14:00-14:30</td>
-  	</tr>
-  	<tr>
-  		<td>7</td>
-  		<td>최영장군묘</td>
-  		<td>14:30-15:30</td>
-  	</tr>
-  	<tr>
-  		<td>8</td>
-  		<td>도착</td>
-  		<td>16:00</td>
-  	</tr>
+  	</c:forEach>  
   </table>
   </div>
   
   <div class="margin20"> <!-- 탑승료, 종료하기/수정하기 버튼 -->
    <div class="margin20"><strong>탑승료</strong></div>
-   <div class="margin20"><strong>성인:</strong><input type="text" value="6,000" readonly="readonly"/></div>
-   <div class="margin20"><strong>기타:</strong><input type="text" value="4,000" readonly="readonly"/></div>
+   <div class="margin20"><strong>성인:</strong><input type="text" value="${ tourInfo.adultFee }" readonly="readonly"/></div>
+   <div class="margin20"><strong>기타:</strong><input type="text" value="${ tourInfo.otherFee }" readonly="readonly"/></div>
    <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
     <div class="marginLR10">
-     <input type="button" value="종료하기" class="mainBtn" onclick="showPopup(true, 'popup')"/></div><div class="marginLR10">
-     <input type="button" value="수정하기" class="mainBtn" onclick="location.href='manager_tour_rectify.jsp'"/></div>
+     <input type="button" value="종료하기" class="mainBtn" onclick="showPopup(true,'popup')"/></div><div class="marginLR10">
+     <input type="button" value="수정하기" class="mainBtn" onclick="location.href='manager_tour_rectify.jsp?tourNum=<%= tourNum %>'"/></div>
    </div>
+  </div>
   </div>
   </div>
   
@@ -261,23 +283,23 @@
 		</div>
 	</div>
 	
-	<!-- 팝업창 -->
+	<!-- 투어 종료 확인 팝업 popup -->
 	<div id="popup" class="hide popup">
-	  <div class="content">
-		<div style="width: 412px;">
-			<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-			display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 종료</div>
-			
-			<div style="background-color: #f0f6f9;">
-				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">정말로 종료하시겠습니까?</div>
+		<div class="content">
+			<div style="width: 450px;">
+				<div style="font-size: 12px; width: 450px; height: 30px; padding-left: 10px;
+				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 수정 확인</div>
 				
-				<div style="display: flex; align-items: center; justify-content: space-evenly; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="closePopup('popup','yes')">
-					<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup','no')">
+				<div style="background-color: #f0f6f9;">
+					<div style="font-size: 16px; display: flex; justify-content: center; 
+					align-items: center; height: 70px ;background-color: #f0f6f9;">해당 투어를 종료하시겠습니까?</div>
+					
+					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+						<input type="button" value="종료" class="popupBtn" onclick="windowMove('popup')">
+						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup')">
+					</div>
 				</div>
 			</div>
-		</div>
 	  </div>
 	</div>
 	
@@ -309,13 +331,15 @@
 			popup.classList.remove('hide');
 		}//showPopup
 		
-		function closePopup(id, yn) {
-			if(yn=='yes'){
-				alert("해당 투어를 종료했습니다.");
-			}//end if
+		function closePopup(id) {
 			const popup = document.querySelector("#"+id);
 			popup.classList.add('hide');
 		}//closePopup
+		
+		function windowMove(id) {
+			closePopup(id);
+			location.href="manager_tour_down_process.jsp?tourNum=<%= tourNum %>"
+		}//windowMove()
 		
 	</script>
 	
