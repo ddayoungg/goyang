@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.goyang.user.vo.TourListVO"%>
 <%@page import="kr.co.goyang.user.dao.TourListDAO"%>
@@ -88,50 +89,150 @@
 		</div>
 	</nav>
 
+	<%
+	TourListDAO tourDAO = TourListDAO.getInstance();
+	TourListVO tourVO = new TourListVO();
+	List <TourListVO> list = tourDAO.selectAllTour(tourVO);
+	%>
+		<%
+	int num = Integer.parseInt(request.getParameter("tourNum"));
+	tourDAO = TourListDAO.getInstance();
+	TourListVO toli = new TourListVO();
+	toli= tourDAO.selectTourSpots(num);
+	%>
 	<div class="hero ">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">화요나들이</h1>
+						<%
+							String weekDay="";
+							if ( toli.getTourNum() == 1){
+								weekDay="화요나들이";
+							} else if ( toli.getTourNum() == 2){
+								weekDay="수요나들이";
+							} else if ( toli.getTourNum() == 3){
+								weekDay="목요나들이";
+							} else if ( toli.getTourNum() == 4){
+								weekDay="금요나들이";
+							}  else if ( toli.getTourNum() == 5){					
+								weekDay="토요나들이";
+							}  else if ( toli.getTourNum() == 6){	
+								weekDay="일요나들이";
+							}
+							%>
+						<h1 class="mb-0"><%=weekDay%></h1>
 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
+	<%-- <%
+	request.setCharacterEncoding("utf-8");
+	String spot = request.getParameter("spotsName");
+	TourListVO spotTourVO= tourDAO.selectSpots(spot);
+	System.out.println(spotTourVO.getSpotsName());
+	%>  --%>
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
 		<ul class="list_sub_menu">
-			<li class="_sub"><a href="user_introduceTour.jsp"> <span>시티
+			<li class="_sub"> 
+			<a href="user_introduceTour.jsp"> <span>시티
 						투어 코스</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>화요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>수요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			</a>
+			</li>
+			<li class="_sub">
+				<%
+				  for (int i=0; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=1; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" >  <span>수요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=2; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" ><span
 					class="menu_text">목요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=3; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span
 					class="menu_text">금요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>토요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>일요나들이</span>
-			</a></li>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=4; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>토요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+				<%
+				  for (int i=5; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>일요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝 -->
+ <%-- 	<%
+	int num = Integer.parseInt(request.getParameter("tourNum"));
+	tourVO = new TourListVO();
+	tourDAO = TourListDAO.getInstance();
+	TourListVO toli = new TourListVO();
+	toli= tourDAO.selectTourSpots(num);
+	System.out.println(toli.getTourNum()+toli.getSpotsName());
+	%>  --%>
+	<%
+	request.setCharacterEncoding("utf-8");
+	String spot = request.getParameter("spotsName");
+	TourListVO spotTourVO= tourDAO.selectSpots(spot);
+	System.out.println(spotTourVO.getSpotsName());
+	%>  
 
 	<!-- 대제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">화요나들이
-			(벽제)</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;"><%=toli.getTourName() %></p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -147,7 +248,7 @@
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p>
-			<span style="color: #ba202a; font-weight: bold;">화요나들이</span><span>&nbsp;코스안내</span>
+			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
 	</div>
 	<!-- 소제목 끝 -->
@@ -158,12 +259,12 @@
 			<div class="map_tab_wrap"
 				style="background: url(../../images/map_tap.png) no-repeat center top;">
 				<p class="map_tab_1">
-					<a href="user_introduceDay.jsp"
+					<a href="user_introduceDay.jsp?tourNum=<%=toli.getTourNum() %>"
 						style="color: #fff; padding-left: 30px; background: transparent;">MAP으로
 						보기</a>
 				</p>
 				<p class="map_tab_2">
-					<a href="user_introduceDay_list.jsp"
+					<a href="user_introduceDay_list.jsp?tourNum=<%=toli.getTourNum() %>"
 						style="color: #444; padding-right: 10px; background: transparent;">LIST로
 						보기</a>
 				</p>
@@ -175,39 +276,186 @@
 			</div>
 			<div style="padding-bottom: 30px;">
 				<table border="0" width="1110px">
+						<%
+						List<TourListVO> spotList = tourDAO.selectTourCourse(num);		
+						%>
 					<tbody align="center">
 						<tr>
 							<td rowspan="3"
-								style="width: 80px; height: 40px; border-radius: 50%; background: #d3e0ea; font-size: 20px; font-weight: bold; text-align: center;">화</td>
-							<td style="color: #7895b2; font-weight: bold;">10:00</td>
-							<td style="color: #7895b2; font-weight: bold;">11:00 ~ 12:00</td>
-							<td style="color: #7895b2; font-weight: bold;">12:00 ~ 13:00</td>
-							<td style="color: #7895b2; font-weight: bold;">13:00 ~ 14:00</td>
-							<td style="color: #7895b2; font-weight: bold;">14:30 ~ 15:30</td>
-							<td style="color: #7895b2; font-weight: bold;">16:00</td>
+							<%
+							String circle="";
+							if ( toli.getTourNum() == 1){
+								circle="화";
+							} else if ( toli.getTourNum() == 2){
+								circle="수";
+							} else if ( toli.getTourNum() == 3){
+								 circle="목";
+							} else if ( toli.getTourNum() == 4){
+								 circle="금";
+							}  else if ( toli.getTourNum() == 5){					
+								 circle="토";
+							}  else if ( toli.getTourNum() == 6){	
+								 circle="일";
+							}
+							%>
+								style="width: 80px; height: 40px; border-radius: 50%; 
+								background: #d3e0ea; font-size: 20px; font-weight: bold;
+								 text-align: center;">
+									<%=circle %>
+								 </td>
+							<td style="color: #7895b2; font-weight: bold;">
+							<%for ( int i=0; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String startHour = tourVO.getStartHour();
+										String endHour = tourVO.getEndHour();
+									%>
+									<%=startHour%>
+									<%break; }%>
+							</td>
+							<td style="color: #7895b2; font-weight: bold;">
+									<%for ( int i=1; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String startHour = tourVO.getStartHour();
+										String endHour = tourVO.getEndHour();
+									%>
+									<%=startHour%>&nbsp;~&nbsp;<%=endHour %>
+									<%break; }%>
+							</td>
+							<td style="color: #7895b2; font-weight: bold;">
+									<%for ( int i=2; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String startHour = tourVO.getStartHour();
+										String endHour = tourVO.getEndHour();
+									%>
+									<%=startHour%>&nbsp;~&nbsp;<%=endHour %>
+									<%break; }%>
+							</td>
+							<td style="color: #7895b2; font-weight: bold;">
+									<%for ( int i=3; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String startHour = tourVO.getStartHour();
+										String endHour = tourVO.getEndHour();
+									%>
+									<%=startHour%>&nbsp;~&nbsp;<%=endHour %>
+									<%break; }%>
+							</td>
+							<td style="color: #7895b2; font-weight: bold;">
+									<%for ( int i=4; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String startHour = tourVO.getStartHour();
+										String endHour = tourVO.getEndHour();
+									%>
+									<%=startHour%>&nbsp;~&nbsp;<%=endHour %>
+									<%break; }%>
+							</td>
+							<td style="color: #7895b2; font-weight: bold;">
+							16:00
+							</td>
 						</tr>
 						<tr
 							style="border-bottom: 1px solid #444; color: #7895b2; font-weight: bold;">
-							<td>1</td>
-							<td>2</td>
-							<td>3</td>
-							<td>4</td>
-							<td>5</td>
-							<td>6</td>
+							<td>
+									<%for ( int i=0; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										int tourOrder = tourVO.getTourOrder();
+									%>
+									<%=tourOrder %>
+									<%break; }%>
+							</td>
+							<td>
+							<%for ( int i=1; i<spotList.size(); ){
+								tourVO = (TourListVO) spotList.get(i);	
+								int tourOrder = tourVO.getTourOrder();
+							%>
+							<%=tourOrder %>
+							<%break; }%>
+							</td>
+							<td>
+							<%for ( int i=2; i<spotList.size(); ){
+								tourVO = (TourListVO) spotList.get(i);	
+								int tourOrder = tourVO.getTourOrder();
+							%>
+							<%=tourOrder %>
+							<%break; }%>
+							</td>
+							<td>
+							<%for ( int i=3; i<spotList.size(); ){
+								tourVO = (TourListVO) spotList.get(i);	
+								int tourOrder = tourVO.getTourOrder();
+							%>
+							<%=tourOrder %>
+							<%break; }%>
+							</td>
+							<td>
+							<%for ( int i=4; i<spotList.size(); ){
+								tourVO = (TourListVO) spotList.get(i);	
+								int tourOrder = tourVO.getTourOrder();
+							%>
+							<%=tourOrder %>
+							<%break; }%>
+							</td>
+							<td>
+							도착
+							</td>
 						</tr>
 						<tr>
-							<td>고양관광정보센터</td>
-							<td><a href="user_introduceDay_detail.jsp"> <span
-									style="text-decoration: underline; color: #168;"> 중남미문화원</span></a></td>
-							<td><a href="user_introduceDay_detail.jsp"> <span
+							<td>
+							<%for ( int i=0; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										 String spotsName=tourVO.getSpotsName(); 
+									%>
+							<%=spotsName %>
+							<%break; }%>
+							</td>
+							<td>
+							<%for ( int i=1; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										 String spotsName=tourVO.getSpotsName(); 
+									%>
+							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> <span
 									style="text-decoration: underline; color: #168;">
-										타코체험/체험비 별도</span></a></td>
-							<td><a href="user_introduceDay_detail.jsp"> <span
-									style="text-decoration: underline; color: #168;"> 고양향교,
-										벽제관지</span></a></td>
-							<td><a href="user_introduceDay_detail.jsp"> <span
-									style="text-decoration: underline; color: #168;"> 최영장군묘</span></a></td>
-							<td>고양관광정보센터</td>
+									<%=spotsName %>
+									<%break; }%>
+									</span></a>
+									</td>
+							 <td>
+							 <%for ( int i=2; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										 String spotsName=tourVO.getSpotsName(); 
+									%>
+							 <a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> <span
+									style="text-decoration: underline; color: #168;">
+									<%=spotsName %>
+									<%break; }%>
+										</span></a></td>
+							<td>
+								<%for ( int i=3; i<spotList.size();  ){
+										tourVO = (TourListVO) spotList.get(i);	
+										 String spotsName=tourVO.getSpotsName(); 
+									%>
+							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> <span
+									style="text-decoration: underline; color: #168;"> 
+									<%=spotsName%>
+									<%break; }%>
+								</span></a></td>
+							<td>
+								<%for ( int i=4; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										String spotsName=tourVO.getSpotsName(); 
+									%>
+							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> <span
+									style="text-decoration: underline; color: #168;">						
+									<%=spotsName%>
+									<%break; }%>
+									</span></a></td> 
+							<td>
+								<%for ( int i=0; i<spotList.size(); ){
+										tourVO = (TourListVO) spotList.get(i);	
+										 String spotsName=tourVO.getSpotsName(); 
+									%>
+							<%=spotsName %>
+							<%break; }%>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -244,8 +492,8 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td width="200px">6,000원</td>
-						<td width="200px">4,000원</td>
+						<td width="200px"><%=toli.getAdultFee() %>원</td>
+						<td width="200px"><%=toli.getOtherFee() %>원</td>
 						<td width="200px">경로,장애인,<br>유치원~초중고,36개월 미만
 						</td>
 					</tr>
@@ -270,11 +518,10 @@
 			<div
 				style="padding: 20px; display: flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
 				<iframe width="350" height="250"
-					src="https://www.youtube.com/embed/pdBJjNjkZpM"
-					title="YouTube video player" frameborder="0"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;
-       picture-in-picture"
-					allowfullscreen></iframe>
+				src="https://www.youtube.com/embed/hngPIPa_BLI" 
+				title="YouTube video player" frameborder="0"
+				 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				 allowfullscreen></iframe>
 				<div style="padding: 20px; text-align: center; padding-top: 80px;">
 					<p style="font-size: 1.75rem; font-weight: bold;">지금 바로 떠나세요!</p>
 					<br>
@@ -362,10 +609,12 @@
 	<script type="text/javascript"
 		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c2b7dbcfb30a29ea8ee41ab3f0eb7a30"></script>
 	<%
+		int tourNum = Integer.parseInt(request.getParameter("tourNum"));
 		TourListDAO tlDAO=TourListDAO.getInstance();
-		TourListVO center=tlDAO.selectCenterSpotMap(1); //센터 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
+		
+		TourListVO center=tlDAO.selectCenterSpotMap(tourNum); //센터 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
 
-		List<TourListVO> spotMap=tlDAO.selectSpotMap(1); //관광지들의 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
+		List<TourListVO> spotMap=tlDAO.selectSpotMap(tourNum); //관광지들의 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
 		
 	%>
 	<script>
