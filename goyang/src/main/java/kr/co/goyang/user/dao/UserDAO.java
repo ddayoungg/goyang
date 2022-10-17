@@ -5,6 +5,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.NamingException;
 
@@ -24,6 +26,47 @@ public class UserDAO {
 		}
 		return userDao;
 	}//getInstance
+	
+	/*-다영수정-*/
+	public List<UserVO> selectTourNameNum() throws SQLException { // 투어이름,넘버가져오기
+		List<UserVO> tourNames = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		DbConnection db = DbConnection.getInstance();
+		try {
+			// 1. 드라이버 로딩
+			// 2. 커넥션 얻기
+			con = db.getConn();
+
+			// 3. 쿼리문 생성 객체 얻기
+			StringBuilder selectTourNames = new StringBuilder();
+
+			selectTourNames.append("	select tour_num,tour_name	")
+			.append("	from tour	")
+			.append("	order by tour_num	");
+
+			pstmt = con.prepareStatement(selectTourNames.toString());
+			
+			// 5. 쿼리문 수행 결과 얻기
+			rs = pstmt.executeQuery();
+			tourNames = new ArrayList<UserVO>();
+
+			while (rs.next()) {// 조회된 레코드가 있음
+				UserVO uVO=new UserVO();
+				uVO.setTourNum(rs.getInt("tour_num"));
+				uVO.setTourName(rs.getString("tour_name"));
+				tourNames.add(uVO);
+			}
+		} finally {
+			// 6. 연결 끊기
+			db.dbClose(rs, pstmt, con);
+		}
+		return tourNames;
+	}
+	
 	
 	//회원가입
 	public int insertUser(UserVO userVo) throws SQLException  {
@@ -54,7 +97,7 @@ public class UserDAO {
 			pstmt.setString(6, userVo.getZipcode());
 			pstmt.setString(7, userVo.getAddr());
 			pstmt.setString(8, userVo.getDeAddr());
-			pstmt.setInt(9, 1);
+			pstmt.setInt(9, userVo.getTourNum());
 			//5.쿼리문 수행 후 결과 얻기
 			chk=pstmt.executeUpdate();
 		}catch(Exception e) {

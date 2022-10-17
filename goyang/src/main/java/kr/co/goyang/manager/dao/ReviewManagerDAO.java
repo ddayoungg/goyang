@@ -3,11 +3,13 @@ import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.co.goyang.dbConnection.DbConnection;
 import kr.co.goyang.manager.vo.ReviewManagerVO;
+import kr.co.goyang.user.vo.UserVO;
 
 public class ReviewManagerDAO {
 	private static ReviewManagerDAO tourDao;
@@ -150,4 +152,45 @@ public class ReviewManagerDAO {
 		}
 		return false;
 	}
+	/* 다영수정 */
+	public List<ReviewManagerVO> selectTourNameNum() throws SQLException { // 투어이름,넘버가져오기
+		List<ReviewManagerVO> tourNames = null;
+
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		DbConnection db = DbConnection.getInstance();
+		try {
+			// 1. 드라이버 로딩
+			// 2. 커넥션 얻기
+			con = db.getConn();
+
+			// 3. 쿼리문 생성 객체 얻기
+			StringBuilder selectTourNames = new StringBuilder();
+
+			selectTourNames.append("	select tour.tour_name,tour_review.tour_num	")
+			.append("	from tour,tour_review	")
+			.append("	where tour.tour_num=tour_review.tour_num	")
+			.append("	order by REVIEW_NUM DESC	");
+
+			pstmt = con.prepareStatement(selectTourNames.toString());
+			
+			// 5. 쿼리문 수행 결과 얻기
+			rs = pstmt.executeQuery();
+			tourNames = new ArrayList<ReviewManagerVO>();
+
+			while (rs.next()) {// 조회된 레코드가 있음
+				ReviewManagerVO uVO=new ReviewManagerVO();
+				uVO.setTourNum(rs.getInt("tour_num"));
+				uVO.setTourName(rs.getString("tour_name"));
+				tourNames.add(uVO);
+			}
+		} finally {
+			// 6. 연결 끊기
+			db.dbClose(rs, pstmt, con);
+		}
+		return tourNames;
+	}
+	/* 다영수정 */
 }//DAO

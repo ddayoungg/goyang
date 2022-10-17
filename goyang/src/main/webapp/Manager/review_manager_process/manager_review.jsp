@@ -1,3 +1,5 @@
+<%@page import="kr.co.goyang.manager.dao.SpotListDAO"%>
+<%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
    <%@ page import="kr.co.goyang.manager.dao.ReviewManagerDAO" %>
@@ -119,13 +121,12 @@
 				<div style="font-size: 13px;display: flex;align-items: end;">목록보기</div>
 			</div>
 
-			<div>
+			<div style="font-size: 15px;">
 				<table class="member" style="width: 100%">
 					<tr>
 						<th>번호</th>
 						<th>제목</th>
 						<th style="min-width: 500px;">내용</th>
-						<th>사진</th>
 						<th>작성일</th>
 						<th>아이디</th>
 						<th>투어</th>
@@ -133,16 +134,16 @@
 					<%
 						ReviewManagerDAO dao = new ReviewManagerDAO(); 
 						ArrayList<ReviewManagerVO> list = dao.getList(pageNumber);
+						List<ReviewManagerVO> tournameList=dao.selectTourNameNum();
 						for(int i=0; i<list.size(); i++){
 					%>					
 					<tr>
 						<td><%= list.get(i).getReviewNum() %></td>
 						<td><%= list.get(i).getTitle() %></td>
 						<td><a href="manager_reviewDetail.jsp?ReviewNum=<%=list.get(i).getReviewNum() %>"><%= list.get(i).getRevContent() %></a></td>
-						<td><%= list.get(i).getReviewImg() %></td>
 						<td><%= list.get(i).getRevWriteDate() %></td>
 						<td><%= list.get(i).getId()%></td>
-						<td><%= list.get(i).getTourNum() %></td>
+						<td><%= tournameList.get(i).getTourName()%></td>
 					</tr>
 					<%
 						}
@@ -156,18 +157,19 @@
 				<input class="pagination pageNow" type="button" value="1">
 				<input class="pagination" type="button" value=">">
 			</div>
-			
+			<!--다영수정-->
+			<%
+				SpotListDAO spotDAO=SpotListDAO.getInstance();
+				String[] spots=spotDAO.selectTourList();
+			%>
 				
 			<div style="display: flex; justify-content: center; margin-bottom: 50px; height: 32px;">
 				<select>
-					<option>코스 선택</option>
-					<option>화요나들이(벽제)</option>
-					<option>수요나들이(행주)</option>
-					<option>목요나들이(일산)</option>
-					<option>금요나들이(고양관광특구)</option>
-					<option>토요나들이(왕릉)</option>
-					<option>일요나들이(패밀리)</option>
+					<% for(int i=0;i<spots.length;i++){ %>
+					<option value="<%=spots[i] %>"><%=spots[i] %></option>
+					<%}%>
 				</select>
+				<!--다영수정-->
 				<input type="text" placeholder="검색어를 입력하세요." style="margin: 0px 10px 0px 10px; min-width: 300px;">
 				<input type="button" value="검색" class="mainBtn" style="width: 80px;">
 			</div>

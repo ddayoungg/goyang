@@ -56,25 +56,20 @@
 </script>
 
 <%
-String manageName=(String)session.getAttribute("id");
-System.out.println(session.getAttribute("id")+"님이 접속하셨습니다.");
+String manageId=(String)session.getAttribute("manageId");
+System.out.println(session.getAttribute("manageId")+"님이 접속하셨습니다.");
 %>
 <!-- 관리자 로그아웃시 세션종료 -->
 <script type="text/javascript">
 $(function(){
-	var Msess=<%=manageName%>
+	var Msess=<%=manageId%>
 	if(Msess==null){
 		alert("로그인 해주세요.");
 		location.href="../login_manager/manager_signIn.jsp";
 	}
 });
 
-function logOut(){
-	<%
-		session.removeAttribute("id");
-	%>
-	location.href="manager_dashboard.jsp";
-}
+
 </script>
 <!--로그아웃 처리 -->
 <script type="text/javascript">
@@ -204,7 +199,7 @@ function logOut(){
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="#void" onclick="logOut()">로그아웃&nbsp;&nbsp;&nbsp;<%=manageName %>관리자님</a>
+						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %></a>
 						</li>
 				</ul>
 

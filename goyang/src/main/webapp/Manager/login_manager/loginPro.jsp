@@ -40,7 +40,7 @@
 	 </script>
  <%}else{
 	 //로그인 정보를 세션 객체에 저장.
-	 session.setAttribute("id", id);
+	 session.setAttribute("manageId", id);
 	 //메인으로 이동.
 	 response.sendRedirect("../dashboard_process/manager_dashboard.jsp");
  }

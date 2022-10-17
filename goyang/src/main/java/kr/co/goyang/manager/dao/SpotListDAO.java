@@ -89,7 +89,8 @@ public class SpotListDAO {
 			StringBuilder selectCnt = new StringBuilder();
 			selectCnt
 			.append("	select count(*) as cnt")
-			.append("	from tour");
+			.append("	from tour")
+			.append("	where run_flag=1");
 			pstmt = conn.prepareStatement(selectCnt.toString());
 			// 4. 바인드 변수에 값 설정
 			//해당 투어검색
@@ -106,7 +107,9 @@ public class SpotListDAO {
 			StringBuilder selectTourName = new StringBuilder();
 			selectTourName
 			.append("	select tour_name")
-			.append("	from tour");
+			.append("	from tour")
+			.append("	where run_flag=1")
+			.append("	order by tour_num");
 			pstmt = conn.prepareStatement(selectTourName.toString());
 			// 4. 바인드 변수에 값 설정
 			//해당 투어검색
