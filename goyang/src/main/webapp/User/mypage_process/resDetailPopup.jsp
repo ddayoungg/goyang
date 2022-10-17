@@ -153,7 +153,7 @@ pageContext.setAttribute("resSeatNum", resSeatNum);//예약한 버스 좌석 번
 					<td>${ reserInfo.phone }</td>
 				</tr>
 				<tr>
-					<th>투어 일정</th>
+					<th>투어 시작 날짜</th>
 					<td>${ reserInfo.reserDate }</td>
 				</tr>
 				<tr>
@@ -168,7 +168,7 @@ pageContext.setAttribute("resSeatNum", resSeatNum);//예약한 버스 좌석 번
 					</td>
 				</tr>
 				<tr>
-					<th>예약 좌석번호</th>
+					<th>예약한 좌석 번호</th>
 					<%if(resSeatNum.length!=0){ %>
 					<td>
 						<c:forEach var="seatNum" items="${ resSeatNum }">
@@ -177,7 +177,7 @@ pageContext.setAttribute("resSeatNum", resSeatNum);//예약한 버스 좌석 번
 					</td>
 					<%}else {%>
 					<td>
-						<c:out value="예약하신 좌석 번호가 존재하지 않습니다."/>
+						<c:out value="좌석없음"/>
 					</td>
 					<%}//end else %>
 				</tr>

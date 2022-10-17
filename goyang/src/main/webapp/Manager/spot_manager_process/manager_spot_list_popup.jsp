@@ -43,7 +43,38 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
 	crossorigin="anonymous"></script>
+
+
+<%
+/* nsm 22-10-17 아이디 세션 */
+//아이디 세션
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+%>
+
+<script type="text/javascript">
+$(function(){
+	accessChk();//접근 권한 체크
 	
+	$("#deleteBtn").click(function(){
+		$("#frm").submit();
+	});
+});//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+}//accessChk
+
+</script>
+
 <script type="text/javascript">
 
 $(function(){
@@ -119,8 +150,9 @@ $(function(){
 					<li><a href="../review_manager_process/manager_review.jsp">후기관리</a></li>
 				</ul>
 			    <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
-					<li></li>
-					<li style="font-size: 5px;font-weight: bold;"><a href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%= manageId %></a>
+						</li>
 				</ul>
 
         <a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">

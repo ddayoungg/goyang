@@ -34,6 +34,44 @@
 
 </style>
 
+<%
+/* nsm 22-10-17 아이디 세션 */
+//아이디 세션
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+%>
+
+<script type="text/javascript">
+$(function(){
+	accessChk();//접근 권한 체크
+	
+	$("#deleteBtn").click(function(){
+		$("#frm").submit();
+	});
+});//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+}//accessChk
+
+</script>
+
+<script type="text/javascript">
+$(function(){
+	
+	$("#deleteBtn").click(function(){
+		$("#frm").submit();
+	});
+});//ready
+
 <script type="text/javascript">
 function fileInput(fileInput, output){
 	var file = document.getElementById(fileInput);
@@ -77,8 +115,9 @@ function fileInput(fileInput, output){
 					<li><a href="../review_manager_process/manager_review.jsp">후기관리</a></li>
 				</ul>
 			    <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
-					<li></li>
-					<li style="font-size: 5px;font-weight: bold;"><a href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%= manageId %></a>
+						</li>
 				</ul>
 
         <a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">

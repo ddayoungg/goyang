@@ -38,12 +38,39 @@
 
 	
 </style>
+
+<!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script type="text/javascript">
+<%
+/* 22-10-17 남상민 아이디 세션 추가 */
+//아이디 세션
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+%>
+$(function(){
+	
+	accessChk();//접근 권한 체크
+});//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+}//accessChk
+
+</script>
+
 <script type="text/javascript">
 $(function(){
 	<%
-	/* String name=(String)session.getAttribute("name"); */
-	String id="tester";
 	int reviewNum = 0;
 	ReviewManagerDAO trDAO = ReviewManagerDAO.getInstance();
 	
@@ -168,7 +195,8 @@ $(function(){
 					<li></li>
 				
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_process/user_logout.jsp">로그아웃</a></li>
+						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%= manageId %></a>
+						</li>
 				</ul>
 				
 				<a href="#"

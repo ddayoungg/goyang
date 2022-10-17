@@ -78,7 +78,7 @@ function accessChk(){
 
 function pageClick(page){
 	$.ajax({
-		url:"user_my_res_process.jsp",
+		url:"user_my_reservation_process.jsp",
 		data:"page="+page,
 		type:"get",
 		dataType:"json",
@@ -91,12 +91,13 @@ function pageClick(page){
 				/* 페이징 테이블 */
 				$("#tableDiv").show();
 				var tbOutput="<table class='member' style='width: 100%'>";
-				tbOutput+="<tr><th>예약번호</th><th>투어 일정</th><th>투어 코스</th><th>인원</th><th>예약 상태</th><th></th></tr>";
+				tbOutput+="<tr><th>예약번호</th><th>투어 시작 날짜</th><th>예약 신청 날짜</th><th>투어 코스</th><th>인원</th><th>예약 상태</th><th></th></tr>";
 				if(!jsonObj.isEmpty){
 					$(jsonObj.list).each(function(i, json){
 						tbOutput+="<tr>";
 						tbOutput+="<td>"+json.reserNum+"</td>";
 						tbOutput+="<td>"+json.reserDate+"</td>";
+						tbOutput+="<td>"+json.reserRegist+"</td>";
 						tbOutput+="<td>"+json.tourName+"</td>";
 						tbOutput+="<td>성인("+json.adultFee+"원) : "+json.adultCnt+"명<br/>";
 						tbOutput+="	 기타("+json.otherFee+"원) : "+json.otherCnt+"명</td>";

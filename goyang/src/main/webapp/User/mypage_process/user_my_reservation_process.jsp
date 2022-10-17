@@ -84,11 +84,15 @@ jsonObj.put("isEmpty", list.isEmpty());
 JSONArray jsonArr=new JSONArray();
 JSONObject jsonTemp=null;
 
-String reserInfo="";
+String reserInfo="";//reserFlag에 따른 예약 상태 저장
+String strDate="";//Date형을 문자형으로 변환 값 저장
 for(MyInfoVO tempVO : list){//예외가 발생했거나 조회결과가 없을 경우
 	jsonTemp=new JSONObject();
+	strDate=new SimpleDateFormat("yyyy-MM-dd").format(tempVO.getReserRegist());
+
 	jsonTemp.put("reserNum", tempVO.getReserNum());
 	jsonTemp.put("reserDate", tempVO.getReserDate());
+	jsonTemp.put("reserRegist", strDate);
 	jsonTemp.put("tourName", tempVO.getTourName());
 	jsonTemp.put("adultFee", tempVO.getAdultFee());
 	jsonTemp.put("otherFee", tempVO.getOtherFee());

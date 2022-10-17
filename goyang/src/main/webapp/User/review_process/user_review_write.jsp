@@ -54,9 +54,13 @@ td{
 
 	$(function () {
 		<%
-		/* String name=(String)session.getAttribute("name"); */
-		String id = "tester";
-		
+		/* nsm 22-10-17 세션 추가 시작 */
+		//아이디 세션 
+	  	String id ="";
+		if(session.getAttribute("id")!=null){
+			id=(String)session.getAttribute("id");
+		}//end if
+	  	
 		TourReviewDAO trDAO = TourReviewDAO.getInstance();
 		TourReviewVO reviewVO = new TourReviewVO();
 		String selectedTourName = "코스 선택";
@@ -75,12 +79,25 @@ td{
 		List<String> tourNames = trDAO.selectTourName();
 		%>
 		
+		accessChk();//접근 권한 여부
+		
 		$("#reviewRegi").click(function () {
 			$("#reviewFrm").submit();
 		})
 		
 	})
-
+	
+function accessChk(){
+	var id="<%= id %>";
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}//end if
+	
+}//accessChk
+	
 	function setFile(){
 	var fReader = new FileReader();
 	fReader.readAsDataURL($("#thumImgFile")[0].files[0]);

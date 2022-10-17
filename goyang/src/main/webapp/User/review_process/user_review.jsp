@@ -44,11 +44,19 @@
 </style>
 <!-- jQuery google CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<%
+/* nsm 22-10-17 세션 추가 시작 */
+//아이디 세션 
+	String id ="";
+if(session.getAttribute("id")!=null){
+	id=(String)session.getAttribute("id");
+}//end if
+%>
+
 <script type="text/javascript">
 $(function(){
 	<%
-	/* String name=(String)session.getAttribute("name"); */
-	String id="tester";
 	int reviewNum = 0;
 	TourReviewDAO trDAO = TourReviewDAO.getInstance();
 	
@@ -75,6 +83,7 @@ $(function(){
 		reviewNumList.add(trVO1.getReviewNum());
 	}
 	%>
+	
 	$("#<%= selectTour%>").prop("selected", true);
 	
 	$("#search").click(function () {
@@ -164,7 +173,15 @@ $(function(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+				<%if(id==""){%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signIn.jsp">로그인</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
+				<%}else{%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_logout.jsp">로그아웃</a></li>
+				<%}//end else%>
 				</ul>
 				
 				<a href="#"

@@ -46,6 +46,15 @@
 <!-- jQuery google CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+<%
+/* nsm 22-10-17 추가 시작 */
+//아이디 세션 
+	String id ="";
+if(session.getAttribute("id")!=null){
+	id=(String)session.getAttribute("id");
+}//end if
+%>
+
 <script type="text/javascript">
 	$(function () {
 		<%
@@ -62,8 +71,6 @@
 		TourReviewVO reviewVO = trDAO.selectReview(reviewNum);
 		List<TourReviewVO> commList = trDAO.selectCommend(reviewNum);
 		
-		String id="";
-		
 		TourReviewVO trVO = new TourReviewVO();
 		List<TourReviewVO> trList = trDAO.selectSearchReview(trVO);
 		List<Integer> reviewNumList = new ArrayList<Integer>();
@@ -74,9 +81,9 @@
 		int reviewIdx = reviewNumList.indexOf(reviewNum);
 		%>
 		
-		//세션에 존재하는 값을 얻는다.
-		//String id=(String)session.getAttribute("id");
-		<%-- String id="";
+		<%--//세션에 존재하는 값을 얻는다.
+		String id=(String)session.getAttribute("id");
+		 String id="";
 		if( id == null ){//세션에 값이 없음.(1.interval이 초과, 2.직접 요청(비정상적 요청).)
 			//redirect 페이지 이동.
 			response.sendRedirect("로그인페이지.jsp");
@@ -90,14 +97,30 @@
 		<%}%>--%>
 		
 		$("#commBtn").click(function () {
-			$("#detailFrm").submit();
+			
+			if(accessChk()){//접근 권한 - 로그인할 경우 댓글 등록 가능
+				$("#detailFrm").submit();
+			}//end if
 		});
 		
 		$("#thumImgFile").change(function(){//대표 사진 세팅
 			setFile();
 		})//change
 		
-	})
+	})//ready
+	
+	function accessChk(){
+		var flag=true;
+		var id="<%= id %>";
+			
+		if(id==""){
+			alert("로그인 해주세요.");
+			location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+			flag=false;
+		}//end if
+		
+		return flag;
+	}//accessChk
 	
 	function showPopup(hasFilter,id) {
 		const popup = document.querySelector("#"+id);
@@ -169,7 +192,15 @@
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<%if(id==""){%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signIn.jsp">로그인</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
+					<%}else{%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_logout.jsp">로그아웃</a></li>
+					<%}//end else%>
 				</ul>
 				
 				<a href="#"
@@ -221,7 +252,7 @@
 			
 			<div style="display:flex; align-items:center; justify-content:space-between; font-size: 20px; height: 70px; width: 100%; padding: 24px 0; border-bottom: 1px solid #ebebeb;">
 				<input type="hidden" name="reviewNum" value="<%=reviewVO.getReviewNum()%>">
-				<input type="hidden" name="id" value="<%= reviewVO.getId()%>">
+				<input type="hidden" name="id" value="<%= id %>">
 				<div><%= reviewVO.getTitle() %></div>
 				<div style="font-size: 14px; font-weight: lighter;"><span><%= reviewVO.getId().substring(0,reviewVO.getId().length()/2) %>****</span> | <span><%= reviewVO.getRevWriteDate() %></span></div>
 			</div>

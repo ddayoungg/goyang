@@ -89,6 +89,13 @@
 	</nav>
 
 <%
+	/* nsm 22-10-17 세션 추가 시작 */
+	//아이디 세션 
+		String id ="";
+	if(session.getAttribute("id")!=null){
+		id=(String)session.getAttribute("id");
+	}//end if
+	
 	TourListDAO tourDAO = TourListDAO.getInstance();
 	TourListVO tourVO = new TourListVO();
 	List <TourListVO> list = tourDAO.selectAllTour(tourVO);

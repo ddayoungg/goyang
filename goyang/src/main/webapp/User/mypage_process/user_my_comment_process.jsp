@@ -84,15 +84,14 @@ jsonObj.put("isEmpty", list.isEmpty());
 JSONArray jsonArr=new JSONArray();
 JSONObject jsonTemp=null;
 
-String strDate="";
+String strDate="";//Date형을 문자형으로 변환 값 저장
 for(MyInfoVO tempVO : list){//예외가 발생했거나 조회결과가 없을 경우
 	jsonTemp=new JSONObject();
+	strDate=new SimpleDateFormat("yyyy-MM-dd").format(tempVO.getComWriteDate());
+
 	jsonTemp.put("commendNum", tempVO.getCommendNum());
 	jsonTemp.put("revContent", tempVO.getRevContent());
 	jsonTemp.put("comContent", tempVO.getComContent());
-	
-	strDate=new SimpleDateFormat("yyyy-MM-dd").format(tempVO.getComWriteDate());
-	
 	jsonTemp.put("comWriteDate", strDate);
 	jsonTemp.put("reviewNum", tempVO.getReviewNum());
 	jsonArr.add(jsonTemp);

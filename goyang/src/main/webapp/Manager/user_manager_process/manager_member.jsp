@@ -37,6 +37,34 @@
 </style>
 <!-- jQuery google CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<%
+/* nsm 22-10-17 아이디 세션 */
+//아이디 세션
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+%>
+
+<script type="text/javascript">
+$(function(){
+	accessChk();//접근 권한 체크
+	
+});//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+}//accessChk
+
+</script>
+
 <script type="text/javascript">
 	
 	$(function () {
@@ -106,12 +134,12 @@
 			
 		
 		<%
-		String id = request.getParameter("id");
-		System.out.println("id : "+id);
+		/* String id = request.getParameter("id");
+		System.out.println("id : "+id); */
 		
-		if(id!=null){
+		if(!manageId.equals("")){
 			System.out.println("id != null");
-			UserManagerVO detailVO = umDAO.selectUser(id);
+			UserManagerVO detailVO = umDAO.selectUser(manageId);
 			System.out.println(detailVO);%>
 		
 		function showUserDetail(){
@@ -228,7 +256,8 @@
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%= manageId %></a>
+						</li>
 				</ul>
 				
 				<a href="#"
@@ -426,7 +455,7 @@
 			
 			<div style="background-color: #f0f6f9;display: flex;flex-direction: column;align-items: center;height: 280px;">
 				<div style="font-size: 16px; background-color: #f0f6f9; padding: 15px;">회원 강제탈퇴 사유를 작성하세요.</div>
-				<input type="hidden" name="id" value="<%=id%>">
+				<input type="hidden" name="id" value="<%= manageId %>">
 				<textarea name="outReas" rows="10" cols="50"></textarea>
 				<div style="display: flex; align-items: center; justify-content: center; padding: 20px;">
 					<input type="button" value="확인" class="mainBtn" id="outBtn">

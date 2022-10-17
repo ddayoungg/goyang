@@ -56,20 +56,24 @@
 </script>
 
 <%
-String manageId=(String)session.getAttribute("manageId");
+/* nsm 22-10-17 세션 수정 */
+//로그인 여부
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+
 System.out.println(session.getAttribute("manageId")+"님이 접속하셨습니다.");
 %>
 <!-- 관리자 로그아웃시 세션종료 -->
 <script type="text/javascript">
 $(function(){
-	var Msess=<%=manageId%>
-	if(Msess==null){
+	var Msess="<%=manageId%>";
+	if(Msess==""){
 		alert("로그인 해주세요.");
 		location.href="../login_manager/manager_signIn.jsp";
 	}
-});
-
-
+});//ready
 </script>
 <!--로그아웃 처리 -->
 <script type="text/javascript">

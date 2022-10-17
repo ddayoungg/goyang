@@ -232,7 +232,7 @@ function setFile(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
 					<li class="active"><a href="../dashboard_process/manager_dashboard.jsp">dash board</a></li>
-					<li><a href="../user_manager_process/manager_member_popup.jsp">회원관리</a></li>
+					<li><a href="../user_manager_process/manager_member.jsp">회원관리</a></li>
 					<li><a href="manager_tour_manager.jsp">투어관리</a></li>
 					<li><a href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
 					<li><a href="../spot_manager_process/manager_spot_list.jsp">관광지 관리</a></li>
