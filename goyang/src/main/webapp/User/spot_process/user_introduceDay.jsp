@@ -611,11 +611,10 @@
 	<%
 		int tourNum = Integer.parseInt(request.getParameter("tourNum"));
 		TourListDAO tlDAO=TourListDAO.getInstance();
-		
 		TourListVO center=tlDAO.selectCenterSpotMap(tourNum); //센터 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
-
+		System.out.println(center);
 		List<TourListVO> spotMap=tlDAO.selectSpotMap(tourNum); //관광지들의 좌표 - 매개변수값은 전 페이지에서 가져오기.(tour_num)
-		
+		System.out.println(spotMap);
 	%>
 	<script>
 		var mapContainer = document.getElementById('map'), // 지도를 표시할 div  

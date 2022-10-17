@@ -236,12 +236,14 @@ public class TourListDAO {
 			conn = dbCon.getConn();
 
 			StringBuilder selectCenterMap = new StringBuilder();
-			selectCenterMap.append("	select map_cen_lati,map_cen_long ").append("	from tour")
-					.append("	where tour_num=?");
+			selectCenterMap
+			.append("	select map_cen_lati,map_cen_long ")
+			.append("	from tour")
+			.append("	where tour_num=?");
 			pstmt = conn.prepareStatement(selectCenterMap.toString());
 			// 4. 바인드 변수에 값 설정
 			//pstmt.setInt(1, tourNum);
-			pstmt.setInt(1, cenVO.getTourNum());
+			pstmt.setInt(1, tourNum);
 			// 5. 쿼리문 수행 후 결과 얻기
 			rs = pstmt.executeQuery(); // rs는 커서의 제어권을 가지고 있다.
 
