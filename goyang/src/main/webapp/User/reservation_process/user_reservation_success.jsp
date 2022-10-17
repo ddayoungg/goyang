@@ -7,13 +7,20 @@
 request.setCharacterEncoding("UTF-8");//post방식 일 때의 한글 처리
 %>
 
-<c:catch var="e">
 <%
-//String id=null;//로그인 하지 않은 경우
-String id="tester";//로그인 한 경우
+String id="";//아이디 초기값
+//로그인 여부(권한여부)
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
+if(id==""){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	return;
+}//end if
+%>
+
+<c:catch var="e">
+<%
 
 TourReservaDAO trDAO=TourReservaDAO.getInstance();
 TourReservaVO trVO=new TourReservaVO();

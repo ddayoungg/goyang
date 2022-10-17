@@ -43,47 +43,30 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <%
-//초기값 설정
-//String id=null;//로그인 하지 않은 경우
-String id="tester";//아이디
-int tourNum=0;//투어 번호
-String reserDate=null;//예약일
-int[] seatNum=null;//예약된 좌석 번호
-int[] seatNumIn=null;//예약한 좌석 번호 배열
-%>
-
-<%
-//로그인 여부(권한여부)
+//파라미터, 세션 set
+//로그인 여부
+String id="";//아이디
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
 
 //투어번호 set
+int tourNum=0;//투어 번호
 if(request.getParameter("tourNum") !=null){//투어 번호 가져오기.
 	tourNum = Integer.parseInt(request.getParameter("tourNum"));
 }//end if
 
-if(tourNum==0){//투어번호를 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_course.jsp");
-	return;
-}//end if
-
 //예약일 set
+String reserDate="";//예약일
 if(request.getParameter("reserDate") !=null){//예약일 가져오기
 	reserDate = request.getParameter("reserDate");
 }//end if
 
-if(reserDate==null){//예약일을 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_date.jsp");
-	return;
-}//end if
+//int[] seiatNumIn=null;//예약한 좌석 번호 배열
 
 //예약된 좌석번호 set
-seatNum=(int[]) request.getAttribute("seatNum");
+int[] seatNum=(int[]) request.getAttribute("seatNum");
+System.out.println(seatNum);
 %>
 
 <script type="text/javascript">
@@ -94,6 +77,8 @@ reaserOutpotArr=null;
 $(function(){
 	var totalCnt=${ param.adultCnt + param.otherCnt };
 	var reaserCnt=0;
+	
+	accessChk();//접근 권한 여부
 	
 	//예약된 좌석 선택 못하도록
 	<% for(int seat: seatNum) {%>
@@ -107,7 +92,7 @@ $(function(){
 		reaserOutpotArr = new Array();
 		
 		reaserCnt=$("[name='seatNumIn']:checked:not(:disabled)").length;//체크된 좌석 수
-		if(reaserCnt==totalCnt){//예약한 인원 수보다 체크된 좌석 수가 많을 때
+		if(reaserCnt==totalCnt){//예약한 인원 수보다 체크된 좌석 수가 같을 때
 			$("[name='seatNumIn']:not(:checked)").prop("disabled", true);
 		}else {
 			$("[name='seatNumIn']:not(:checked)").prop("disabled", false);
@@ -128,6 +113,31 @@ $(function(){
 	});//next click
 	
 });//ready
+
+function accessChk(){
+	
+	var id="<%= id %>";
+	var tourNum=<%= tourNum %>;
+	var reserDate="<%= reserDate %>";
+	var chkFlag=true; //true 통과, false 돌아가기
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}else if(tourNum==0){
+		alert("투어를 선택해주세요.");
+		chkFlag=false;
+	}else if(reserDate==""){
+		alert("투어일정을 선택해주세요.");
+		chkFlag=false;
+	}//end else if
+	
+	if(!chkFlag){//필요한 파라미터 값이 없을 경우 코스 선택 페이지로 이동
+		location.href="http://localhost/goyang/User/reservation_process/user_reservation_course.jsp";
+	}//end if
+		
+}//accessChk
 
 function seatChk(reaserFrmArr, totalCnt){
 	
@@ -176,7 +186,7 @@ function seatChk(reaserFrmArr, totalCnt){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a href="../login_process/user_logout.jsp">로그아웃</a></li>
 				</ul>
 				
 				<a href="#"

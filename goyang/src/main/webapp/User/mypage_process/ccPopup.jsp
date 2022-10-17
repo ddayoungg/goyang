@@ -45,10 +45,32 @@
 <jsp:useBean id="miVO" class="kr.co.goyang.user.vo.MyInfoVO" scope="page" />
 <jsp:setProperty name="miVO" property="*"/>
 
+<%
+//아이디 set
+String id="";//아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+
+//예약번호 set
+int reserNum=0;
+if(request.getParameter("reserNum") !=null) {
+	reserNum=Integer.parseInt(request.getParameter("reserNum"));
+}//end if
+
+//창 닫기
+String closeFlag="pass";//"pass"=창 닫기 X  // "close","commit","logout"=창 닫기 O
+if(request.getParameter("closeFlag") !=null){
+	closeFlag = request.getParameter("closeFlag");
+}//end if
+
+%>
+
 <script type="text/javascript">
 $(function(){
+	accessChk();//접근 권한 확인
+	
 	$("#closeBtn").click(function(){//닫기 버튼 누를 시 예약 취소 팝업 닫기
-		opener.location.reload();
 	    window.close();
 	});//click
 	
@@ -56,6 +78,36 @@ $(function(){
 		nullChk();
 	});//click
 })//ready
+
+function accessChk(){
+	var id="<%= id %>";
+	var reserNum=<%= reserNum %>;
+	var closeFlag="<%= closeFlag %>";
+		
+	if(id==""){
+		if(closeFlag != "logout") {//user_mypage_rescancel_process에서 로그인 하지 않은 상태에서 넘어올 경우
+			alert("로그인 해주세요.");
+		}//end if
+		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=logout";
+		window.close();
+		return;
+	}//end if
+	
+	if(closeFlag=="commit") {//예약취소 성공 시 팝업 닫기
+		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=commit";
+		window.close();
+		return;
+	}//end if
+	
+	if(reserNum==0){
+		alert("존재하지 않은 예약번호 입니다.");
+		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=reserNum";
+		window.close();
+		return;
+	}//end if
+	
+	
+}//accessChk      
 
 function nullChk() {
 	if($("#cancelReas").val().trim()==""){
@@ -74,22 +126,11 @@ function nullChk() {
 <div id="dubWrap">
 
 <%
-String id="user";//로그인한 아이디
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
-%>
-
-<%
 MyInfoDAO miDAO=MyInfoDAO.getInstance();
 
 //파라미터 값 set
 miVO.setId(id);
-miVO.setReserNum(Integer.parseInt(request.getParameter("reserNum")));
+miVO.setReserNum(reserNum);
 
 MyInfoVO reserInfo=miDAO.selectReserDetail(miVO);
 
@@ -108,9 +149,10 @@ pageContext.setAttribute("reserInfo", reserInfo);
 			<div><textarea id="cancelReas" name="cancelReas" cols="100" rows="10" placeholder="내용을 입력해주세요."></textarea></div>
 			</div>
 			
-			<!-- hidden 영역 -->
+			<!-- hidden 영역 시작 -->
 			<input type="hidden" id="hiddReserNum" name="reserNum" value="${ param.reserNum }">
 			<input type="hidden" id="hiddReserDate" name="reserDate" value="${ reserInfo.reserDate }">
+			<!-- hidden 영역 끝 -->
 			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
 			<input type="button" value="예약 취소" id="recCcBtn" class="popupBtn">
 			<input type="button" value="닫기" id="closeBtn" class="popupBtn"/>

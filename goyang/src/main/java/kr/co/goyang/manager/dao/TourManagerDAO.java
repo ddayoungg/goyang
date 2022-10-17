@@ -25,7 +25,7 @@ public class TourManagerDAO {
 		return tourDAO;
 	}
 	
-	public List<TourManagerVO> selectSearchTour(TourManagerVO tmVO) throws SQLException {//투어 관리 리스트
+	public List<TourManagerVO> selectTourList(TourManagerVO tmVO) throws SQLException {//투어 관리 리스트
 		List<TourManagerVO> list = new ArrayList<TourManagerVO>();
 		
 		Connection con=null;
@@ -86,7 +86,7 @@ public class TourManagerDAO {
 		return list;
 	}//selectSearchTour
 	
-	public TourManagerVO selectTour(int tourNum) throws SQLException {//투어별 상세보기
+	public TourManagerVO selectTourDetail(int tourNum) throws SQLException {//투어별 상세보기
 		TourManagerVO tmVO;
 		Connection con=null;
 		PreparedStatement pstmt=null;
@@ -185,39 +185,6 @@ public class TourManagerDAO {
 		return list;
 	}//selectTourSpots
 	
-	public void tranTourAdd(TourManagerVO tmVO) {
-		
-		DbConnection dc=DbConnection.getInstance();
-		
-		Connection con=null;
-		try {
-			con=dc.getConn();
-			con.setAutoCommit(false);
-			
-			int tourNum=insertTour(tmVO, con);
-			tmVO.setTourNum(tourNum);
-			insertTourSport(tmVO, con);
-			
-			con.commit();
-			System.out.println("commit 성공");
-		} catch (SQLException e) {
-			try {
-				System.out.println("트랜잭션 실패");
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} // end catch
-			e.printStackTrace();
-		}finally {
-			try {//6.연결 끊기
-				con.setAutoCommit(true);//오토커밋 설정
-				if(con!=null) {con.close();}//end if
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}//end catch
-		}//end finally
-	}//tranTourAdd
-	
 	public int insertTour(TourManagerVO tmVO, Connection con) throws SQLException{//투어 관리 추가- int tourNum 반환값: 관광지 추가 시 new tourNum 값이 필요
 		int tourNum=tmVO.getTourNum();
 		
@@ -283,42 +250,6 @@ public class TourManagerDAO {
 		return selectNum;
 	}// selectNextNum
 	
-	public int tranTourRectify(TourManagerVO tmVO) {
-		int upCnt=0;
-		int delCnt=0;
-		DbConnection dc=DbConnection.getInstance();
-		
-		Connection con=null;
-		try {
-			con=dc.getConn();
-			con.setAutoCommit(false);
-			
-			upCnt=updateTour(tmVO, con);
-			delCnt=delecteTourSport(tmVO.getTourNum(), con);
-			insertTourSport(tmVO, con);
-			
-			con.commit();
-			System.out.println("commit 성공");
-		} catch (SQLException e) {
-			try {
-				System.out.println("트랜잭션 실패");
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} // end catch
-			e.printStackTrace();
-		}finally {
-			try {//6.연결 끊기
-				con.setAutoCommit(true);//오토커밋 설정
-				if(con!=null) {con.close();}//end if
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}//end catch
-		}//end finally
-		
-		return (upCnt+delCnt);
-	}//tranTourRectify
-	
 	public int updateTour(TourManagerVO tmVO, Connection con) throws SQLException{//투어 정보 수정
 		int updateCnt=0;
 		
@@ -355,7 +286,7 @@ public class TourManagerDAO {
 		return updateCnt;
 	}//updateTour
 	
-	public int delecteTourSport(int tourNum, Connection con) throws SQLException {
+	public int delecteTourSport(int tourNum, Connection con) throws SQLException {//투어 수정 할 경우 관광지 삭제 => 관광지 추가
 		int deleteCnt=0;
 		
 		PreparedStatement pstmt=null;

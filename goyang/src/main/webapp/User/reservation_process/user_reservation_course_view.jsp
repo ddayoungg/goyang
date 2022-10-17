@@ -53,31 +53,25 @@
 	}
 </style>
 
+<%
+//파라미터, 세션 얻기
+//로그인 여부
+String id="";//아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+%>
+
 <script type="text/javascript">
 $(function(){
 	
 })//ready
+
 </script>
 
 </head>
 
 <body>
-<%
-//초기값 설정
-//String id=null;//로그인 하지 않은 경우
-String id="tester";//아이디
-%>
-
-<%
-//로그인 여부(권한여부)
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
-%>
 
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
@@ -106,7 +100,21 @@ if(id==null){//로그인되지 않았다면
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<%
+					if(id==""){
+				%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signIn.jsp">로그인</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
+				<%
+					}else{
+				%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_logout.jsp">로그아웃</a></li>
+				<%
+					}
+				%>
 				</ul>
 				
 				<a href="#"
@@ -182,7 +190,7 @@ if(id==null){//로그인되지 않았다면
 						</td>
 						<td>
 							<div style="padding-bottom: 10px;">10:00 ~ 16:00</div>
-							<div>성인 : ${ cosList.adultFee } <br>기타 : ${ cosList.otherFee }</div>
+							<div>성인 : ${ cosList.adultFee }원 <br>기타 : ${ cosList.otherFee }원</div>
 						</td>
 						<td><div style="display: flex; justify-content: end;"><input type="button" id="reserBtn" onclick="location.href='user_reservation_date.jsp?tourNum=${ cosList.tourNum }'" value="예약하기" class="mainBtn"></div>
 						</td>

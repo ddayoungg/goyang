@@ -1,3 +1,4 @@
+<%@page import="java.sql.SQLException"%>
 <%@page import="kr.co.goyang.manager.dao.TourManagerDAO"%>
 <%@page import="java.sql.Date"%>
 <%@page import="kr.co.goyang.user.vo.TourReservaVO"%>
@@ -12,26 +13,37 @@
 <script type="text/javascript">
 
 <%
-int tourNum=0;
+//초기값
 int upResult=0;//update문으로 변환된 행 수
-%>
-<c:catch var="e">
-<%
+
+//로그인 여부
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+
+if(manageId==""){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
+	return;
+}//end if
+//투어 번호
+int tourNum=0;
 if(request.getParameter("tourNum") != null){
 	tourNum = Integer.parseInt(request.getParameter("tourNum"));
 }//end if
-
-TourManagerDAO tmDAO=TourManagerDAO.getInstance();
-upResult=tmDAO.updateTourDown(tourNum); //투어 종료
 %>
-</c:catch>
 
-<c:if test="${ e ne null }">
-예외발생 :
-<c:out value= "${ e }" />
-</c:if>
+<%
+TourManagerDAO tmDAO=TourManagerDAO.getInstance();
 
-<%if(upResult==1){%>
+try{
+	upResult=tmDAO.updateTourDown(tourNum); //투어 종료
+}catch(SQLException se){
+	se.printStackTrace();
+}//end catch
+
+if(upResult==1){
+%>
 	alert("해당 투어가 종료되었습니다.");
 	history.back();
 <%}else {%>

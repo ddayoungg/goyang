@@ -33,51 +33,54 @@
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
 <style type="text/css">
-
+#tableDiv{width: 100%;}
 </style>
 
 <!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
 <%
-//로그인 여부(권한여부)
-//String id=null;//로그인 하지 않은 경우
-String id="admin";//로그인 한 경우
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면 로그인창으로 이동
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
-	return;
+//로그인 여부
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
 }//end if
 
 TourManagerDAO tmDAO=TourManagerDAO.getInstance();
 TourManagerVO tmVO=new TourManagerVO();
 
-//검색 셋팅
-String textSearch=null;//파라미터 검색 값에 대한
-String listSearch=null;//파라미터 검색 종류 값에 대한
-if(request.getParameter("textSearch")!=null){
-	textSearch=request.getParameter("textSearch");
-	listSearch=request.getParameter("listSearch");
-}//end if
-
-if(textSearch!=null){//파라미터 검색 값이 있을 경우
-	tmVO.setTextSearch(textSearch);
-	tmVO.setListSearch(listSearch);
-}//end if
 %>
 
 <script type="text/javascript">
 
 $(function(){
+	
+	var listSearch=$("#listSearch").val();//코스명, 코스번호
+	var textSearch=$("#textSearch").val().trim();//검색 input text
+	
+	accessChk();//접근 권한 확인
+	
+	tourList(listSearch, textSearch);//초기 화면 set
+	
 	$("#searchBtn").click(function() { //투어 검색
-		if(typeChk()){
+		listSearch=$("#listSearch").val();
+		textSearch=$("#textSearch").val().trim();	
+	
+		if(typeChk(listSearch, textSearch)){//코스번호 일때 text 타입이 숫자인지 확인
+			alert("숫자를 입력해주세요.");
 			return;
 		}//end if
 		
-		$("#searchFrm").submit();
+		tourList(listSearch, textSearch);//검색 ajax 호출
+		
 	});//click
+	
+	$("#textSearch").keydown(function(keyNum){
+		//현재의 키보드의 입력값을 keyNum으로 받음
+		if(keyNum.keyCode == 13){ //keyCode=13 : Enter
+			$("#searchBtn").click()	
+		}//end if
+	});//keydown
 	
 	$("#addBtn").click(function(){//투어 추가 페이지로 이동
 		location.href="manager_tour_add.jsp";
@@ -85,16 +88,59 @@ $(function(){
 	
 });//ready
 
-function typeChk(){
-	var searchTextVal=parseInt($("#textSearch").val());
-	var searchSelVal=$("#listSearch").val();
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+	
+}//accessChk
+
+function tourList(listSearch, textSearch){
+	$.ajax({
+		url:"manager_tour_manager_process.jsp",
+		data:"listSearch="+listSearch+"&textSearch="+textSearch,
+		type:"get",
+		dataType:"json",
+		error:function( xhr ){
+			$("#tableDiv").show();
+			$("#tableDiv").html("처리 중 문제가 발생 했습니다. 다시 시도해 주세요.");
+		},
+		success:function(jsonObj){
+			$("#tableDiv").show();
+			
+			var output="<table class='member' style='width: 100%'>";
+			output+="<tr><th>코스번호</th><th>코스명</th><th>시간</th><th>요금</th><th></th></tr>";
+			if(!jsonObj.isEmpty){
+				$(jsonObj.list).each(function(i, json){
+					output+="<tr>";
+					output+="<td>"+json.tourNum+"</td>";
+					output+="<td>"+json.tourName+"</td>";
+					output+="<td>10:00-16:00</td>";
+					output+="<td>성인: "+json.adultFee+"원<br/>기타: "+json.otherFee+"원</td>";
+					output+="<td><input type='button' value='상세보기' class='mainBtn' onclick=\"location.href='manager_tour_detail.jsp?tourNum="+json.tourNum+"'\"/></td>";
+					output+="</tr>";
+				});//each
+			}else {
+				output+="<tr><td colspan='5'>데이터가 존재하지 않습니다.</td></tr>";
+			}//end else
+			output+="</table>";
+				
+			$("#tableDiv").html(output);
+			$("#totalCnt").html($(jsonObj.list).length);
+		}//success
+	});//ajax
+}//tourList
+
+function typeChk(listSearch, textSearch){
 	var flag=false;
 	
-	console.log(typeof(searchSelVal));
-	console.log(typeof(searchTextVal));
+	var textSearch=parseInt(textSearch);//String을 Int로 변경
 	
-	if(searchSelVal=="tourNum" && typeof(searchTextVal)!="number"){
-		alert("숫자를 입력해주세요.");
+	if(listSearch=="tourNum" && typeof(textSearch)!="number"){
 		flag=true;
 	}//end if
 	
@@ -136,7 +182,7 @@ function typeChk(){
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+						href="../login_manager/manager_signIn.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %>관리자님</a></li>
 				</ul>
 				
 				<a href="#"
@@ -185,51 +231,21 @@ function typeChk(){
 		
 			<div>
 				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-				
-					<form id="searchFrm" action="manager_tour_manager.jsp" method="get">
 					<select id="listSearch" name="listSearch">
      					<option value="tourName" selected>코스명</option>
      					<option value="tourNum">코스번호</option>
     				</select>
 					<input type="text" id="textSearch" name="textSearch" placeholder="내용을 입력하세요." value="<%  %>">
 					<input type="button" id="searchBtn" value="검색" class="mainBtn">
-					</form>
 				</div>
-				<table class="member" style="width: 100%">
-					<tr>
-						<th>코스번호</th>
-						<th>코스명</th>
-						<th>시간</th>
-						<th>요금</th>
-						<th></th>
-					</tr>
-					<%
-					List<TourManagerVO> tourList=tmDAO.selectSearchTour(tmVO);
-					
-					pageContext.setAttribute("tourList", tourList);
-					%>
-					<c:forEach var="tour" items="${ tourList }">
-					<tr>
-						<td>${ tour.tourNum }</td>
-						<td>${ tour.tourName }</td>
-						<td>10:00-16:00</td>
-						<td>성인: ${ tour.adultFee }원<br>기타: ${ tour.otherFee }원</td>
-						<td><input type="button" value="상세보기" class="mainBtn" onclick="location.href='manager_tour_detail.jsp?tourNum=${ tour.tourNum }'"/></td>
-					</tr>
-					</c:forEach>
-				</table>
+				<div id="tableDiv">
+				<!-- ajax로 투어를 테이블로 표시 -->
+				</div>
 			</div>
 			
 			<div style="display: flex; justify-content: end; align-items: center;">
-				<%-- <div></div>
-				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-					<input class="pagination" type="button" value="<">
-					<input class="pagination pageNow" type="button" value="1">
-					<input class="pagination" type="button" value=">">
-				</div> --%>
-				
-				<div>
-					총 <span>${ fn:length(tourList) }</span>건
+				<div >
+					총 <span id="totalCnt"></span>건
 				</div>
 			</div>
 			<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">

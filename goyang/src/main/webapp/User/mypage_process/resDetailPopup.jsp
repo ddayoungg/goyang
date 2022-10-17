@@ -45,18 +45,76 @@
 <jsp:useBean id="miVO" class="kr.co.goyang.user.vo.MyInfoVO" scope="page" />
 <jsp:setProperty name="miVO" property="*"/>
 
+<%
+String id="";//로그인한 아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+
+//예약번호 set
+int reserNum=0;
+if(request.getParameter("reserNum") !=null) {
+	reserNum=Integer.parseInt(request.getParameter("reserNum"));
+}//end if
+
+//자신의 창 닫기
+String closeFlag="pass";//"pass"=창 닫기 O "close"=창 닫기 X
+if(request.getParameter("closeFlag") !=null){
+	closeFlag = request.getParameter("closeFlag");
+}//end if
+
+%>
+
 <script type="text/javascript">
 $(function(){
-	$("#closeBtn").click(function(){
+	
+	accessChk();//접근 권한 확인
+	
+	<%if(closeFlag.equals("commit")) {%>
 		opener.location.reload();
+		window.close();
+		return;
+	<%}//end if%>
+	
+	$("#closeBtn").click(function(){
 	    window.close();
 	});//click
 })//ready
 
+function accessChk(){
+	var id="<%= id %>";
+	var reserNum=<%= reserNum %>;
+	var closeFlag="<%= closeFlag %>";
+	
+	if(id==""){
+		<%if(!closeFlag.equals("logout")) {%>//자식 팝업 창에서 이미 메시지를 띄울 경우
+			alert("로그인 해주세요.");
+		<%}//end if%>
+		opener.location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		window.close();
+		return;
+	}//end if
+	
+	if(closeFlag=="commit") {//예약취소 성공 시 팝업 닫기
+		window.close();
+		return;
+	}//end if
+	
+	if(reserNum==0){
+		if(closeFlag!="reserNumNon"){//자식 팝업 창에서 이미 메시지를 띄울 경우
+			alert("존재하지 않은 예약번호 입니다.");
+		}//end if
+		opener.location.reload();
+	    window.close();
+		return;
+	}//end if
+	
+}//accessChk
+
 function ccPopup(reserNum) {//예약 취소 팝업
 	var leftVal=(document.body.offsetWidth / 2) - (220 / 2);
 	var topVal=(window.screen.height / 2) - (320 / 2);
-	window.open("ccPopup.jsp?reserNum="+reserNum+"", "예약 취소", "width=800, height=500, left="+leftVal+", top="+topVal+"");
+	window.open("ccPopup.jsp?reserNum="+reserNum, "예약 취소", "width=800, height=500, left="+leftVal+", top="+topVal+"");
 }//ccPopup
 
 </script>
@@ -65,28 +123,17 @@ function ccPopup(reserNum) {//예약 취소 팝업
 <div id="dubWrap">
 
 <%
-String id="tester";//로그인한 아이디
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
-%>
-
-<%
 MyInfoDAO miDAO=MyInfoDAO.getInstance();
 
 //파라미터 값 set
 miVO.setId(id);
-miVO.setReserNum(Integer.parseInt(request.getParameter("reserNum")));
+miVO.setReserNum(reserNum);
 
-MyInfoVO reserInfo=miDAO.selectReserDetail(miVO);
-int[] resSeatNum=miDAO.selectResSeatNum(miVO.getReserNum());
+MyInfoVO reserInfo=miDAO.selectReserDetail(miVO);//예약 정보
+int[] resSeatNum=miDAO.selectResSeatNum(miVO.getReserNum());//예약된 좌석 번호
 
-pageContext.setAttribute("reserInfo", reserInfo);
-pageContext.setAttribute("resSeatNum", resSeatNum);
+pageContext.setAttribute("reserInfo", reserInfo);//예약한 등록 정보
+pageContext.setAttribute("resSeatNum", resSeatNum);//예약한 버스 좌석 번호
 %>
 		
 <div style="width: 800px; margin: 0px auto">
@@ -106,29 +153,35 @@ pageContext.setAttribute("resSeatNum", resSeatNum);
 					<td>${ reserInfo.phone }</td>
 				</tr>
 				<tr>
-					<th>날짜</th>
+					<th>투어 일정</th>
 					<td>${ reserInfo.reserDate }</td>
 				</tr>
 				<tr>
-					<th>투어코스</th>
+					<th>투어 코스</th>
 					<td>${ reserInfo.tourName }</td>
 				</tr>
 				<tr>
 					<th>인원수 </th>
 					<td>
 						성인(${ reserInfo.adultFee }원) : ${ reserInfo.adultCnt }명, 
-						기타(${ reserInfo.otherFee }) : ${ reserInfo.otherCnt }명
+						기타(${ reserInfo.otherFee }원) : ${ reserInfo.otherCnt }명
 					</td>
 				</tr>
 				<tr>
 					<th>예약 좌석번호</th>
+					<%if(resSeatNum.length!=0){ %>
 					<td>
 						<c:forEach var="seatNum" items="${ resSeatNum }">
 							<c:out value="${ seatNum }"/>번&nbsp;
 						</c:forEach>
 					</td>
-					
+					<%}else {%>
+					<td>
+						<c:out value="예약하신 좌석 번호가 존재하지 않습니다."/>
+					</td>
+					<%}//end else %>
 				</tr>
+				
 				<c:if test="${ not empty reserInfo.cancelReas }">
 				<tr>
 					<th>취소 사유</th>

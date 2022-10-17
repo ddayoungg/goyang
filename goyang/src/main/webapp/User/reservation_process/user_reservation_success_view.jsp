@@ -45,37 +45,47 @@
 
 <%
 //초기값 설정
-//String id=null;//로그인 하지 않은 경우
-String id="tester";//아이디
-int reserNum=0;//예약 번호
-%>
-
-<%
 //로그인 여부(권한여부)
+String id="";//아이디
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
 
 //예약번호 set
+int reserNum=0;//예약 번호
 if(request.getAttribute("reserNum") != null){//예약 번호 가져오기
 	reserNum = (int)request.getAttribute("reserNum");
 }//end if
-if(reserNum==0){//예약번호를 가지고 오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/main/index.jsp");
-	return;
-}//end if
+
 %>
 
 <script type="text/javascript">
 $(function(){
+	
+	accessChk();//접근 권한 확인
+	
 	$("#homeMoveBtn").click(function(){
 		location.href="../main/index.jsp"
 	});//click
 });//ready
+
+function accessChk(){
+	var id="<%= id %>";
+	var reserNum=<%= reserNum %>;
+	var chkFlag=true; //true 통과, false 돌아가
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}//end if
+	
+	if(reserNum==0){//예약번호 파라미터 값이 없을 경우
+		location.href="http://localhost/goyang/User/main/index.jsp";
+		return;
+	}//end if
+		
+}//accessChk
 
 </script>
 
@@ -113,7 +123,7 @@ $(function(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a href="../login_process/user_logout.jsp">로그아웃</a></li>
 				</ul>
 				
 				<a href="#"
@@ -256,45 +266,6 @@ $(function(){
 		</div>
 	</div>
 	
-	<!-- 팝업창 -->
-	<div id="popup" class="hide popup">
-		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 예약 결제 확인</div>
-				
-				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">투어 예약 결제를 하시겠습니까?</div>
-					
-					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popup2')">
-						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup')">
-					</div>
-				</div>
-			</div>
-	  </div>
-	</div>
-	
-	<!-- 팝업창 -->
-	<div id="popup2" class="hide popup">
-	  <div class="content">
-		<div style="width: 412px;">
-			<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-			display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 예약 결제 확인</div>
-			
-			<div style="background-color: #f0f6f9;">
-				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">결제가 완료되었습니다.</div>
-				
-				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="closePopup('popup2')">
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-
 	<div id="overlayer"></div>
 	<div class="loader">
 		<div class="spinner-border" role="status">
@@ -316,31 +287,6 @@ $(function(){
 	<script src="../../js/typed.js"></script>
 
 	<script src="../../js/custom.js"></script>
-
-	<!-- 수정 -->
-	<script type="text/javascript">
-		function showPopup(hasFilter,id) {
-			const popup = document.querySelector("#"+id);
-			
-			if(id=='popup2'){
-				document.querySelector('#popup').classList.add('hide');
-			}
-			
-			if (hasFilter) {
-				popup.classList.add('has-filter');
-			} else {
-				popup.classList.remove('has-filter');
-			}
-				
-			popup.classList.remove('hide');
-		}
-		
-		function closePopup(id) {
-			const popup = document.querySelector("#"+id);
-			popup.classList.add('hide');
-		}
-		
-	</script>
 </body>
 
 </html>

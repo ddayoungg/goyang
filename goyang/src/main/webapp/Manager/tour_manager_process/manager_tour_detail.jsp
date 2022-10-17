@@ -44,6 +44,7 @@
 .imgSize{width: 300px; height: 200px; border:1px solid #333;}
 .margin20{margin: 20px;}
 .marginLR10{margin : 10px 0px 10px 20px}
+.inputBorderNone{border:0px none;}
 </style>
 
 <!-- google jquery CDN -->
@@ -51,31 +52,41 @@
 
 <script type="text/javascript">
 <%
-//로그인 여부(권한여부)
-//String id=null;//로그인 하지 않은 경우
-String id="admin";//로그인 한 경우
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
-	return;
+//파라미터, 세선 set
+//로그인
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
 }//end if
 
-//투어를 선택 하지 않고 주소로 들어갈 경우
+//투어번호
 int tourNum=0;
 if(request.getParameter("tourNum") !=null){//세션에서 아이디 가져오기.
 	tourNum = Integer.parseInt(request.getParameter("tourNum"));
 }//end if
-if(tourNum==0){//투어를 지정하지 않을 경우
-	response.sendRedirect("http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp");
-	return;
-}//end if
 %>
 
 $(function(){
-	
+	accessChk();//접근 권한 체크
 });//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	var tourNum=<%= tourNum %>;
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+	
+	if(tourNum==null){
+		alert("투어를 선택해주세요.");
+		location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp";
+		return;
+	}//end if
+	
+}//accessChk
 
 </script>
 </head>
@@ -112,7 +123,7 @@ $(function(){
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+						href="../login_manager/manager_signIn.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %>관리자님</a></li>
 				</ul>
 				
 				<a href="#"
@@ -163,43 +174,37 @@ $(function(){
   <hr> -->
   <%
   TourManagerDAO tmDAO=TourManagerDAO.getInstance();
-  TourManagerVO tourInfo=tmDAO.selectTour(tourNum);
+  TourManagerVO tourInfo=tmDAO.selectTourDetail(tourNum);
   
   pageContext.setAttribute("tourInfo", tourInfo);
   %>
-  <div class="container">
-  <div class="margin20"><!-- 코스명, 요약 설명, 사진, 맵 -->
-   <div class="margin20">
-    <span><strong>코스명</strong></span><br/>
-    <input type="text" name="tourName" class="textSize" value="${ tourInfo.tourName }" readonly="readonly" /><br/>
+  <div><!-- 전체 테이블 -->
+  <table class="member">
+  <tr>
+   <th><span><strong>코스명</strong></span></th>
+   <td><span class="margin20">${ tourInfo.tourName }</span></td>
+  </tr>
+  <tr>
+   <th><span><strong>요약 설명</strong></span></th>
+   <td><span class="margin20">${ tourInfo.explain }</span></td>
+  </tr>
+  <tr>
+   <th><span><strong>사진</strong></span></th>
+   <td><div class="imgSize"><img class="imgSize" name="thumImg" src="http://localhost/goyang/images/${ tourInfo.thumImg }"></div></td>
+  </tr>
+  <tr><!-- 관광지 등록 -->
+   <th><span><strong>코스</strong></span></th>
+   <td>
+    <div style="text-align: right">
+     <span><strong>중심 위도, 경도</strong></span>
+     <span class="margin20">${ tourInfo.mapCenLati }, ${ tourInfo.mapCenLong }</span><br/>
     </div>
-    <div class="margin20">
-    <span><strong>요약 설명</strong></span><br/>
-    <input type="text" name="explain" class="textSize" value="${ tourInfo.explain }" readonly="readonly" />
-   </div>
-   <div style="display: flex; justify-content: left; margin-bottom: 5px; margin-top: 20px;">
-   <div class="margin20"><!-- 중심 위도 경도 -->
-    <span><strong>중심 위도</strong></span>
-    <input type="text" name="mapCenLati" value="${ tourInfo.mapCenLati }" readonly="readonly" class="margin20" /><br/>
-    <span><strong>중심 경도</strong></span>
-    <input type="text" name="mapCenLong" value="${ tourInfo.mapCenLong }" readonly="readonly" class="margin20" /><br/>
-   </div>
-    <div class="margin20"><!-- 대표 사진 -->
-     <span>대표 사진</span><br/>
-     <div class="imgSize"><img class="imgSize" name="thumImg" src="http://localhost/goyang/images/${ tourInfo.thumImg }"></div>
-    </div>
-   </div>
-  </div>
-  
-  <div class="margin20"><!-- 코스 테이블 -->
-  <span class="margin20"><strong>코스</strong></span><br/>
-  <table class="member tableSize">
+   	<table class="member tableSize">
   	<tr>
   		<th>순번</th>
   		<th>경유지명/내용</th>
   		<th>시간</th>
-  		<th>위도</th>
-  		<th>경도</th>
+  		<th>위도, 경도</th>
   	</tr>
   	<%
   	List<TourManagerVO> tourSportList=tmDAO.selectTourSpots(tourNum);
@@ -210,25 +215,34 @@ $(function(){
   		<td>${ tourSport.tourOrder }</td>
   		<td>${ tourSport.spotName }</td>
   		<td>${ tourSport.startHour }-${ tourSport.endHour }</td>
-  		<td>${ tourSport.mapSpoLati }</td>
-  		<td>${ tourSport.mapSpoLong }</td>
+  		<td>${ tourSport.mapSpoLati }, ${ tourSport.mapSpoLong }</td>
   	</tr>
   	</c:forEach>  
   </table>
-  </div>
+   </td>
+  </tr>
+  <tr>
+   <th><span><strong>탑승료</strong></span><br/><span style="font-size: 13px">(단위:원)</span></th>
+   <td>
+   <div style="text-align: left">
+    <span><strong>성인: </strong></span><span> ${ tourInfo.adultFee } <strong>원</strong></span><br/>
+    <span><strong>기타: </strong></span><span> ${ tourInfo.otherFee } <strong>원</strong></span>
+   </div>
+   </td>
+  </tr>
+  </table>
+  </div><!-- 전체 테이블 끝 -->
   
-  <div class="margin20"> <!-- 탑승료, 종료하기/수정하기 버튼 -->
-   <div class="margin20"><strong>탑승료</strong></div>
-   <div class="margin20"><strong>성인:</strong><input type="text" value="${ tourInfo.adultFee }" readonly="readonly"/></div>
-   <div class="margin20"><strong>기타:</strong><input type="text" value="${ tourInfo.otherFee }" readonly="readonly"/></div>
-   <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-    <div class="marginLR10">
-     <input type="button" value="종료하기" class="mainBtn" onclick="showPopup(true,'popup')"/></div><div class="marginLR10">
-     <input type="button" value="수정하기" class="mainBtn" onclick="location.href='manager_tour_rectify.jsp?tourNum=<%= tourNum %>'"/></div>
+  <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+   <div class="marginLR10">
+     <input type="button" value="종료하기" class="mainBtn" onclick="showPopup(true,'popup')"/>
+   </div>
+   <div class="marginLR10">
+     <input type="button" value="수정하기" class="mainBtn" onclick="location.href='manager_tour_rectify.jsp?tourNum=<%= tourNum %>'"/>
    </div>
   </div>
-  </div>
-  </div>
+  
+  </div><!-- container -->
   
   <!-- footer -->
 
@@ -291,7 +305,7 @@ $(function(){
 				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 수정 확인</div>
 				
 				<div style="background-color: #f0f6f9;">
-					<div style="font-size: 16px; display: flex; justify-content: center; 
+					<div style="font-size: 16px; display: flex; justify-content: center;
 					align-items: center; height: 70px ;background-color: #f0f6f9;">해당 투어를 종료하시겠습니까?</div>
 					
 					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">

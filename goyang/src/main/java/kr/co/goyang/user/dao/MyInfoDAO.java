@@ -114,8 +114,10 @@ public class MyInfoDAO {
 		try {
 			conn = dc.getConn();
 			StringBuilder selectMyUesrInfo = new StringBuilder();
-			selectMyUesrInfo.append("	select 	TOUR_NUM, TOUR_NAME		")
-			.append("	from		TOUR				")
+			selectMyUesrInfo
+			.append("	SELECT 		TOUR_NUM, TOUR_NAME			")
+			.append("	FROM		TOUR					")
+			.append("	WHERE		RUN_FLAG=1				")
 			.append("	ORDER BY	TOUR_NUM				");
 			
 			pstmt = conn.prepareStatement(selectMyUesrInfo.toString());
@@ -189,14 +191,6 @@ public class MyInfoDAO {
 		try {
 				conn=dc.getConn();
 				
-//				.append("	SELECT 	 	*									")
-//				.append("	FROM		(SELECT		ROW_NUMBER() OVER (ORDER BY TR.REVIEW_NUM DESC) RNUM, TR.REVIEW_NUM, T.TOUR_NAME, TR.TITLE, TR.REV_WRITE_DATE, TR.ID")
-//				.append("				FROM		TOUR_REVIEW TR, TOUR T	")
-//				.append("				WHERE		TR.TOUR_NUM=T.TOUR_NUM	")
-//				.append("				ORDER BY	TR.REVIEW_NUM DESC		")
-//				.append("				)									")
-//				.append("	WHERE 		NUM BETWEEN ? AND ? AND ID=?");
-				
 				StringBuilder TOUR_RESERVA=new StringBuilder();
 				TOUR_RESERVA
 				.append("	SELECT		*									")
@@ -205,14 +199,15 @@ public class MyInfoDAO {
 				.append("							T.TOUR_NAME, T.ADULT_FEE, T.OTHER_FEE	")
 				.append("				FROM		TOUR_RESERVA TR, TOUR T	")
 				.append("				WHERE		TR.TOUR_NUM=T.TOUR_NUM	")
+				.append("							AND ID=?				")
 				.append("				ORDER BY  	TR.RESER_NUM DESC		")
 				.append("				)									")
-				.append("	WHERE 		RNUM BETWEEN ? AND ? AND ID=?		");
+				.append("	WHERE 		RNUM BETWEEN ? AND ?		");
 
 				pstmt=conn.prepareStatement( TOUR_RESERVA.toString() );
-				pstmt.setInt(1, miVO.getStartPS()+1);
-				pstmt.setInt(2, miVO.getStartPS()+miVO.getLenPS());
-				pstmt.setString(3, miVO.getId());
+				pstmt.setString(1, miVO.getId());
+				pstmt.setInt(2, miVO.getStartPS()+1);
+				pstmt.setInt(3, miVO.getStartPS()+miVO.getLenPS());
 				rs=pstmt.executeQuery(); 
 				
 				MyInfoVO miSetVO=null;
@@ -286,7 +281,8 @@ public class MyInfoDAO {
 			StringBuilder TOUR_RESERVA = new StringBuilder();
 			TOUR_RESERVA
 			.append("	SELECT   	TU.NAME, TU.EMAIL, TU.PHONE,	")
-			.append("			   	TR.RESER_NUM, TR.RESER_DATE, TR.ADULT_CNT, TR.OTHER_CNT, T.TOUR_NAME, RC.CANCEL_REAS	")
+			.append("			   	TR.RESER_NUM, TR.RESER_DATE, TR.ADULT_CNT, TR.OTHER_CNT,	")
+			.append("			   	T.TOUR_NAME, ADULT_FEE, OTHER_FEE,  RC.CANCEL_REAS	")
 			.append("	FROM		TOUR_USER TU, TOUR_RESERVA TR, TOUR T, RESERVA_CANCEL RC	")
 			.append("	WHERE		TR.ID=TU.ID AND TR.TOUR_NUM=T.TOUR_NUM AND TR.RESER_NUM=RC.RESER_NUM(+)	")
 			.append("				AND TR.ID=? AND TR.RESER_NUM=?	");
@@ -306,6 +302,8 @@ public class MyInfoDAO {
 				miResultVO.setAdultCnt(rs.getInt("ADULT_CNT"));
 				miResultVO.setOtherCnt(rs.getInt("OTHER_CNT"));
 				miResultVO.setTourName(rs.getString("TOUR_NAME"));
+				miResultVO.setAdultFee(rs.getInt("ADULT_FEE"));
+				miResultVO.setOtherFee(rs.getInt("OTHER_FEE"));
 				miResultVO.setCancelReas(rs.getString("CANCEL_REAS"));
 			}//end if
 			
@@ -366,43 +364,7 @@ public class MyInfoDAO {
 		return seatNum;
 	}//selectSeatNum
 	
-	public int tranReserCancel(MyInfoVO miVO) {
-		int rowCnt=0;
-		
-		DbConnection dc=DbConnection.getInstance();
-		
-		Connection con=null;
-		try {
-			con=dc.getConn();
-			con.setAutoCommit(false);
-			
-			insertReserCancel(miVO, con);
-			rowCnt=updateReserCancel(miVO.getReserNum(), con);
-			
-			con.commit();
-			System.out.println("commit 성공");
-		} catch (SQLException e) {
-			try {
-				System.out.println("트랜잭션 실패");
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} // end catch
-			e.printStackTrace();
-		}finally {
-			try {//6.연결 끊기
-				con.setAutoCommit(true);//오토커밋 설정
-				if(con!=null) {con.close();}//end if
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}//end catch
-		}//end finally
-		
-		return rowCnt;
-	}//transactionReser
-
 	public void insertReserCancel(MyInfoVO miVO, Connection con) throws SQLException { // 예약 취소 - 예약 취소 테이블 추가
-
 		PreparedStatement pstmt = null;
 
 		try {
@@ -423,12 +385,39 @@ public class MyInfoDAO {
 			//연결 끊기
 			if(pstmt!=null) { pstmt.close(); }//end if
 		}//end finally
-
 	}// insertReserCancel
+	
+	public int updateCancelReas(MyInfoVO miVO, Connection con) throws SQLException { // 예약 취소 - 예약 취소 테이블 추가
+		int upCnt=0;
+		
+		PreparedStatement pstmt = null;
+		
+		try {
+			StringBuilder updateCancelReas = new StringBuilder();
+			updateCancelReas
+			.append("	UPDATE	RESERVA_CANCEL										")
+			.append("	SET		CANCEL_REAS=?										")
+			.append("	WHERE	RESER_NUM=(SELECT 	RESER_NUM						")
+			.append("					   FROM		TOUR_RESERVA					")
+			.append("					   WHERE	RESER_NUM=? AND RESER_FLAG=3)	");
+			
+			pstmt = con.prepareStatement( updateCancelReas.toString());
+			
+			pstmt.setString(1, miVO.getCancelReas());
+			pstmt.setInt(2, miVO.getReserNum());
+			
+			upCnt=pstmt.executeUpdate();
+			
+		} finally {
+			//연결 끊기
+			if(pstmt!=null) { pstmt.close(); }//end if
+		}//end finally
+		
+		return upCnt;
+	}//updateCancelReas
 	
 	public int updateReserCancel(int reserNum, Connection con) throws SQLException { // 예약 취소-예약 상태
 		int upCnt=0;
-		
 
 		PreparedStatement pstmt = null;
 
@@ -499,16 +488,17 @@ public class MyInfoDAO {
 				.append("	FROM		(SELECT		ROW_NUMBER() OVER (ORDER BY TR.REVIEW_NUM DESC) RNUM, TR.REVIEW_NUM, T.TOUR_NAME, TR.TITLE, TR.REV_WRITE_DATE, TR.ID")
 				.append("				FROM		TOUR_REVIEW TR, TOUR T	")
 				.append("				WHERE		TR.TOUR_NUM=T.TOUR_NUM	")
+				.append("							AND ID=?				")
 				.append("				ORDER BY	TR.REVIEW_NUM DESC		")
 				.append("				)									")
-				.append("	WHERE 		RNUM BETWEEN ? AND ? AND ID=?");
+				.append("	WHERE 		RNUM BETWEEN ? AND ?				");
 				
 				
 				pstmt=conn.prepareStatement( TOUR_REVIEW.toString() );
 				
-				pstmt.setInt(1, miVO.getStartPS()+1);
-				pstmt.setInt(2, miVO.getStartPS()+miVO.getLenPS());
-				pstmt.setString(3, miVO.getId());
+				pstmt.setString(1, miVO.getId());
+				pstmt.setInt(2, miVO.getStartPS()+1);
+				pstmt.setInt(3, miVO.getStartPS()+miVO.getLenPS());
 				
 				rs=pstmt.executeQuery(); 
 				
@@ -641,17 +631,18 @@ public class MyInfoDAO {
 				TOUR_COMMEND
 				.append("	SELECT		*													")
 				.append("	FROM		(SELECT		ROW_NUMBER() OVER (ORDER BY TC.COMMEND_NUM DESC) RNUM,	")
-				.append("							TC.COMMEND_NUM, TR.REV_CONTENT, TC.COM_WRITE_DATE, TC.COM_CONTENT, TR.ID	")
+				.append("							TC.COMMEND_NUM, TR.REV_CONTENT, TC.COM_WRITE_DATE, TC.COM_CONTENT, TR.ID, TC.REVIEW_NUM	")
 				.append("				FROM		TOUR_COMMEND TC, TOUR_REVIEW TR			")
 				.append("				WHERE 		TC.REVIEW_NUM = TR.REVIEW_NUM			")
+				.append("							AND TR.ID=?								")
 				.append("				ORDER BY	TC.COMMEND_NUM DESC						")
 				.append("				)													")
-				.append("	WHERE 		RNUM BETWEEN ? AND ? AND ID=?						");
+				.append("	WHERE 		RNUM BETWEEN ? AND ?								");
 				
 				pstmt=conn.prepareStatement( TOUR_COMMEND.toString() );
-				pstmt.setInt(1, miVO.getStartPS()+1);
-				pstmt.setInt(2, miVO.getStartPS()+miVO.getLenPS());
-				pstmt.setString(3, miVO.getId());
+				pstmt.setString(1, miVO.getId());
+				pstmt.setInt(2, miVO.getStartPS()+1);
+				pstmt.setInt(3, miVO.getStartPS()+miVO.getLenPS());
 				rs=pstmt.executeQuery(); 
 				
 				MyInfoVO miSetVO=null;
@@ -661,6 +652,7 @@ public class MyInfoDAO {
 					miSetVO.setRevContent(rs.getString("REV_CONTENT"));
 					miSetVO.setComContent(rs.getString("COM_CONTENT"));
 					miSetVO.setComWriteDate(rs.getDate("COM_WRITE_DATE"));
+					miSetVO.setReviewNum(rs.getInt("REVIEW_NUM"));
 					list.add(miSetVO);
 				}//
 

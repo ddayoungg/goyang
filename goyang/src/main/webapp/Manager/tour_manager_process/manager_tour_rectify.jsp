@@ -44,7 +44,7 @@
 .imgSize{width: 300px; height: 200px; border:1px solid #333;}
 .margin20{margin: 20px;}
 .marginLR10{margin : 10px 0px 10px 20px}
-
+.inputBorderNone{border:0px none;}
 </style>
 <!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -52,34 +52,24 @@
 <script type="text/javascript">
 
 <%
-//초기값 설정
-//String id=null;//로그인 하지 않은 경우
-String id="admin";//아이디
+//파라미터, 세션 set
+//로그인 여부
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
+}//end if
+
+//투어 번호
 int tourNum=0;//투어 번호
-%>
-
-<%
-//로그인 여부(권한여부)
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
-	return;
-}//end if
-
-//투어 번호 set
 if(request.getParameter("tourNum") !=null){//투어 번호 가져오기
 	tourNum = Integer.parseInt(request.getParameter("tourNum"));
-}//end if
-if(tourNum==0){//투어번호를 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp");
-	return;
 }//end if
 %>
 
 tableCnt=0;
 $(function(){
+	
+	accessChk();//접근권한 검사
 	
 	$("#thumImgFile").change(function(){//대표 사진 세팅
 		setFile();
@@ -91,7 +81,7 @@ $(function(){
 		if($('#tableAction tr').length>12){
 			return;
 		}
-		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly'/></td>"
+		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly' class='inputBorderNone centerText'/></td>"
 		tableTemp +="<td><input type='text' name='spotNameIn' value=''/></td>"
 		tableTemp +="<td><input type='text' name='startHourIn' value='' size=3 maxlength='20'/></td>"
 		tableTemp +="<td><input type='text' name='endHourIn' value='' size=3 maxlength='20'/></td>"
@@ -114,6 +104,24 @@ $(function(){
 		chkNull();
 	});//click
 })//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	var tourNum=<%= tourNum %>;
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+	
+	if(tourNum==0){
+		alert("투어를 선택해주세요.");
+		location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp";
+		return;
+	}//end if
+	
+}//accessChk
 
 function chkNull(){
 	if($("#tourName").val().trim()=="") {
@@ -235,7 +243,7 @@ function setFile(){
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+						href="../login_manager/manager_signIn.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %>관리자님</a></li>
 				</ul>
 				
 				<a href="#"
@@ -282,90 +290,99 @@ function setFile(){
 	<!-- 라인 구분 선 끝-->
 	
   <div class="container">
+  
   <%
   TourManagerDAO tmDAO=TourManagerDAO.getInstance();
-  TourManagerVO tourInfo=tmDAO.selectTour(tourNum);
+  TourManagerVO tourInfo=tmDAO.selectTourDetail(tourNum);
   
   pageContext.setAttribute("tourInfo", tourInfo);
   %>
-  <div class="container">
   <form id="recitfyFrm" action="manager_tour_rectify_process.jsp" method="post" enctype="multipart/form-data">
-   <div class="margin20">
-    <span><strong>코스명</strong></span><br/>
-    <input type="text" class="textSize" name="tourName" id="tourName" value="${ tourInfo.tourName }" placeholder="코스명을 입력하세요." maxlength=20/><br/>
+  <div><!-- 전체 테이블 -->
+  <table class="member">
+  <tr>
+   <th><span><strong>코스명</strong></span></th>
+   <td><input type="text" class="textSize" name="tourName" id="tourName" value="${ tourInfo.tourName }" placeholder="코스명을 입력하세요." maxlength=20/></td>
+  </tr>
+  <tr>
+   <th><span><strong>요약 설명</strong></span></th>
+   <td><input type="text" class="textSize" name="explain" id="explain" value="${ tourInfo.explain }" placeholder="내용을 입력하세요." maxlength=30/></td>
+  </tr>
+  <tr>
+   <th><span><strong>사진</strong></span></th>
+   <td>
+     <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
+      <div>
+       <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="${ tourInfo.thumImg }"/>
+      </div>
+       <div class="imgSize"><img class="imgSize" id="thumImgOutput" src="http://localhost/goyang/images/${ tourInfo.thumImg }"/></div>
+     </div>
+    </td>
+  </tr>
+  <tr><!-- 관광지 등록 -->
+   <th><span><strong>코스</strong></span></th>
+   <td>
+    <div style="text-align: right">
+      
+       <span><strong>중심 위도</strong></span>
+       <input type="text" name="mapCenLati" class="margin20" value="${ tourInfo.mapCenLati }" size=3 maxlength="20" />
+      
+       <span><strong>중심 경도</strong></span>
+       <input type="text" name="mapCenLong" class="margin20" value="${ tourInfo.mapCenLong }" size=3 maxlength="20"  /><br/>
+      
     </div>
-    <div class="margin20">
-    <span><strong>요약 설명</strong></span><br/>
-    <input type="text" class="textSize" name="explain" id="explain" value="${ tourInfo.explain }" placeholder="내용을 입력하세요." maxlength=30/>
-   </div>
-
-   
-  <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
-
-    <div class="margin20"><!-- 중심 위도 경도 -->
-    <span><strong>중심 위도</strong></span>
-    <input type="text" name="mapCenLati" class="margin20" value="${ tourInfo.mapCenLati }" /><br/>
-    <span><strong>중심 경도</strong></span>
-    <input type="text" name="mapCenLong" class="margin20" value="${ tourInfo.mapCenLong }" /><br/>
-   </div>
-   
-   <div class="margin20"><!-- 대표 사진 -->
-   <span><strong>대표 사진</strong></span><br/>
-   <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
-    <div>
-     <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="${ tourInfo.thumImg }">
-     <input type="hidden" id="hiddThumImg" name="thumImg" value="${ tourInfo.thumImg }"/>
+   	 <table class="member tableSize" id="tableAction">
+  	  <tr>
+  		  <th>순번</th>
+  	  	  <th>경유지명/내용</th>
+  		  <th>시작 시간</th>
+  		  <th>끝나는 시간</th>
+  		  <th>위도</th>
+  		  <th>경도</th>
+  	  </tr>
+  	  <%
+  	   List<TourManagerVO> tourSportList=tmDAO.selectTourSpots(tourNum);
+  	   pageContext.setAttribute("tourSportList", tourSportList);
+  	  %>
+	  <c:forEach var="tourSport" items="${ tourSportList }">	
+  	  <tr>
+  		  <td><input type="text" name="tourOrderIn" value="${ tourSport.tourOrder }" size=1 readonly="readonly" class="inputBorderNone centerText" /></td>
+  		  <td><input type="text" name="spotNameIn" value="${ tourSport.spotName }" /></td>
+  		  <td><input type="text" name="startHourIn" value="${ tourSport.startHour }" size=3 maxlength='20'/></td>
+  		  <td><input type="text" name="endHourIn" value="${ tourSport.endHour }" size=3 maxlength='20'/></td>
+  		  <td><input type="text" name="mapSpoLatiIn" value="${ tourSport.mapSpoLati }" size=3 maxlength='20'/></td>
+  		  <td><input type="text" name="mapSpoLongIn" value="${ tourSport.mapSpoLong }" size=3 maxlength='20'/></td>
+  	  </tr>
+  	  </c:forEach>
+    </table>
+    
+    <div style="display: flex; justify-content: space-evenly;">
+      <input type="button" value="항목추가" class="mainBtn" id="btn-add-row"/>
+      <input type="button" value="항목제거" class="mainBtn" id="btn-delete-row"/>
     </div>
-     <div class="imgSize"><img class="imgSize" id="thumImgOutput" src="http://localhost/goyang/images/${ tourInfo.thumImg }"/></div>
-    </div>
+    
+   </td>
+  </tr>
+  <tr>
+   <th><span><strong>탑승료</strong></span><br/><span style="font-size: 13px">(단위:원)</span></th>
+   <td>
+   <div style="text-align: left">
+    <span><strong>성인: </strong></span><input type="text" name="adultFee" id="adultFee" value="${ tourInfo.adultFee }" size=5 maxlength="9"/><br/>
+    <span><strong>기타: </strong></span><input type="text" name="otherFee" id="otherFee" value="${ tourInfo.otherFee }" size=5 maxlength="9"/>
    </div>
-  </div>
-  
-  
-  <div class="margin20"><!-- 코스 테이블 -->
-  <span class="margin20"><strong>코스</strong></span><br/>
-  <table class="member tableSize" id="tableAction">
-  	<tr>
-  		<th>순번</th>
-  		<th>경유지명/내용</th>
-  		<th>시작 시간</th>
-  		<th>끝나는 시간</th>
-  		<th>위도</th>
-  		<th>경도</th>
-  	</tr>
-  	<%
-  	List<TourManagerVO> tourSportList=tmDAO.selectTourSpots(tourNum);
-  	pageContext.setAttribute("tourSportList", tourSportList);
-  	%>
-	<c:forEach var="tourSport" items="${ tourSportList }">	
-  	<tr>
-  		<td><input type="text" name="tourOrderIn" value="${ tourSport.tourOrder }" size=1 readonly="readonly"/></td>
-  		<td><input type="text" name="spotNameIn" value="${ tourSport.spotName }" /></td>
-  		<td><input type="text" name="startHourIn" value="${ tourSport.startHour }" size=3 maxlength='20'/></td>
-  		<td><input type="text" name="endHourIn" value="${ tourSport.endHour }" size=3 maxlength='20'/></td>
-  		<td><input type="text" name="mapSpoLatiIn" value="${ tourSport.mapSpoLati }" size=3 maxlength='20'/></td>
-  		<td><input type="text" name="mapSpoLongIn" value="${ tourSport.mapSpoLong }" size=3 maxlength='20'/></td>
-  	</tr>
-  	</c:forEach>
+   </td>
+  </tr>
   </table>
-   <div style="display: flex; justify-content: space-evenly;">
-    <input type="button" value="항목추가" class="mainBtn" id="btn-add-row"/>
-    <input type="button" value="항목제거" class="mainBtn" id="btn-delete-row"/>
-   </div>
-  </div>
+  </div><!-- 전체 테이블 끝 -->
   
-  <div class="margin20"> <!-- 탑승료, 종료하기/수정하기 버튼 -->
-   <div class="margin20"><strong>탑승료</strong></div>
-   <div class="margin20"><strong>성인:</strong><input type="text" name="adultFee" id="adultFee" value="${ tourInfo.adultFee }"/></div>
-   <div class="margin20"><strong>기타:</strong><input type="text" name="otherFee" id="otherFee" value="${ tourInfo.otherFee }"/></div>
-   <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-   <input type="hidden" name="tourNum" value="<%= tourNum %>"/>
+  <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+    <input type="hidden" name="tourNum" value="<%= tourNum %>"/>
+    <input type="hidden" id="hiddThumImg" name="thumImg" value="${ tourInfo.thumImg }"/>
     <div class="marginLR10"></div><div class="marginLR10"><input type="button" id="rectifyBtn" value="수정하기" class="mainBtn"/></div>
-   </div>
   </div>
+   
   </form>
-  </div>
-  </div>
+  </div><!-- container -->
   
   <!-- footer -->
 

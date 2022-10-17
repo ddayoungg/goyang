@@ -13,6 +13,18 @@ request.setCharacterEncoding("UTF-8");//post방식 일 때의 한글 처리
 <jsp:setProperty name="trVO" property="otherCnt"/>
 <jsp:setProperty name="trVO" property="seatNumIn"/>
 
+<%
+//로그인 권한여부
+String id="";//아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+if(id==""){//로그인되지 않았다면
+	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	return;
+}//end if
+%>
+
 <c:catch var="e">
 <%
 
@@ -40,6 +52,6 @@ rd.forward(request,response);
 </c:catch>
 
 <c:if test="${ e ne null }">
-예외발생 :
-<c:out value= "${ e }" />
+잠시 후 다시 한번 시도해 주세요. 
+<%-- <c:out value= "${ e }" /> --%>
 </c:if>

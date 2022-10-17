@@ -15,15 +15,13 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <script type="text/javascript">
 <%
-//초기값
-String id="user";//로그인 한 경우
 int upResult=0;
-%>
-<%
+
+String id="";//아이디
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
-if(id==null){//로그인되지 않았다면
+if(id==""){//로그인되지 않았다면
 	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
 	return;
 }//end if
@@ -41,8 +39,8 @@ upResult=miDAO.updateMyInfo(miVO);
 </c:catch>
 
 <c:if test="${ e ne null }">
-예외발생 :
-<c:out value= "${ e }" />
+처리 중에 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
+/* <c:out value= "${ e }" /> */
 </c:if>
 
 <%if(upResult!=0){%>

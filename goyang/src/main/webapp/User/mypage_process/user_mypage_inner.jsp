@@ -33,13 +33,47 @@
 <!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+<%
+String id="";
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+
+//비밀번호 확인 여부
+String passFlag="fail";//로그인 한 경우
+if(session.getAttribute("passFlag") !=null){//"pass"=접근 허용  // "fail"=접근 불가
+	passFlag = (String) session.getAttribute("passFlag");
+}//end if
+
+%>
+
 <script type="text/javascript">    
 $(function(){
+	
+	accessChk();//접근 권한 확인
+	
 	$("#confirmBtn").click(function(){
 		passChk();//패스워드 입력 사항 체크
 	});//click
 	
 })//reday
+
+function accessChk(){
+	var id="<%= id %>";
+	var passFlag="<%= passFlag %>";
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}//end if
+	
+	if(passFlag=="pass"){
+		location.href="http://localhost/goyang/User/mypage_process/user_mypage.jsp";
+		return;
+	}//end if
+	
+}//accessChk
 
 function passChk() {
 	
@@ -69,18 +103,6 @@ function passChk() {
 </head>
 
 <body>
-
-<%
-String id="user";
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
-%>
-
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
 			<div class="site-mobile-menu-close">
@@ -104,7 +126,7 @@ if(id==null){//로그인되지 않았다면
 				</ul>
 			    <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a href="../login_process/user_logout.jsp">로그아웃</a></li>
 				</ul>
 
 				<a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">
@@ -128,10 +150,9 @@ if(id==null){//로그인되지 않았다면
 
  <div style="width:100%; display:flex; flex-direction:column; align-items:center; margin-top: 36px; margin-bottom: 36px;">
 	<div style="background:#eff0f2; width:30%">
-		<form action="user_mypage_pass_process.jsp" method="get" id="passFrm">
+		<form action="user_mypage_pass_process.jsp" method="post" id="passFrm">
 			<div style="margin-top:15px;display:flex; flex-direction:column; align-items:center; ">
 				<span style="font-size:20px;  padding-bottom:15px; "><strong>비밀번호 확인</strong></span>
-				
 				
 				<input type="password" id="password" name="password" placeholder="비밀번호를 입력해주세요."
 				style="font-size: 20px; display: flex; justify-content: center; align-items: center; height: 40px;"><br/>

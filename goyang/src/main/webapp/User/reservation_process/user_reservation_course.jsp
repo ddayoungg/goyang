@@ -8,6 +8,15 @@
 request.setCharacterEncoding("UTF-8");//post방식 일 때의 한글 처리
 %>
 
+<%
+//파라미터, 세션 얻기
+//로그인 여부
+String id="";//아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+%>
+
 <c:catch var="e">
 <%
 TourReservaDAO trDAO = TourReservaDAO.getInstance();

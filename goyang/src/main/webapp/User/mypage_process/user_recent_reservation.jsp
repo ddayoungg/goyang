@@ -38,16 +38,104 @@
 <!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
+<%
+String id="";//아이디
+if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
+	id = (String) session.getAttribute("id");
+}//end if
+
+//비밀번호 확인 여부
+String passFlag="fail";//로그인 한 경우
+if(session.getAttribute("passFlag") !=null){//"pass"=접근 허용  // "fail"=접근 불가
+	passFlag = (String) session.getAttribute("passFlag");
+}//end if
+%>
+
 <script type="text/javascript">
-
 $(function(){
-
+	accessChk();//접근 권한 확인
+	
+	pageClick(1);//초기 리스트 set
 });//ready
+
+function accessChk(){
+	var id="<%= id %>";
+	var passFlag="<%= passFlag %>";
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}//end if
+	
+	if(passFlag=="fail"){
+		alert("비밀번호 확인을 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_mypage_inner.jsp";
+		return;
+	}//end if
+	
+}//accessChk
+
+function pageClick(page){
+	$.ajax({
+		url:"user_my_res_process.jsp",
+		data:"page="+page,
+		type:"get",
+		dataType:"json",
+		error:function( xhr ){
+			$("#tableDiv").show();
+			/* $("#tableDiv").html(xhr.status); */
+			$("#tableDiv").html("처리 중 문제가 발생 했습니다. 다시 시도해 주세요.");
+		},
+		success:function(jsonObj){
+				/* 페이징 테이블 */
+				$("#tableDiv").show();
+				var tbOutput="<table class='member' style='width: 100%'>";
+				tbOutput+="<tr><th>예약번호</th><th>투어 일정</th><th>투어 코스</th><th>인원</th><th>예약 상태</th><th></th></tr>";
+				if(!jsonObj.isEmpty){
+					$(jsonObj.list).each(function(i, json){
+						tbOutput+="<tr>";
+						tbOutput+="<td>"+json.reserNum+"</td>";
+						tbOutput+="<td>"+json.reserDate+"</td>";
+						tbOutput+="<td>"+json.tourName+"</td>";
+						tbOutput+="<td>성인("+json.adultFee+"원) : "+json.adultCnt+"명<br/>";
+						tbOutput+="	 기타("+json.otherFee+"원) : "+json.otherCnt+"명</td>";
+						tbOutput+="<td><span>"+json.reserInfo+"</span></td>";
+						tbOutput+="<td><input type='button' value='상세보기' class='mainBtn' onclick='detailPopup("+json.reserNum+")'/></td>";
+						tbOutput+="</tr>";
+					});//each
+				}else {
+					tbOutput+="<tr><td colspan='5'>데이터가 존재하지 않습니다.</td></tr>";
+				}//end else
+				tbOutput+="</table>";
+					
+				$("#tableDiv").html(tbOutput);
+				/* 페이징 버튼 */
+				var pgOutput="<nav><ul class='pagination justify-content-center'>";
+				if( jsonObj.startPage != 1 ) {
+					pgOutput+="<li class='page-item'><a class='page-link'";
+					pgOutput+="href='#void' onclick='pageClick("+ (jsonObj.startPage-1) +")' tabindex='-1'";
+					pgOutput+="aria-disabled='true'>&lt;<!-- < --></a></li>";
+				}//end if
+				for(var i=jsonObj.startPage;i<=jsonObj.endPage;i++){
+					pgOutput+="<li class='page-item'>"
+					pgOutput+="<a class='page-link href='#void' onclick='pageClick("+ i +")'>"+ i +"</a></li>";
+				}//end for
+				if(jsonObj.totalPages != jsonObj.endPage) {
+					pgOutput+="<li class='page-item'>";
+					pgOutput+="<a class='page-link' href='#void' onclick='pageClick("+ (jsonObj.endPage + 1) +")'>&gt;<!-- > --></a></li>"
+				}//end if
+				pgOutput+="</ul></nav>";
+				
+				$("#pageDiv").html(pgOutput);
+		}//success
+	});//ajax
+}//pageClick
 
 function detailPopup(reserNum){
 	var leftVal=(document.body.offsetWidth / 2) - (200 / 2);
 	var topVal=(window.screen.height / 2) - (300 / 2);
-	window.open("resDetailPopup.jsp?reserNum="+reserNum+"", "상세보기", "width=800, height=500, left="+leftVal+", top="+topVal+"");
+	window.open("resDetailPopup.jsp?reserNum="+reserNum, "상세보기", "width=800, height=500, left="+leftVal+", top="+topVal+"");
 }//recPopup
                
 /* function changePage(value){                     
@@ -65,18 +153,6 @@ function detailPopup(reserNum){
 </head>
 
 <body>
-
-<%
-String id="tester";//로그인한 아이디
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
-%>
-
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
 			<div class="site-mobile-menu-close">
@@ -100,7 +176,7 @@ if(id==null){//로그인되지 않았다면
 				</ul>
 			    <ul class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a href="../login_process/user_logout.jsp">로그아웃</a></li>
 				</ul>
 
 				<a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">
@@ -155,142 +231,17 @@ if(id==null){//로그인되지 않았다면
 	<!-- 라인 구분 선 끝-->
 
  <div class="container">
-		<form>
 			<div style="font-size:23px;  display:flex; justify-content:space-between;">
 				<!-- <div style="font-weight: bold;"> 최근 예매 조회 </div> -->
 			</div>		
 			<!-- <hr style="margin-bottom:50px;">	 -->
 				
- 			<div style="margin: 50px 0 80px 0">
-				<table class="member" style="width:100%">
-					<tr>
-						<th>예약번호</th>
-						<th>날짜</th>
-						<th>투어코스</th>
-						<th>인원</th>
-						<th>예약상태</th>
-						<th>           </th>
-					</tr>
-					<%
-					//페이징 시작
-					int cPage=1;//현재 페이지
-					int totalRows=0;//전체 행 수
-					int totalPages=0;//전체 페이지 수
-					int lenPS=5;//한 페이지 보여줄 행 수
-					int startPS=0;//페이지의 시작 지점
-					
-					MyInfoDAO miDAO=MyInfoDAO.getInstance();
-					MyInfoVO miVO=new MyInfoVO();
-					
-					try {
-						 cPage=Integer.parseInt(request.getParameter("page"));
-					}catch(NumberFormatException nfe) {//파라미터가 null이 나올 경우
-						cPage=1;
-					}//end catch
-					
-					//전체 데이터 개수
-					totalRows=miDAO.selectMyReserTotal(id);
-					//총 페이지 수
-					totalPages = totalRows % lenPS == 0 ? totalRows/lenPS : (totalRows/lenPS) + 1;
-					if(totalPages==0) {
-						totalPages = 1;
-					}//end if
-					
-					if(cPage > totalPages) {
-						cPage = 1;
-					}//end if
-					
-					startPS = (cPage - 1) * lenPS;//각 페이지의 시작 지점
-					
-					//VO set
-					miVO.setId(id);
-					miVO.setStartPS(startPS);
-					miVO.setLenPS(lenPS);
-				
-					List<MyInfoVO> reserList=miDAO.selectMyReserList(miVO);
-				
-					pageContext.setAttribute("reserList", reserList);
-				
-					%>
-					<% if(reserList.size() != 0) { %>
-					<c:forEach var="myReserList" items="${ reserList }">
-					<tr>
-						<td>${ myReserList.reserNum }</td>
-						<td>${ myReserList.reserDate }</td>
-						<td>${ myReserList.tourName }</td>
-						<td>
-							성인(${ myReserList.adultFee }) : ${ myReserList.adultCnt }명<br/>
-						    기타(${ myReserList.otherFee }) : ${ myReserList.otherCnt }명
-						</td>
-						<td>
-							<c:choose>
-								<c:when test="${ myReserList.reserFlag eq 1 }">
-									<span>예약대기</span>
-								</c:when>
-								<c:when test="${ myReserList.reserFlag eq 2 }">
-									<span>예약확정</span>
-								</c:when>
-								<c:when test="${ myReserList.reserFlag eq 3 }">
-									<span>취소요청</span>
-								</c:when>
-								<c:when test="${ myReserList.reserFlag eq 4 }">
-									<span>취소확정</span>
-								</c:when>
-							</c:choose>
-						</td>
-						<td><input type="button" value="상세보기" onclick="detailPopup(${ myReserList.reserNum })" class="mainBtn" id="detBtn" style="width:100px; height:32px;"></td>
-					</tr>
-					</c:forEach>
-					<% }else { %>
-					<tr>
-						<td colspan="5">데이터가 존재하지 않습니다.</td>
-					</tr>
-					<% }//end else %>
-				</table>
+ 			<div id="tableDiv" style="margin: 50px 0 20px 0">
+				<!-- ajax 내 예약 관리 테이블 -->
 			</div>
-			
-			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;"><!-- 페이지 블럭 -->
-			<%
-				//페이지 블럭
-				int pageLength=5;//페이지 블록 길이 1~5페이지
-				int currentBlock=cPage % pageLength == 0 ? cPage / pageLength : (cPage / pageLength) +1;//현재 페이지가 어디 블럭에 속해있는지 알려줌.
-				int startPage = (currentBlock - 1) * pageLength + 1;
-				int endPage = startPage + pageLength - 1;
-				//마지막 페이지 묶음에서 총 페이지 수를 넘어가면 끝 페이즈를 마지막 페이지 숫자로 지정
-				if(endPage > totalPages) {
-					endPage = totalPages;
-				}//end if
-			%>
-			 <nav>
-			  <ul class="pagination justify-content-center">
-			   <% if(startPage != 1 ) {%>
-			   <li class="page-item"><a class="page-link"
-			   		href="user_recent_reservation.jsp?page=<%= startPage - 1 %>" tabindex="-1"
-			   		aria-disabled="true">&lt;<!-- < --></a></li>
-			   <% }//end if %>
-			   <% for(int i=startPage;i<=endPage;i++) { %>
-			   	<li class="page-item">
-			   	<a class="page-link" href="user_recent_reservation.jsp?page=<%= i %>"><%= i %></a></li>
-			   <% }//end for %>
-			   <%
-			   	//마지막 페이지 숫자와 startPage에서 pageLength 더해준 값이 일치할 때
-			   	//즉, 마지막 페이지 블록일 때
-			   	if(totalPages != endPage) {
-			   %>
-			   	<li class="page-item">
-			   		<a class="page-link" href="user_recent_reservation.jsp?page=<%=endPage + 1 %>">&gt;<!-- > --></a>
-			   	</li>
-			   <% }//end if %>
-			  </ul> 
-			 </nav>
+			<div id="pageDiv" style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;"><!-- 페이지 블럭 -->
+				<!-- ajax 내 예약 관리 패이징 버튼 -->
 			</div>
-			
-			<%-- <div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
-				<input class="pagination" type="button" value="<">
-				<input class="pagination pageNow" type="button" value="1">
-				<input class="pagination" type="button" value=">">
-			</div> --%>
-		</form>
 	</div>	
 
 	

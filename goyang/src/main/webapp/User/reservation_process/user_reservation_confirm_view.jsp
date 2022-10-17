@@ -44,57 +44,39 @@
 
 
 <%
-//초기값 설정
-//String id=null;//로그인 하지 않은 경우
-String id="tester";//아이디
-int tourNum=0;//투어 번호
-String reserDate=null;//예약일
-int[] seatNumIn=null;//예약한 좌석 번호 배열
-int adultCnt=0;//예약한 성인 인원 수
-int otherCnt=0;//예약한 기타 인원 수
-%>
-<%
+//파라미터, 세션 얻기
 //아이디 set
+String id="";//아이디
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
-	return;
-}//end if
 
 //투어 번호 set
+int tourNum=0;//투어 번호
 if(request.getParameter("tourNum") !=null){//투어 번호 가져오기
 	tourNum = Integer.parseInt(request.getParameter("tourNum"));
 }//end if
-if(tourNum==0){//투어번호를 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_course.jsp");
-	return;
-}//end if
 
 //예약일 set
+String reserDate="";//예약일
 if(request.getParameter("reserDate") !=null){//예약일 가져오기
 	reserDate = request.getParameter("reserDate");
 }//end if
-if(reserDate==null){//예약일을 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_date.jsp");
-	return;
-}//end if
 
 //예약한 좌석 번호 배열 set
+int[] seatNumIn=null;//예약한 좌석 번호 배열
 if((int[])request.getAttribute("seatNumIn") != null){
 	seatNumIn=(int[])request.getAttribute("seatNumIn");
 }//end if
-if(seatNumIn==null){//예약한 좌석 번호 배열 가져오지 못할 경우
-	response.sendRedirect("http://localhost/goyang/User/reservation_process/user_reservation_seat.jsp");
-	return;
-}//end if
+
 %>
 
 <script type="text/javascript">
 $(function(){
 	var seatNumIn = new Array();
 	var seatNumOutput = new Array();
+	
+	accessChk();//접근 권한 여부
 	
 	<% for(int seat : seatNumIn) {%>//예약한 좌석번호 세팅
 		seatNumOutput.push(<%= seat %>+"번 ");//seatNumOutput 세팅
@@ -103,13 +85,35 @@ $(function(){
 	$("#seatNumOutput").html(seatNumOutput);//예약한 좌석 번호
 	
 	$("#payBtn").click(function(){
-		
-		/* $("#hiddenSeatNumIn").val(seatNumIn);//hidden 값에 세팅 */
-		
 		showPopup(true,'popup');//결제 확인 메시지 창.
 	})//payBtn
 	
 })//ready
+
+function accessChk(){
+	var id="<%= id %>";
+	var tourNum=<%= tourNum %>;
+	var reserDate="<%= reserDate %>";
+	var chkFlag=true; //true 통과, false 돌아가
+		
+	if(id==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		return;
+	}else if(tourNum==0){
+		alert("투어를 선택해주세요.");
+		chkFlag=false;
+	}else if(reserDate==""){
+		alert("예약일을 선택해주세요.");
+		chkFlag=false;
+	}//end else if
+	
+	if(!chkFlag){//필요한 파라미터 값이 없을 경우 코스 선택 페이지로 이동
+		location.href="http://localhost/goyang/User/reservation_process/user_reservation_course.jsp";
+	}//end if
+		
+}//accessChk
+
 </script>
 
 <title>고양 시티투어</title>
@@ -145,7 +149,7 @@ $(function(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
-					<li style="font-size: 5px; font-weight: bold;"><a href="../main/index.jsp">로그아웃</a></li>
+					<li style="font-size: 5px; font-weight: bold;"><a href="../login_process/user_logout.jsp">로그아웃</a></li>
 				</ul>
 				
 				<a href="#"
@@ -215,7 +219,7 @@ $(function(){
 						<td>${ tourInfo.tourName }</td>
 					</tr>
 					<tr>
-						<th>날짜</th>
+						<th>투어일정</th>
 						<td><span><%= reserDate %></span><br>10:00 ~ 16:00</td>
 					</tr>
 					<tr>
@@ -250,10 +254,10 @@ $(function(){
 			</div>
 			
 			<div style="display: flex; justify-content: end; margin: 20px 0;">
-				<input type="hidden" name="tourNum" id="hiddenTourNum" value=<%= tourNum %> />
-				<input type="hidden" name="reserDate" id="hiddenReserDate" value=<%= reserDate %> />
-				<input type="hidden" name="adultCnt" id="hiddenAdultCnt" value=${ param.adultCnt } />
-				<input type="hidden" name="otherCnt" id="hiddenOtherCnt" value=${ param.otherCnt } />
+				<input type="hidden" name="tourNum" id="hiddTourNum" value=<%= tourNum %> />
+				<input type="hidden" name="reserDate" id="hiddReserDate" value=<%= reserDate %> />
+				<input type="hidden" name="adultCnt" id="hiddAdultCnt" value=${ param.adultCnt } />
+				<input type="hidden" name="otherCnt" id="hiddOtherCnt" value=${ param.otherCnt } />
 				
 				<c:forEach var="seatNum" items="${ seatNumIn }">
 				<input type="hidden" name="seatNumIn" value="${ seatNum }" />
@@ -308,19 +312,19 @@ $(function(){
 		</div>
 	</div>
 	
-	<!-- 팝업창 -->
+	<!-- 결제 확인 창 팝업 -->
 	<div id="popup" class="hide popup">
 		<div class="content">
-			<div style="width: 412px;">
-				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 예약 결제 확인</div>
+			<div style="width: 450px;">
+				<div style="font-size: 12px; width: 450px; height: 30px; padding-left: 10px;
+				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 수정 확인</div>
 				
 				<div style="background-color: #f0f6f9;">
 					<div style="font-size: 16px; display: flex; justify-content: center; 
-					align-items: center; height: 70px ;background-color: #f0f6f9;">투어 예약 결제를 하시겠습니까?</div>
+					align-items: center; height: 70px ;background-color: #f0f6f9;">정말로 결제 하시겠습니까?</div>
 					
 					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popup2')">
+						<input type="button" value="확인" class="popupBtn" onclick="windowMove('popup')">
 						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup')">
 					</div>
 				</div>
@@ -328,25 +332,6 @@ $(function(){
 	  </div>
 	</div>
 	
-	<!-- 팝업창 -->
-	<div id="popup2" class="hide popup">
-	  <div class="content">
-		<div style="width: 412px;">
-			<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
-			display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">투어 예약 결제 확인</div>
-			
-			<div style="background-color: #f0f6f9;">
-				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">결제가 완료되었습니다.</div>
-				
-				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="closePopup('popup2')">
-				</div>
-			</div>
-		</div>
-	  </div>
-	</div>
-
 	<div id="overlayer"></div>
 	<div class="loader">
 		<div class="spinner-border" role="status">
@@ -369,14 +354,10 @@ $(function(){
 
 	<script src="../../js/custom.js"></script>
 
-	<!-- 수정 -->
+
 	<script type="text/javascript">
 		function showPopup(hasFilter,id) {
 			const popup = document.querySelector("#"+id);
-			
-			if(id=='popup2'){
-				document.querySelector('#popup').classList.add('hide');
-			}
 			
 			if (hasFilter) {
 				popup.classList.add('has-filter');
@@ -385,17 +366,20 @@ $(function(){
 			}
 				
 			popup.classList.remove('hide');
-		}
+		}//showPopup
 		
 		function closePopup(id) {
 			const popup = document.querySelector("#"+id);
 			popup.classList.add('hide');
-			if(id=='popup2') {
-				$("#payFrm").submit();
-			}//end if
-		}
+		}//closePopup
+		
+		function windowMove(id) {
+			closePopup(id);
+			$("#payFrm").submit();//form submit
+		}//windowMove()
 		
 	</script>
+
 </body>
 
 </html>

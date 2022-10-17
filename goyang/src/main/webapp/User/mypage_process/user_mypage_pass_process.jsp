@@ -15,15 +15,13 @@ request.setCharacterEncoding("UTF-8");
 </head>
 <script type="text/javascript">
 <%
-//초기값
-String id="user";//로그인 한 경우
 boolean flag=false;//비밀번호 확인 여부
-%>
-<%
+
+String id="";//아이디
 if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
-if(id==null){//로그인되지 않았다면
+if(id==""){//로그인되지 않았다면
 	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
 	return;
 }//end if
@@ -41,15 +39,17 @@ flag=miDAO.selectMyPassConfirm(miVO);//비밀번호 확인
 </c:catch>
 
 <c:if test="${ e ne null }">
-예외발생 :
-<c:out value= "${ e }" />
+처리 중에 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.
+/* <c:out value= "${ e }" /> */
 </c:if>
 
-<%if(flag){%>
-	location.href="user_mypage.jsp";
+<%if(flag){
+	session.setAttribute("passFlag", "pass");//비밀번호 확인에 대한 세션값 할당.
+%>
+	location.href="http://localhost/goyang/User/mypage_process/user_mypage.jsp";
 <%}else {%>
 	alert("비밀번호가 틀렸습니다.");
-	location.href="user_mypage_inner.jsp";
+	history.back();
 <%}%>
 </script>
 <body>

@@ -183,44 +183,6 @@ public class TourReservaDAO {
 		return seatNum;
 	}//selectSeatNum
 	
-	
-	public int tranReser(TourReservaVO trVO) {
-		int reserNum=0;
-		
-		DbConnection dc=DbConnection.getInstance();
-		
-		Connection con=null;
-		try {
-			con=dc.getConn();
-			con.setAutoCommit(false);
-			
-			reserNum=insertTourReser(trVO, con);
-			trVO.setReserNum(reserNum);
-			insertSeatReser(trVO, con);
-			
-			con.commit();
-			System.out.println("commit 성공");
-		} catch (SQLException e) {
-			try {
-				System.out.println("트랜잭션 실패");
-				reserNum=0;
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			} // end catch
-			e.printStackTrace();
-		}finally {
-			try {//6.연결 끊기
-				con.setAutoCommit(true);//오토커밋 설정
-				if(con!=null) {con.close();}//end if
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}//end catch
-		}//end finally
-		
-		return reserNum;
-	}//transactionReser
-	
 	public int insertTourReser(TourReservaVO trVO, Connection con) throws SQLException {
 		int reserNum=0;
 		

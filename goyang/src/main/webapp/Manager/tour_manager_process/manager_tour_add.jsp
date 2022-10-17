@@ -41,7 +41,7 @@
 .imgSize{width: 300px; height: 200px; border:1px solid #333;}
 .margin20{margin: 20px;}
 .marginLR10{margin : 10px 0px 10px 20px}
-
+.inputBorderNone{border:0px none;}
 </style>
 
 <!-- google jquery CDN -->
@@ -50,24 +50,18 @@
 <script type="text/javascript">
 
 <%
-//초기값
-//String id=null;//로그인 하지 않은 경우
-String id="admin";//로그인 한 경우
-%>
-
-<%
-//로그인 여부(권한여부)
-if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
-	id = (String) session.getAttribute("id");
-}//end if
-if(id==null){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
-	return;
+//파라미터, 세션 set
+//로그인 여부
+String manageId="";//아이디
+if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
+	manageId = (String) session.getAttribute("manageId");
 }//end if
 %>
 
 tableCnt=0;
 $(function(){
+	
+	accessChk();//접근 권한 체크
 	
 	$("#thumImgFile").change(function(){//대표 사진 세팅
 		setFile();
@@ -79,7 +73,7 @@ $(function(){
 		if($('#tableAction tr').length>12){
 			return;
 		}//end if
-		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly'/></td>";
+		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly' class='inputBorderNone centerText'/></td>";
 		tableTemp +="<td><input type='text' name='spotNameIn' value=''/></td>";
 		tableTemp +="<td><input type='text' name='startHourIn' value='' size=3 maxlength='20'/></td>";
 		tableTemp +="<td><input type='text' name='endHourIn' value='' size=3 maxlength='20'/></td>";
@@ -104,6 +98,16 @@ $(function(){
 	});//click
 	
 });//ready
+
+function accessChk(){
+	var Msess="<%= manageId %>";
+	
+	if(Msess==""){
+		alert("로그인 해주세요.");
+		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		return;
+	}//end if
+}//accessChk
 
 function chkNull(){
 	if($("#tourName").val().trim()=="") {
@@ -164,11 +168,6 @@ function chkImg(){
 	var blockExt="jpg,gif,jpeg,png,bmp".split(",");
 	var flag=false;
 	
-	/* if(fileName==""){
-		alert("업로드할 파일을 선택해주세요.");
-		return;
-	}//end if */
-	
 	var fileExt=fileName.substring(fileName.lastIndexOf(".")+1);
 	for(var i=0; i < blockExt.length; i++){
 		if(blockExt[i] == fileExt){
@@ -180,7 +179,7 @@ function chkImg(){
 	
 }//chkImg
 
-function setFile(){
+function setFile(){//미리 이미지 보기 set
 	var fReader = new FileReader();
 	fReader.readAsDataURL($("#thumImgFile")[0].files[0]);
 	fReader.onloadend = function(event) {
@@ -225,7 +224,7 @@ function setFile(){
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manager_signIn.jsp">로그아웃</a></li>
+						href="../login_manager/manager_signIn.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %>관리자님</a></li>
 				</ul>
 				
 				<a href="#"
@@ -270,98 +269,106 @@ function setFile(){
 	<!-- 라인 구분 선 끝-->
 	
   <div class="container">
-  <!-- <div style="font-size: 20px; margin: 50px 0px 10px 0px">투어 정보 추가</div>
-  <hr> -->
-  <div class="container">
+  
   <form id="addFrm" action="manager_tour_add_process.jsp" method="post" enctype="multipart/form-data">
-  <div class="margin20"><!-- 코스명, 요약 설명, 사진, 맵 -->
-    <span><strong>코스명</strong></span><br/>
-    <input type="text" class="textSize" name="tourName" id="tourName" value="" placeholder="코스명을 입력하세요." maxlength=20/><br/>
+  <div><!-- 전체 테이블 -->
+  <table class="member">
+  <tr>
+   <th><span><strong>코스명</strong></span></th>
+   <td><input type="text" class="textSize" name="tourName" id="tourName" value="" placeholder="코스명을 입력하세요." maxlength=20/></td>
+  </tr>
+  <tr>
+   <th><span><strong>요약 설명</strong></span></th>
+   <td><input type="text" class="textSize" name="explain" id="explain" value="" placeholder="내용을 입력하세요." maxlength=30/></td>
+  </tr>
+  <tr>
+   <th><span><strong>사진</strong></span></th>
+   <td>
+     <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
+      <div>
+       <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value=""/>
+      </div>
+       <div class="imgSize"><img class="imgSize" id="thumImgOutput" src=""/></div>
+     </div>
+    </td>
+  </tr>
+  <tr><!-- 관광지 등록 -->
+   <th><span><strong>코스</strong></span></th>
+   <td>
+    <div style="text-align: right">
+      
+       <span><strong>중심 위도</strong></span>
+       <input type="text" name="mapCenLati" class="margin20" size=3 maxlength="20" />
+      
+       <span><strong>중심 경도</strong></span>
+       <input type="text" name="mapCenLong" class="margin20" size=3 maxlength="20" /><br/>
+      
     </div>
-    <div class="margin20">
-    <span><strong>요약 설명</strong></span><br/>
-    <input type="text" class="textSize" name="explain" id="explain" value="" placeholder="내용을 입력하세요." maxlength=30/>
-   </div>
-   
-   
-   <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
-   
-    <div class="margin20"><!-- 중심 위도 경도 -->
-    <span><strong>중심 위도</strong></span>
-    <input type="text" name="mapCenLati" class="margin20" /><br/>
-    <span><strong>중심 경도</strong></span>
-    <input type="text" name="mapCenLong" class="margin20" /><br/>
-   </div>
-   
-   <div class="margin20"><!-- 대표 사진 -->
-   <span><strong>대표 사진</strong></span><br/>
-   <div style="display: flex; justify-content: left; margin:20px 20px 0px 5px;">
-    <div>
-     <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="">
+   	 <table class="member tableSize" id="tableAction">
+  	 <tr>
+  		 <th>순번</th>
+  		 <th>경유지명/내용</th>
+  		 <th>시작 시간</th>
+  		 <th>끝나는 시간</th>
+  		 <th>위도</th>
+  		 <th>경도</th>
+  	 </tr>
+  	
+  	 <tr>
+  	 	 <td><input type="text" name="tourOrderIn" value="1" size=1 readonly="readonly" class="inputBorderNone centerText"/></td>
+  		 <td><input type="text" name="spotNameIn" value=""/></td>
+  	 	 <td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="mapSpoLatiIn" value="" size=3/></td>
+  		 <td><input type="text" name="mapSpoLongIn" value="" size=3/></td>
+  	 </tr>
+  	
+  	 <tr>
+  		 <td><input type="text" name="tourOrderIn" value="2" size=1 readonly="readonly" class="inputBorderNone centerText" /></td>
+  		 <td><input type="text" name="spotNameIn" value=""/></td>
+  		 <td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
+  	 </tr>
+  	
+  	 <tr>
+  		 <td><input type="text" name="tourOrderIn" value="3" size=1 readonly="readonly" class="inputBorderNone centerText" /></td>
+  		 <td><input type="text" name="spotNameIn" value=""/></td>
+  		 <td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
+  		 <td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
+  	 </tr>
+  	
+    </table>
+    
+    <div style="display: flex; justify-content: space-evenly;">
+     <input type="button" value="항목추가" class="mainBtn" id="btn-add-row"/>
+     <input type="button" value="항목제거" class="mainBtn" id="btn-delete-row"/>
     </div>
-     <div class="imgSize"><img class="imgSize" id="thumImgOutput" src=""/></div>
-    </div>
+    
+   </td>
+  </tr>
+  <tr>
+   <th><span><strong>탑승료</strong></span><br/><span style="font-size: 13px">(단위:원)</span></th>
+   <td>
+   <div style="text-align: left">
+    <span><strong>성인: </strong></span><input type="text" name="adultFee" id="adultFee" value="" size=5 maxlength="9"/><br/>
+    <span><strong>기타: </strong></span><input type="text" name="otherFee" id="otherFee" value="" size=5 maxlength="9"/>
    </div>
-  </div>
-  
-  
-  <div class="margin20"><!-- 코스 테이블 -->
-  <span class="margin20"><strong>코스</strong></span><br/>
-  <table class="member tableSize" id="tableAction">
-  	<tr>
-  		<th>순번</th>
-  		<th>경유지명/내용</th>
-  		<th>시작 시간</th>
-  		<th>끝나는 시간</th>
-  		<th>위도</th>
-  		<th>경도</th>
-  	</tr>
-  	
-  	<tr>
-  		<td><input type="text" name="tourOrderIn" value="1" size=1 readonly="readonly"/></td>
-  		<td><input type="text" name="spotNameIn" value=""/></td>
-  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="mapSpoLatiIn" value="" size=3/></td>
-  		<td><input type="text" name="mapSpoLongIn" value="" size=3/></td>
-  	</tr>
-  	
-  	<tr>
-  		<td><input type="text" name="tourOrderIn" value="2" size=1 readonly="readonly"/></td>
-  		<td><input type="text" name="spotNameIn" value=""/></td>
-  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
-  	</tr>
-  	
-  	<tr>
-  		<td><input type="text" name="tourOrderIn" value="3" size=1 readonly="readonly"/></td>
-  		<td><input type="text" name="spotNameIn" value=""/></td>
-  		<td><input type="text" name="startHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="endHourIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="mapSpoLatiIn" value="" size=3 maxlength="20"/></td>
-  		<td><input type="text" name="mapSpoLongIn" value="" size=3 maxlength="20"/></td>
-  	</tr>
-  	
+   </td>
+  </tr>
   </table>
-   <div style="display: flex; justify-content: space-evenly;">
-    <input type="button" value="항목추가" class="mainBtn" id="btn-add-row"/>
-    <input type="button" value="항목제거" class="mainBtn" id="btn-delete-row"/>
-   </div>
-  </div>
+  </div><!-- 전체 테이블 끝 -->
   
-  <div class="margin20"> <!-- 탑승료, 종료하기/수정하기 버튼 -->
-   <div class="margin20"><strong>탑승료</strong></div>
-   <div class="margin20"><strong>성인:</strong><input type="text" name="adultFee" id="adultFee" value=""/></div>
-   <div class="margin20"><strong>기타:</strong><input type="text" name="otherFee" id="otherFee" value=""/></div>
-   <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+  <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
     <div class="marginLR10"></div><div class="marginLR10"><input type="button" id="addBtn" value="추가하기" class="mainBtn"/></div>
-   </div>
   </div>
+   
   </form>
-  </div>
-  </div>
+  </div><!-- container -->
+  
   
   <!-- footer -->
 
