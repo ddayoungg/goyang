@@ -10,6 +10,7 @@ import java.util.List;
 
 import kr.co.goyang.dbConnection.DbConnection;
 import kr.co.goyang.manager.vo.UserManagerVO;
+import kr.co.goyang.user.vo.TourReservaVO;
 
 public class UserManagerDAO {
 
@@ -112,6 +113,8 @@ public class UserManagerDAO {
 			.append("	from tour_user				");
 			
 			System.out.println("umVO.getListSearch() : "+umVO.getListSearch());
+			System.out.println(umVO.getListSearch()==null);
+			System.out.println(umVO.getTextSearch()==null);
 			if(umVO.getListSearch()==null) {
 				umVO.setListSearch("선택");
 			}
@@ -162,36 +165,84 @@ public class UserManagerDAO {
 		return userList;
 	}
 	
-	public void insertDelReasUser(UserManagerVO umVO) throws SQLException { // 삭제 이유
-		DbConnection dc = DbConnection.getInstance();
+	public void tranUser(UserManagerVO umVO) { // 트랜잭션 처리
+		
+		DbConnection dc=DbConnection.getInstance();
+		
+		Connection con=null;
+		try {
+			con=dc.getConn();
+			con.setAutoCommit(false);
+			
+			insertDelReasUser(umVO, con);
+			updateOutFlag(umVO, con);
+			
+			con.commit();
+			System.out.println("commit 성공");
+		} catch (SQLException e) {
+			try {
+				System.out.println("트랜잭션 실패");
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} // end catch
+			e.printStackTrace();
+		}finally {
+			try {//6.연결 끊기
+				con.setAutoCommit(true);//오토커밋 설정
+				if(con!=null) {con.close();}//end if
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}//end catch
+		}//end finally
+	}//tranUser
+	
+	public void insertDelReasUser(UserManagerVO umVO, Connection con) throws SQLException { // 삭제 이유 추가
 
-		Connection con = null;
 		PreparedStatement pstmt = null;
 
-		try {
-			// 1.드라이버 로딩
-			// 2.connection 얻기
-			con = dc.getConn();
+		// 3.쿼리문 생성 객체 얻기
+		StringBuilder insertDelRea = new StringBuilder();
+		insertDelRea
+		.append("	insert into user_out(id, out_reas, out_date)	")
+		.append("	values(?, ?, sysdate)	");
 
-			// 3.쿼리문 생성 객체 얻기
-			StringBuilder insertDelRea = new StringBuilder();
-			insertDelRea
-			.append("	insert into user_out(id, out_reas, out_date)	")
-			.append("	values(?, ?, sysdate)	");
+		pstmt = con.prepareStatement(insertDelRea.toString());
 
-			pstmt = con.prepareStatement(insertDelRea.toString());
+		// 4.바인드 변수에 값 설정
+		pstmt.setString(1, umVO.getId());
+		pstmt.setString(2, umVO.getOutReas());
 
-			// 4.바인드 변수에 값 설정
-			pstmt.setString(1, umVO.getId());
-			pstmt.setString(2, umVO.getOutReas());
+		// 5.쿼리문 수행 결과 얻기
+		pstmt.executeUpdate();
 
-			// 5.쿼리문 수행 결과 얻기
-			pstmt.executeUpdate();
+		if(pstmt!=null) { pstmt.close(); }
+	}
+	
+	
+	public int updateOutFlag(UserManagerVO umVO, Connection con) throws SQLException { // out_flag 업데이트
+		int upCnt = 0;
 
-		} finally {
-			// 6.연결 끊기
-			dc.dbClose(null, pstmt, con);
-		}
+		PreparedStatement pstmt = null;
 
+		// 3.쿼리문 생성 객체 얻기
+		StringBuilder updateReview = new StringBuilder();
+		updateReview
+		.append("	update	tour_user	")
+		.append("	set		out_flag=0	")
+		.append("	where	id=?		");
+
+		pstmt = con.prepareStatement(updateReview.toString());
+
+		// 4.바인드 변수에 값 설정
+		pstmt.setString(1, umVO.getId());
+
+		// 5.쿼리문 수행 결과 얻기
+		upCnt = pstmt.executeUpdate();
+		
+		// 연결 끊기
+		if(pstmt!=null) { pstmt.close(); } 
+				
+		return upCnt;
 	}
 }

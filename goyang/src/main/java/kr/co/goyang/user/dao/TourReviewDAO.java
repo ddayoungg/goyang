@@ -371,7 +371,7 @@ public class TourReviewDAO {
 					cnt++;
 				}
 			}
-			selectReview.append("	order by review_num	");
+			selectReview.append("	order by review_num desc	");
 			
 			pstmt = con.prepareStatement(selectReview.toString());
 
