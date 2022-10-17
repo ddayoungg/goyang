@@ -1,3 +1,7 @@
+<%@page import="kr.co.goyang.manager.vo.SpotListVO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourListDAO"%>
+<%@page import="kr.co.goyang.user.vo.TourListVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!-- /*
@@ -84,50 +88,133 @@
 		</div>
 	</nav>
 
+<%
+	TourListDAO tourDAO = TourListDAO.getInstance();
+	TourListVO tourVO = new TourListVO();
+	List <TourListVO> list = tourDAO.selectAllTour(tourVO);
+	%>
+ <%
+	int num = Integer.parseInt(request.getParameter("tourNum"));
+	TourListVO toli = new TourListVO();
+	toli= tourDAO.selectTourSpots(num);
+	%> 
 	<div class="hero ">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">화요나들이</h1>
+					<%
+							String weekDay="";
+							if ( toli.getTourNum() == 1){
+								weekDay="화요나들이";
+							} else if ( toli.getTourNum() == 2){
+								weekDay="수요나들이";
+							} else if ( toli.getTourNum() == 3){
+								weekDay="목요나들이";
+							} else if ( toli.getTourNum() == 4){
+								weekDay="금요나들이";
+							}  else if ( toli.getTourNum() == 5){					
+								weekDay="토요나들이";
+							}  else if ( toli.getTourNum() == 6){	
+								weekDay="일요나들이";
+							}
+							%>
+						<h1 class="mb-0"><%=weekDay%></h1>
 
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
 		<ul class="list_sub_menu">
 			<li class="_sub"><a href="user_introduceTour.jsp"> <span>시티
 						투어 코스</span>
 			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>화요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>수요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			<li class="_sub">
+				<%
+				  for (int i=0; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=1; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" >  <span>수요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=2; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" ><span
 					class="menu_text">목요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=3; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span
 					class="menu_text">금요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>토요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>일요나들이</span>
-			</a></li>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=4; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>토요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+				<%
+				  for (int i=5; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>일요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝-->
-
+<%-- <%
+	int num = Integer.parseInt(request.getParameter("tourNum"));
+	TourListVO tourVO = new TourListVO();
+	TourListDAO tourDAO = TourListDAO.getInstance();
+	TourListVO toli = new TourListVO();
+	toli= tourDAO.selectTourSpots(num);
+	%> --%>
 	<!-- 대제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">화요나들이
-			(벽제)</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;"><%=toli.getTourName() %></p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -154,12 +241,12 @@
 			<div class="map_tab_wrap"
 				style="background: url(../../images/map_tap_2.png) no-repeat center top;">
 				<p class="map_tab_1">
-					<a href="user_introduceDay.html"
+					<a href="user_introduceDay.jsp?tourNum=<%=toli.getTourNum() %>"
 						style="color: #444; padding-left: 30px; background: transparent;">MAP으로
 						보기</a>
 				</p>
 				<p class="map_tab_2">
-					<a href="user_introduceDay_list.html"
+					<a href="user_introduceDay_list.jsp?tourNum=<%=toli.getTourNum() %>"
 						style="color: #fff; padding-right: 10px; background: transparent;">LIST로
 						보기</a>
 				</p>
@@ -175,33 +262,26 @@
 						</tr>
 					</thead>
 					<tbody>
+						<%
+						List <TourListVO> spotList = tourDAO.selectTourCourse(num);			
+						
+						for (int i=0; i<spotList.size(); i++){
+							TourListVO spotVO = (TourListVO) spotList.get(i);
+							
+							int tourOrder = spotVO.getTourOrder();
+							String spotsName = spotVO.getSpotsName();
+							String startHour = spotVO.getStartHour();
+							String endHour = spotVO.getEndHour();
+						
+						%>
 						<tr height="40px">
-							<td>1</td>
-							<td>고양관광정보센터 둘러보기</td>
-							<td>10:00 ~ 10:30</td>
+							<td><%=tourOrder %></td>
+							<td><%=spotsName %></td>
+							<td><%=startHour%>&nbsp;~&nbsp;<%=endHour %></td>
 						</tr>
+					<% } %>
 						<tr height="40px">
-							<td>2</td>
-							<td>중남미문화원</td>
-							<td>10:30 ~ 12:00</td>
-						</tr>
-						<tr height="40px">
-							<td>3</td>
-							<td>타코체험 / 체험비 별도</td>
-							<td>12:00 ~ 13:00</td>
-						</tr>
-						<tr height="40px">
-							<td>4</td>
-							<td>고양학교, 벽제관지</td>
-							<td>12:00 ~ 14:00</td>
-						</tr>
-						<tr height="40px">
-							<td>5</td>
-							<td>최영장군묘</td>
-							<td>14:00 ~ 15:30</td>
-						</tr>
-						<tr height="40px">
-							<td>6</td>
+							<td>-</td>
 							<td>도착</td>
 							<td>16:00</td>
 						</tr>
@@ -240,8 +320,8 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td width="200px">6,000원</td>
-						<td width="200px">4,000원</td>
+						<td width="200px"><%=toli.getAdultFee() %>원</td>
+						<td width="200px"><%=toli.getOtherFee() %>원</td>
 						<td width="200px">경로,장애인,<br>유치원~초중고,36개월 미만
 						</td>
 					</tr>
@@ -266,11 +346,10 @@
 			<div
 				style="padding: 20px; display: flex; flex-direction: row; justify-content: space-evenly; align-items: center;">
 				<iframe width="350" height="250"
-					src="https://www.youtube.com/embed/pdBJjNjkZpM"
-					title="YouTube video player" frameborder="0"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;
-       picture-in-picture"
-					allowfullscreen></iframe>
+				src="https://www.youtube.com/embed/hngPIPa_BLI" 
+				title="YouTube video player" frameborder="0"
+				 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+				 allowfullscreen></iframe>
 				<div style="padding: 20px; text-align: center; padding-top: 80px;">
 					<p style="font-size: 1.75rem; font-weight: bold;">지금 바로 떠나세요!</p>
 					<br>

@@ -132,7 +132,8 @@
 					<tr>
 						<th>예약번호</th>
 						<th>고객명</th>
-						<th>예약일</th>
+						<th>투어 시작 날짜</th>
+						<th>예약 신청 날짜</th>
 						<th>투어코스명</th>
 						<th>요금</th>
 						<th>상태</th>
@@ -161,12 +162,11 @@
 					cancelReas="취소사유";
 				}
 			%>
-					
 					<tr>
 						<td><%= reserVO.getReserNum()%></td>
 				 <td><a href="#"><span onclick="location.href='manager_reser_search.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
-					
-						<td><%= reserVO.getReserDate() %></td>
+						<td><%= reserVO.getReserDate()%></td>
+						<td><%= reserVO.getReserRegist() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
 						<td><%= reserVO.getReserFlag %></td>
@@ -267,10 +267,18 @@
 	 int num = Integer.parseInt(request.getParameter("reserNum"));  
 	ReservaManagerVO reserVO = new ReservaManagerVO();
 	reserVO = reserDAO.selectReserva(num);
+	
+	reserVO.setSeatNums(reserDAO.searchSeatNum(reserVO));
+/* 	String reserRegist ="";
+	if (reserVO.getReserRegist() == null) {
+		reserRegist="취소된 예약";
+	} else if (reserVO.getReserRegist() != null) {
+		reserVO.getReserRegist();
+	}
+	System.out.println(reserRegist); */
 	%>
 		<div class="content">
 			<div style="width: 800px;">
-	<!-- <form method="post"> -->
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
 		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">예약 상세
 				</div>
@@ -282,6 +290,21 @@
 						<td><%=reserVO.getName() %></td> 
 						</tr>
 						<tr>
+							<th>예약상태</th>
+							<%
+							if ( reserVO.getReserFlag() == 1 ) {
+								reserVO.getReserFlag="예약대기";
+							} else if ( reserVO.getReserFlag() == 2 ) {
+								reserVO.getReserFlag="예약확정";
+							} else if ( reserVO.getReserFlag() == 3) {
+								reserVO.getReserFlag="취소요청"; 
+							} else if ( reserVO.getReserFlag() == 4) {
+								reserVO.getReserFlag="취소확정"; 
+							} System.out.println(reserVO.getReserFlag);
+							%>
+							<td><%=reserVO.getReserFlag%></td>
+						</tr>
+						<tr>
 							<th>이메일</th>
 							<td><%=reserVO.getEmail()%></td>
 						</tr>
@@ -290,8 +313,12 @@
 							<td><%=reserVO.getPhone()%></td>
 						</tr>
 						<tr>
-							<th>날짜</th>
+							<th>투어 시작 날짜</th>
 							<td><%=reserVO.getReserDate()%></td>
+						</tr>
+						<tr>
+							<th>예약 신청 날짜</th>
+							<td><%=reserVO.getReserRegist()%></td>
 						</tr>
 						<tr>
 							<th>투어코스</th>
@@ -303,14 +330,21 @@
 						</tr>
 						<tr>
 							<th>예약한 좌석 번호</th>
-							<td><%=reserVO.getSeatNum()%></td>
+							<td>
+							<% for(int i=0; i<reserVO.getSeatNums().length; i++){
+								if(reserVO.getSeatNums()[i]==0){%>
+									좌석없음
+								<%}else{%>
+								<%= reserVO.getSeatNums()[i]  %>번&nbsp;
+							<%}}//end for %>
+							</td>
 						</tr>
 					</table>
 				</div>
 			<!-- 	</form> -->
 
 				<div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
-					<input type="button" value="예약확정" class="popupBtn" onclick="showPopup(true,'popupConfirm_1')">
+					<input id="detailButton" type="button" value="예약확정" class="popupBtn" onclick="showPopup(true,'popupConfirm_1')">
 					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_reservation.jsp'">
 				</div>
 			</div>
@@ -328,7 +362,6 @@
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
 		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">취소 사유
 				</div>
-
 				<div style="width: 800px">
 					<table class="member" style="width: 100%">
 						<tr>
@@ -385,7 +418,7 @@
 			align-items: center; height: 70px ;background-color: #f0f6f9;">취소 확정하시겠습니까?</div>
 
 					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-						<input type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popupCancel_2')">
+						<input id="detailButton" type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popupCancel_2')">
 						<input type="button" value="취소" class="popupBtn" onclick="closePopup('popupCancel_1')">
 					</div>
 				</div>
@@ -486,7 +519,20 @@
 			const popup = document.querySelector('#' + id);
 			popup.classList.add('hide');
 		}	
-				
+		
+		/* jsp페이지에서 jquery로 값 넘기기 ( 특정 조건에 따라 버튼 사라지게 하기)*/	
+		<%
+			if(reserVO.getReserFlag()==2){
+			%>
+			$("#detailButton").hide();
+			<%}else if (reserVO.getReserFlag()==3 ){%>
+			$("#detailButton").hide();
+			<%}else if (reserVO.getReserFlag()==4 ){%>
+			$("#detailButton").hide();
+			<%}else{ %>
+			$("#detailButton").show();
+		<% }%>
+						
 	
 	</script>
 </body>

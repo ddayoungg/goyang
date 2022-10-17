@@ -396,9 +396,10 @@
 	<!-- 팝업창 : manager_reservation_cancel_2 -->
 	<div id="popupCancel_2" class="popup">
 <%
-	int flag = Integer.parseInt(request.getParameter("reserNum"));
+	int num = Integer.parseInt(request.getParameter("reserNum"));
 	ReservaManagerVO reserVO = new ReservaManagerVO();
-	 reserVO = reserDAO.updateDelReserva(flag); 
+	 reserVO = reserDAO.updateDelReserva(num); 
+	 reserVO = reserDAO.updateDelSeatNum(num);
 	%> 
 		<div class="content">
 			<div style="width: 412px;">

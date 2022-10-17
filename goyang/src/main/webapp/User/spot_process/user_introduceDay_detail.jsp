@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourListDAO"%>
+<%@page import="kr.co.goyang.user.vo.TourListVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!-- /*
@@ -82,18 +85,33 @@
 		</div>
 	</nav>
 
+  <%
+    TourListDAO tourDAO = TourListDAO.getInstance();
+	TourListVO tourVO = new TourListVO();
+	List <TourListVO> list = tourDAO.selectAllTour(tourVO);	
+    %>
+	<%
+	TourListVO toli = new TourListVO();
+	tourVO = tourDAO.selectTourSpots(toli.getTourNum());
+	System.out.println(toli.getTourNum());
+	%> 
+	<%
+	request.setCharacterEncoding("utf-8");
+	String spot = request.getParameter("spotsName");
+	TourListVO spotTourVO= tourDAO.selectSpots(spot);
+	System.out.println(spotTourVO.getSpotsName());
+	%>
 	<div class="hero">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">중남미문화원</h1>
+						<h1 class="mb-0"><%=spotTourVO.getSpotsName()%></h1>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
@@ -101,30 +119,88 @@
 			<li class="_sub"><a href="user_introduceTour.jsp"> <span>시티
 						투어 코스</span>
 			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>화요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>수요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			<li class="_sub">
+				<%
+				  for (int i=0; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=1; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" >  <span>수요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=2; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" ><span
 					class="menu_text">목요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=3; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span
 					class="menu_text">금요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>토요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>일요나들이</span>
-			</a></li>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=4; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>토요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+				<%
+				  for (int i=5; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>일요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝 -->
-
+	<%-- <%
+	request.setCharacterEncoding("utf-8");
+	String spot = request.getParameter("spotsName");
+	TourListVO spotTourVO= tourDAO.selectSpots(spot);
+	System.out.println(spotTourVO.getSpotsName());
+	%> --%>
 	<!-- 대제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">화요나들이
-			(벽제)</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;"><%=spotTourVO.getTourName() %></p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -140,7 +216,23 @@
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p>
-			<span style="color: #ba202a; font-weight: bold;">화요나들이</span><span>&nbsp;코스안내</span>
+						<%
+							String weekDay="";
+							if ( spotTourVO.getTourNum() == 1){
+								weekDay="화요나들이";
+							} else if ( spotTourVO.getTourNum() == 2){
+								weekDay="수요나들이";
+							} else if ( spotTourVO.getTourNum() == 3){
+								weekDay="목요나들이";
+							} else if ( spotTourVO.getTourNum() == 4){
+								weekDay="금요나들이";
+							}  else if ( spotTourVO.getTourNum() == 5){					
+								weekDay="토요나들이";
+							}  else if ( spotTourVO.getTourNum() == 6){	
+								weekDay="일요나들이";
+							}
+							%>
+			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
 	</div>
 	<!-- 소제목 끝 -->
@@ -151,32 +243,32 @@
 			<div class="map_tab_wrap"
 				style="background: url(../../images/map_tap.png) no-repeat center top;">
 				<p class="map_tab_1">
-					<a href="user_introduceDay.jsp"
+					<a href="user_introduceDay.jsp?tourNum=<%=spotTourVO.getTourNum() %>"
 						style="color: #fff; padding-left: 30px; background: transparent;">MAP으로
 						보기</a>
 				</p>
 				<p class="map_tab_2">
-					<a href="user_introduceDay_list.jsp"
+					<a href="user_introduceDay_list.jsp?tourNum=<%=spotTourVO.getTourNum() %>"
 						style="color: #444; padding-right: 10px; background: transparent;">LIST로
 						보기</a>
 				</p>
 			</div>
 			<div>
 				<p
-					style="font-size: 20px; font-weight: bold; padding: 20px 0 0 0; margin: 0;">중남미문화원
-					소개</p>
+					style="font-size: 20px; font-weight: bold; padding: 20px 0 0 0; margin: 0;">
+					<%=spotTourVO.getSpotsName()%> 소개</p>
 				<h2 class="section-sub-title text-center mb-3"></h2>
 			</div>
 			<div
 				style="text-align: center; padding-top: 20px; padding-bottom: 20px;">
-				<img src="../../images/중남미문화원.jpg" width="300px">
+				<img src="../../images/<%=spotTourVO.getSpotsImg() %>" width="300px" alt="image">
 			</div>
 			<div style="padding-bottom: 80px;">
 				<p style="font-weight: bold; font-size: 16px; text-align: center;">
-					중남미문화원</p>
-				<p style="font-size: 16px; padding: 0 80px 0 80px;">뼈 끝에 스며들어 가는
-					열락의 소리다이것은 피어나기 전인 유소년에게서 구하지 못할 바이며 시들어 가는 노년에게서 구하지 못할 바이며 오직 우리
-					청춘에서만 구할 수 있는 것이 다 청춘은 인생의 황금시대다 우리는 이 황금시대의 가치를</p>
+					<%=spotTourVO.getSpotsName()%></p>
+				<p style="font-size: 16px; padding: 0 80px 0 80px;">
+						<%=spotTourVO.getSpoContent() %>
+					</p>
 			</div>
 		</div>
 	</div>

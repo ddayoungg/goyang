@@ -139,7 +139,8 @@
 					<tr>
 						<th>예약번호</th>
 						<th>고객명</th>
-						<th>예약일</th>
+						<th>투어 시작 날짜</th>
+						<th>예약 신청 날짜</th>
 						<th>투어코스명</th>
 						<th>요금</th>
 						<th>상태</th>
@@ -174,12 +175,13 @@
 					
 					<tr>
 						<td><%= reserVO.getReserNum()%></td>					
-		 <td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
-						<td><%= reserVO.getReserRegist()%></td>
+		 				<td><a  href="manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>"><%= reserVO.getName() %></a> </td>
+						<td><%= reserVO.getReserDate()%></td>
+						<td><%=reserVO.getReserRegist() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
 						<td><%= reserVO.getReserFlag %></td>
-						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
+						<td><a href="manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>"><%= cancelReas %></a></td>
 					</tr>
 			<%
 				}	
@@ -203,35 +205,35 @@
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-	<%-- 			<%
-				String temPage = request.getParameter("page");
+				<%
+				ReservaManagerVO reserVO = new ReservaManagerVO();
+				reserVO.setTotal(reserDAO.searchReserTotal(reserVO));
 				
-				if (tempPage == null || temPage.length() ==0){
-					cPage =1;
-				}
-				try {
-					cPage = Integer.parseInt(empPage);
-				} catch ( NumberFormatException e) {
-					cPage = 1;
-				}
-				%> --%>
-					<input class="pagination" type="button" value="">
-					<div class="pagination" >
-					<%-- <%
-					int lastpage = Math.ceil(total/10)+1;
-					%> --%>
+				/* 
+				int nowPage = Integer.parseInt(request.getParameter("nowPage"));
+				if ( nowPage == null) {
+					nowPage = 
+				} */
+		
+				int total = reserVO.getTotal();
+				int lastpage = (int)Math.ceil((double)total/10);
+				%>
+					<!-- <input class="pagination" type="button" value=""> -->
+					<!-- <div class="pagination" > -->
 					<%
-					for(int i=1; i<=2; i++)  {
-						out.print(i+" ");
-					}
+					for(int i=1; i<=lastpage; i++)  {
+						int pageNum = i;
 					%>
-					</div>
-					<!-- <input class="pagination pageNow" type="button" value="1"> -->
-					<input class="pagination" type="button" value="">
+					<%-- <input class="pagination pageNow" type="button" value=<%=pageNum%>> --%>
+					<a href="manager_reservation.jsp?nowPage=<%=pageNum %>">
+					<input class="pagination" type="button" value=<%=pageNum%>></a>
+					<%} %>
+					<!-- </div> -->
+					<!-- <input class="pagination" type="button" value=""> -->
 				</div>
 
 				<div>
-					총 <span>1</span>건의 예약 / 1~2번째
+					총 <span><%=total%></span>건의 예약 
 				</div>
 			</div>
 
@@ -512,7 +514,22 @@
 			const popup = document.querySelector('#' + id);
 			popup.classList.add('hide');
 		}	
-				
+		
+		$(document).ready(function()
+				{
+			$('td a').hover(function(){
+				$(this).css('text-decoration','underline');
+			/* 	$(this).css('color','#008b8b'); */
+			},function(){
+				$(this).css('text-decoration','none');
+				/* $(this).css('color','#1A374D'); */
+			});
+		});
+
+		
+			
+		
+		
 	
 	</script>
 </body>

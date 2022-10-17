@@ -1,3 +1,6 @@
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.vo.TourListVO"%>
+<%@page import="kr.co.goyang.user.dao.TourListDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!-- /*
@@ -101,8 +104,16 @@
 			</div>
 		</div>
 	</div>
-
-
+    <%
+    TourListDAO tourDAO = TourListDAO.getInstance();
+	TourListVO tourVO = new TourListVO();
+	List <TourListVO> list = tourDAO.selectAllTour(tourVO);	
+    %>
+	<%
+	TourListVO toli = new TourListVO();
+	tourVO = tourDAO.selectTourSpots(toli.getTourNum());
+	System.out.println(toli.getTourNum());
+	%> 
 
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
@@ -110,104 +121,227 @@
 			<li class="_sub"><a href="user_introduceTour.jsp"> <span>시티
 						투어 코스</span>
 			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>화요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>수요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			<li class="_sub">
+				<%
+				  for (int i=0; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=1; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" >  <span>수요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=2; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" ><span
 					class="menu_text">목요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=3; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span
 					class="menu_text">금요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>토요나들이</span>
-			</a></li>
-			<li class="_sub"><a href="user_introduceDay.jsp"> <span>일요나들이</span>
-			</a></li>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+			<%
+				  for (int i=4; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>토요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
+			<li class="_sub">
+				<%
+				  for (int i=5; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						 
+						int tourNum = toVO.getTourNum();
+				%> 
+			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>일요나들이</span>
+			</a>
+			<%break; } %> 
+			</li>
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝 -->
 
-	<!-- 상단 4개 여행지 -->
 	<div class="container">
+	<%
+
+		  for (int i=0; i<list.size(); ){ 
+				TourListVO toVO = (TourListVO) list.get(i);	
+				
+				 String thumImg = toVO.getThumImg();
+				  String tourName =toVO.getTourName(); 
+				  String explain = toVO.getExplain();
+				  int adultFee = toVO.getAdultFee();
+				  int otherFee = toVO.getOtherFee(); 
+	%>
+	<!-- 상단 4개 여행지 -->
+<%-- 	<%
+	TourListVO toli = new TourListVO();
+	tourVO = tourDAO.selectTourSpots(toli.getTourNum());
+	System.out.println(toli.getTourNum());
+	%> --%>
 		<div class="row">
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
+					<!-- <form> -->
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/중남미문화원.jpg" alt="Image" class="img-fluid"></a>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>">
+						<%-- <img src="/goyang/<%=request.getContextPath()+thumImg%>" alt="Image" class="img-fluid"> --%>
+						<img src="../../images/<%=thumImg%>" alt="Image" class="img-fluid">
+						</a>
 					</div>
+					<!-- </form> -->
 					<div class="d-flex">
 						<div>
+						
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>화요나들이 (벽제)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">고양에서 즐기는 또 다른 문화여행</p>
+							<p class="p-text-align"><%=explain%></p>
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+						<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
 			</div>
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
+				<%
+				  for (int i=1; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						
+						 String thumImg = toVO.getThumImg();
+						  String tourName =toVO.getTourName(); 
+						  String explain = toVO.getExplain();
+						  int adultFee = toVO.getAdultFee();
+						  int otherFee = toVO.getOtherFee(); 
+				%>
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/행주산성.jpg" alt="Image" class="img-fluid"></a>
+						<a class="d-block mb-3"  href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><img
+							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>수요나들이 (행주)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">행주가 예술이야~</p>
+							<p class="p-text-align"><%=explain%></p>
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+					<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
 			</div>
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
+			<%
+				  for (int i=2; i<list.size();){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						
+						 String thumImg = toVO.getThumImg();
+						  String tourName =toVO.getTourName(); 
+						  String explain = toVO.getExplain();
+						  int adultFee = toVO.getAdultFee();
+						  int otherFee = toVO.getOtherFee(); 
+				%>
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/일산역 전시관.jpg" alt="Image" class="img-fluid"></a>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><img
+							src=<%=thumImg%> alt="Image" class="img-fluid">
+<%-- 							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"> --%>
+							</a>
 					</div>
 					<div class="d-flex">
 						<div>
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>목요나들이 (일산)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">추억의 일산여행</p>
+							<p class="p-text-align"><%=explain%></p>
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+				<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
 			</div>
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
+			<%
+				  for (int i=3; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						
+						 String thumImg = toVO.getThumImg();
+						  String tourName =toVO.getTourName(); 
+						  String explain = toVO.getExplain();
+						  int adultFee = toVO.getAdultFee();
+						  int otherFee = toVO.getOtherFee(); 
+				%>
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/모터스튜디오 고양.jpeg" alt="Image" class="img-fluid"></a>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"  ><img
+							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>금요나들이 (고양관광특구)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">고양관광특구 속으로</p>
+							<p class="p-text-align"><%=explain%></p>
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+					<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
 			</div>
@@ -231,45 +365,76 @@
 			<div class="col-6 col-md-6 col-lg-3"></div>
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
+			<%
+				  for (int i=4; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						
+						 String thumImg = toVO.getThumImg();
+						  String tourName =toVO.getTourName(); 
+						  String explain = toVO.getExplain();
+						  int adultFee = toVO.getAdultFee();
+						  int otherFee = toVO.getOtherFee(); 
+				%>
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/서삼릉.jpg" alt="Image" class="img-fluid"></a>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><img
+							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>토요나들이 (왕릉)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">고려의 왕릉과 조선의 왕릉</p>
-							<p class="p-text-align">그리고 유네스코 세계문화유산</p>
+							<p class="p-text-align"><%=explain%></p>
+<!-- 							<p class="p-text-align">그리고 유네스코 세계문화유산</p> -->
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+					<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
 			</div>
 			<div class="col-6 col-md-6 col-lg-3">
 				<div class="media-1">
 					<div class="img-align">
-						<a href="user_introduceDay.jsp" class="d-block mb-3"><img
-							src="../../images/고양생태공원.jpg" alt="Image" class="img-fluid"></a>
+			 <%
+				  for (int i=5; i<list.size(); ){ 
+						TourListVO toVO = (TourListVO) list.get(i);	
+						
+						 String thumImg = toVO.getThumImg();
+						  String tourName =toVO.getTourName(); 
+						  String explain = toVO.getExplain();
+						  int adultFee = toVO.getAdultFee();
+						  int otherFee = toVO.getOtherFee(); 
+				%>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><img
+							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
 							<h3 class="p-text-align">
-								<a href="user_introduceDay.jsp"><b>일요나들이 (패밀리)</b></a>
+								<a href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><b><%=tourName%></b></a>
 							</h3>
 							<p class="p-text-align">10:00 ~ 16:00</p>
-							<p class="p-text-align">주말인데 뭐하지?</p>
-							<p class="p-text-align">아빠~생태공원으로 놀러가요^^</p>
+							<p class="p-text-align"><%=explain%></p>
+					<!-- 		<p class="p-text-align">아빠~생태공원으로 놀러가요^^</p> -->
 							<p class="p-text-align-size">
-								<b>6천원/4천원</b>
+								<b><%=adultFee%>원/<%=otherFee%>원</b>
 							</p>
 						</div>
+				<%
+						break;
+  					}
+						%>
 					</div>
 				</div>
+ 		<%--  <%
+				}
+		%> --%>
 			</div>
 			<div class="col-6 col-md-6 col-lg-3"></div>
 		</div>
@@ -335,13 +500,23 @@
 										</tr>
 									</thead>
 									<tbody align="center">
+										<%
+										 for (int i=0; i<list.size(); ){ 
+												TourListVO toVO = (TourListVO) list.get(i);	
+										 int adultFee = toVO.getAdultFee();
+										 int otherFee = toVO.getOtherFee();
+										%>
 										<tr>
-											<td width="80px">6,000원</td>
-											<td width="80px">4,000원</td>
+											<td width="80px"><%=adultFee%>원</td>
+											<td width="80px"><%=otherFee %>원</td>
 											<td width="120px">경로,장애인,<br>유치원~초중고,<br>36개월
 												미만
 											</td>
 										</tr>
+										<% 
+										break;
+										  }
+										%>
 									</tbody>
 								</table>
 							</div>

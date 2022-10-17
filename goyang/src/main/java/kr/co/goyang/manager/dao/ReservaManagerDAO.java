@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+import kr.co.goyang.dbConnection.DbConnection;
 import kr.co.goyang.manager.vo.ReservaManagerVO;
 //import org.apache.commons.lang3.StringUtils;
 
@@ -24,30 +24,31 @@ import kr.co.goyang.manager.vo.ReservaManagerVO;
 public class ReservaManagerDAO {
 	private static ReservaManagerDAO reserDAO;
 	
-	private ReservaManagerDAO() {
-		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			System.out.println("드라이브 호출 에러");
-		}
+	public ReservaManagerDAO() {
+		
 	}
 	
-	public static ReservaManagerDAO getInstance() {
-		if (reserDAO == null) {
-			reserDAO = new ReservaManagerDAO();
-		}
-		return reserDAO;
-	}
 	
-	private String url = "jdbc:oracle:thin:@211.63.89.140:1521:orcl";
-	private String uid = "goyang";
-	private String upw = "tour";
+	/*
+	 * private ReservaManagerDAO() { try {
+	 * Class.forName("oracle.jdbc.driver.OracleDriver"); } catch
+	 * (ClassNotFoundException e) { e.printStackTrace();
+	 * System.out.println("드라이브 호출 에러"); } }
+	 */
+
+	 public static ReservaManagerDAO getInstance() 
+	 { if (reserDAO == null) {
+	 reserDAO = new ReservaManagerDAO(); 
+	 } return reserDAO; 
+	 }
 	
-	private Connection conn= null;
-	private PreparedStatement pstmt = null;
-	private ResultSet rs = null;
-	private Statement stmt = null;
+	/*
+	 * private String url = "jdbc:oracle:thin:@211.63.89.140:1521:orcl"; private
+	 * String uid = "goyang"; private String upw = "tour";
+	 * 
+	 * private Connection conn= null; private PreparedStatement pstmt = null;
+	 * private ResultSet rs = null; private Statement stmt = null;
+	 */
 	
 	/**검색 결과, 전체 리스트
 	 * @param reserVO
@@ -60,27 +61,43 @@ public class ReservaManagerDAO {
 	 */
 	public ArrayList <ReservaManagerVO> selectSearchReserva( ) {
 		ArrayList <ReservaManagerVO> list = new ArrayList<ReservaManagerVO>();
-		/*
-		 * public List<ReservaManagerVO> selectSearchReserva( ) { List<ReservaManagerVO>
-		 * list = new ArrayList<ReservaManagerVO>();
-		 */		//return list;
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		
 		try {
-			conn=DriverManager.getConnection(url, uid, upw);
-			pstmt = conn.prepareStatement("select distinct r.reser_num, u.name, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
-					+ "c.cancel_reas "
-					+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
-					+ " where r.reser_num is not null "
-					+ " and u.id = r.id (+)"
-					+ " and r.reser_num = b.reser_num (+)"
-					+ " and r.tour_num = t.tour_num (+)"
-					+ " and r.reser_num = c.reser_num (+)"
-					+ "order by r.reser_num");
+			/* conn=DriverManager.getConnection(url, uid, upw); */
+			conn = dbCon.getConn();
+		
+			
+			  pstmt = conn.
+			  prepareStatement("select distinct r.reser_num, u.name, r.reser_date, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
+			  + "c.cancel_reas " +
+			  " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c" +
+			  " where r.reser_num is not null " + " and u.id = r.id (+)" +
+			  " and r.reser_num = b.reser_num (+)" + " and r.tour_num = t.tour_num (+)" +
+			  " and r.reser_num = c.reser_num (+)" + "order by r.reser_date desc ");
+		
+			/*
+			 * pstmt = conn. prepareStatement( "select * " + " from ( " +
+			 * " select distinct r.reser_num, u.name, r.reser_date,r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,\r\n"
+			 * + " c.cancel_reas " +
+			 * " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c " +
+			 * " where r.reser_num is not null " + " and u.id = r.id (+) " +
+			 * " and r.reser_num = b.reser_num (+) " + " and r.tour_num = t.tour_num (+) " +
+			 * " and r.reser_num = c.reser_num(+) " + " order by r.reser_date desc " + " ) "
+			 * + " where rownum between 1 and 10 ");
+			 */
+			 
+			 
 			rs = pstmt.executeQuery();
 			while ( rs.next()) {
 				ReservaManagerVO reserVO = new ReservaManagerVO ();
 				reserVO.setReserNum(rs.getInt("reser_num"));
 				reserVO.setName(rs.getString("name")); 
+				reserVO.setReserDate(rs.getString("reser_date"));
 				reserVO.setReserRegist(rs.getDate("reser_regist"));
 				reserVO.setTourName(rs.getString("tour_name"));
 				reserVO.setAdultCnt(rs.getInt("adult_cnt"));
@@ -109,16 +126,23 @@ public class ReservaManagerDAO {
 	 */
 	
 	public ReservaManagerVO selectReserva (int num  )  {
-		//i=1;
 		ReservaManagerVO reserVO = new ReservaManagerVO(); 
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
-			conn=DriverManager.getConnection(url, uid, upw);
+			conn = dbCon.getConn();
 			
-			String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_regist, t.tour_name, r.adult_cnt, r.other_cnt, b.seat_num,"
+			/* conn=DriverManager.getConnection(url, uid, upw); */
+			
+			String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_date, r.reser_regist, r.reser_flag,"
+					+ "t.tour_name, r.adult_cnt, r.other_cnt,"
 					+ "t.adult_fee, t.other_fee"
 					+ " from tour_user u, tour_reserva r, bus_seat b, tour t"
 					+ " where r.reser_num=?"
-					+ " and r.reser_num = b.reser_num"
+					//+ " and r.reser_num = b.reser_num"
 					+ " and u.id=r.id"
 					+ " and r.tour_num = t.tour_num";
 			pstmt = conn.prepareStatement( sql );
@@ -133,18 +157,19 @@ public class ReservaManagerDAO {
 				reserVO.setName(rs.getString("name"));
 				reserVO.setEmail(rs.getString("email"));
 				reserVO.setPhone(rs.getString("phone"));
-				reserVO.setReserDate(rs.getString("reser_regist"));
+				reserVO.setReserDate(rs.getString("reser_date"));
+				reserVO.setReserRegist(rs.getDate("reser_regist"));
+				reserVO.setReserFlag(rs.getInt("reser_flag"));
 				reserVO.setTourName(rs.getString("tour_name"));
 				reserVO.setAdultCnt(rs.getInt("adult_cnt"));
 				reserVO.setOtherCnt(rs.getInt("other_cnt"));
-				reserVO.setSeatNum(rs.getInt("seat_num"));
+				//reserVO.setSeatNum(rs.getInt("seat_num"));
 				reserVO.setAdultFee(rs.getInt("adult_fee"));
 				reserVO.setOtherFee(rs.getInt("other_fee"));
-
+				
+				System.out.println(reserVO);
 			}
 			System.out.println("DAO : 정보 저장 완료");
-//			System.out.println(reserVO.getName()+reserVO.getEmail()+reserVO.getPhone()+reserVO.getReserDate()+reserVO.getReserNum()+
-//					reserVO.getTourName()+reserVO.getAdultCnt()+reserVO.getOtherCnt()+reserVO.getSeatNum());
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -165,8 +190,15 @@ public class ReservaManagerDAO {
 	/*public int updateReserva(ReservaManagerVO reserVO) throws SQLException {*/
 	public ReservaManagerVO  updateReserva(int upFlag) throws SQLException {
 		ReservaManagerVO reserVO = new ReservaManagerVO();
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
-		conn = DriverManager.getConnection(url, uid, upw );
+			
+		conn = dbCon.getConn();	
+			/* conn = DriverManager.getConnection(url, uid, upw ); */
 		String sql = "update tour_reserva"
 				+ " set reser_flag=2 "
 				+ " where reser_num = ? ";
@@ -254,12 +286,19 @@ public class ReservaManagerDAO {
 	
 		ReservaManagerVO reserVO = new ReservaManagerVO();
 		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
 		try {
-		conn=DriverManager.getConnection(url, uid, upw);
-		String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_regist, t.tour_name, r.adult_cnt, r.other_cnt, b.seat_num , t.adult_fee, t.other_fee, c.cancel_reas"
+			
+		conn = dbCon.getConn();	
+			/* conn=DriverManager.getConnection(url, uid, upw); */
+		String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_date, r.reser_regist, r.reser_flag, t.tour_name, r.adult_cnt, r.other_cnt, b.seat_num , t.adult_fee, t.other_fee, c.cancel_reas"
 				+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
 				+ " where r.reser_num = ?"
-				+ " and r.reser_num = b.reser_num"
+				/* + " and r.reser_num = b.reser_num" */
 				+ " and r.reser_num = c.reser_num"
 				+ " and u.id=r.id"
 				+ " and r.tour_num = t.tour_num";
@@ -274,7 +313,9 @@ public class ReservaManagerDAO {
 				reserVO.setName(rs.getString("name"));
 				reserVO.setEmail(rs.getString("email"));
 				reserVO.setPhone(rs.getString("phone"));
-				reserVO.setReserDate(rs.getString("reser_regist"));
+				reserVO.setReserDate(rs.getString("reser_date"));
+				reserVO.setReserRegist(rs.getDate("reser_regist"));
+				reserVO.setReserFlag(rs.getInt("reser_flag"));
 				reserVO.setTourName(rs.getString("tour_name"));
 				reserVO.setAdultCnt(rs.getInt("adult_cnt"));
 				reserVO.setOtherCnt(rs.getInt("other_cnt"));
@@ -283,9 +324,8 @@ public class ReservaManagerDAO {
 				reserVO.setOtherFee(rs.getInt("other_fee"));
 				reserVO.setCancelReas(rs.getString("cancel_reas"));
 			}
-			System.out.println("DAO : 정보 저장 완료");
-//			System.out.println(reserVO.getName()+reserVO.getEmail()+reserVO.getPhone()+reserVO.getReserDate()+reserVO.getReserNum()+
-//					reserVO.getTourName()+reserVO.getAdultCnt()+reserVO.getOtherCnt()+reserVO.getSeatNum()+reserVO.getCancelReas());
+			/* System.out.println("DAO : 정보 저장 완료"); */
+
 		}catch(Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -301,17 +341,30 @@ public class ReservaManagerDAO {
 	 * @return
 	 */
 	/* public int updateDelReserva(ReservaManagerVO reserVO) { */
-	public ReservaManagerVO updateDelReserva(int flag) { 
+	public ReservaManagerVO updateDelReserva(int num) { 
 		//int flag=0;
 		ReservaManagerVO reserVO = new ReservaManagerVO();
-		String sql = "update tour_reserva set reser_flag =4 where reser_num= ? ";
 		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = " update tour_reserva set reser_flag =4 where reser_num= ? ";
+			/*	+ " delete from bus_seat where reser_num= ? ";	*/	
 		try { 
-			conn = DriverManager.getConnection(url, uid, upw );
+			conn = dbCon.getConn();
+			/* conn = DriverManager.getConnection(url, uid, upw ); */
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt .setInt(1, flag);
+			pstmt .setInt(1, num);
+			/*pstmt .setInt(2, num); */
 			pstmt.executeUpdate();
+			
+			/*if(rs.next()) {
+				reserVO.setReserFlag(rs.getInt("reser_flag"));
+				reserVO.setSeatNum(rs.getInt("seat_num"));*/
+			/* } System.out.println(reserVO); */
 		} catch ( Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -324,13 +377,57 @@ public class ReservaManagerDAO {
 		}
 		return reserVO;
 	}
-
+	
+	//좌석 넘버 삭제
+	public ReservaManagerVO updateDelSeatNum(int num) { 
+		//int flag=0;
+		ReservaManagerVO reserVO = new ReservaManagerVO();
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = " delete from bus_seat where reser_num= ? ";
+			/*	+ " delete from bus_seat where reser_num= ? ";	*/	
+		try { 
+			conn = dbCon.getConn();
+			/* conn = DriverManager.getConnection(url, uid, upw ); */
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt .setInt(1, num);
+			/*pstmt .setInt(2, num); */
+			pstmt.executeUpdate();
+			
+			/*if(rs.next()) {
+				reserVO.setReserFlag(rs.getInt("reser_flag"));
+				reserVO.setSeatNum(rs.getInt("seat_num"));*/
+			/* } System.out.println(reserVO); */
+		} catch ( Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(conn != null) conn.close();
+				if(pstmt != null) pstmt.close();
+			} catch( Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return reserVO;
+	}
 	//특정 사람 찾기
 	public List<ReservaManagerVO> Listmembers(ReservaManagerVO reserVO) {
 		List <ReservaManagerVO> membersList = new ArrayList<ReservaManagerVO>();
 		String name_1 = reserVO.getName();
+		
+		DbConnection dbCon = DbConnection.getInstance();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
 		try {
-			conn = DriverManager.getConnection(url, uid, upw );
+			conn = dbCon.getConn();
+			/* conn = DriverManager.getConnection(url, uid, upw ); */
 			String sql = "select distinct r.reser_num, u.name, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
 					+ "c.cancel_reas "
 					+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
@@ -409,8 +506,15 @@ public class ReservaManagerDAO {
 public List<ReservaManagerVO> ListReserFlags(ReservaManagerVO reserVO){
 	List <ReservaManagerVO> reserFlagsList = new ArrayList<ReservaManagerVO>();
 	int flag = reserVO.getReserFlag();
+	
+	DbConnection dbCon = DbConnection.getInstance();
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	
 	try {
-	conn= DriverManager.getConnection(url,uid,upw);
+		conn = dbCon.getConn();
+		/* conn= DriverManager.getConnection(url,uid,upw); */
 	String sql = "select distinct r.reser_num, u.name, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
 			+ "c.cancel_reas"
 			+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
@@ -473,29 +577,77 @@ public List<ReservaManagerVO> ListReserFlags(ReservaManagerVO reserVO){
 }
 	return reserFlagsList;
 }
+
 //리스트 개수 파악
-//public int searchReserTotal (ReservaManagerVO reserVO) {
-//	int total=0;
-//	
-//	try {
-//		conn=DriverManager.getConnection(url, uid, upw);
-//		String sql =" select count(reser_num) from tour_reserva ";
-//		pstmt = conn.prepareStatement(sql);
-//		rs=pstmt.executeQuery();
-//		
-//		if(rs.next()) {
-//			total = rs.getInt("count(reser_num)");
-//		}
-//	}finally {
-//		try {
-//			if(conn != null)conn.close();
-//			if(pstmt != null)pstmt.close();
-//		} catch ( Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	return total;
-//}
+public int searchReserTotal (ReservaManagerVO reserVO) throws SQLException {
+	int total=0;
+	
+	DbConnection dbCon = DbConnection.getInstance();
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	
+	try {
+		conn = dbCon.getConn();
+		/* conn=DriverManager.getConnection(url, uid, upw); */
+		String sql =" select count(reser_num) from tour_reserva ";
+		pstmt = conn.prepareStatement(sql);
+		rs=pstmt.executeQuery();
+		
+		if(rs.next()) {
+			total = rs.getInt("count(reser_num)");
+		}
+	}finally {
+		try {
+			if(conn != null)conn.close();
+			if(pstmt != null)pstmt.close();
+		} catch ( Exception e) {
+			e.printStackTrace();
+		}
+	}
+	return total;
+}
+
+//좌석 번호 배열로 얻기
+public int[] searchSeatNum(ReservaManagerVO reserVO ) {
+	int[] seatNums=null;
+	
+	DbConnection dbCon = DbConnection.getInstance();
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	
+	try {
+		conn = dbCon.getConn();
+		/* conn=DriverManager.getConnection(url,uid,upw); */
+		String sql = " select b.seat_num"
+				+ " from tour_user u, tour_reserva r, bus_seat b, tour t"
+				+ " where r.reser_num like ?"
+				+ " and u.id = r.id (+)"
+				+ " and r.reser_num = b.reser_num (+)"
+				+ " and r.tour_num = t.tour_num (+)"
+				+ " order by  b.seat_num";
+		pstmt=conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+		pstmt.setInt(1,reserVO.getReserNum());
+		rs=pstmt.executeQuery();
+		int rowcount=0;
+		if(rs.last()) {
+			rowcount = rs.getRow();
+			rs.beforeFirst();
+		}
+		seatNums=new int[rowcount];
+		int idx=0;
+		while (rs.next()) {
+			seatNums[idx++]=rs.getInt("seat_num");
+		}
+		rs.close();
+		pstmt.close();
+		conn.close();
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+	return seatNums;	
+}
 
 public static void main(String [] args) throws SQLException {
 	//ReservaManagerVO reserVO = new ReservaManagerVO();
