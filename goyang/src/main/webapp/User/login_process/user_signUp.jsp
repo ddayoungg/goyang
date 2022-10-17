@@ -1,9 +1,9 @@
-<%@page import="kr.co.goyang.user.vo.UserVO"%>
-<%@page import="kr.co.goyang.user.dao.UserDAO"%>
 <%@page import="java.util.List"%>
-<%@page import="kr.co.goyang.user.dao.TourReviewDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+	    <%@ page import="kr.co.goyang.user.dao.UserDAO" %>
+	    <%@ page import="kr.co.goyang.user.vo.UserVO" %>
+	
 <!-- /*
 * Template Name: Tour
 * Template Author: Untree.co
@@ -259,61 +259,10 @@
 		}).open();
 	}
 	
+	
 	 $(function(){
 		
-		$("#id").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		
-		$("#password").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		
-		$("#conpassword").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#email").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#name").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#phone").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#zipcode").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#address").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		$("#deaddress").keydown( function(evt) {
-			if( evt.which ==13 ){// 눌린키의 키코드를 which 속성으로 받을 수 있다.
-				chkNull();
-			}//end if
-		});//keydown
-		
-		$("#signUp").keydown(function(){
-			if(event.keyCode ===13){
-				event.preventDefault();
-			}
-		}) 
+	
 		
 			//아이디 중복확인 창
 	$("#btnDup").click(function(){
@@ -321,10 +270,6 @@
 	});//click
 		
 	
-	$("#signUp").click(function(){		
-		$("#frm").submit();
-	})
-		
 	});//ready
 
 
@@ -459,7 +404,7 @@
 		//아이디와 비밀번호가 모두 입력된 후 form 태그의 action으로 설정된페이지로 요청을
 		//보낸다.
 
-		
+		$("#frm").submit();
 		
 		
 	}//chkNull
@@ -591,6 +536,7 @@
 				<input type="text" name="deAddr" id="deAddr"
 					class="inputbox size" placeholder="Detail Address" maxlength="50" /><br>
 				<div id="deaddrWarnMsg">상세주소를 입력해주세요.</div>
+
 				<!--다영수정-->
 				<%
 					UserDAO userDAO = UserDAO.getInstance();
@@ -603,11 +549,12 @@
 				<input type="radio" name="cose" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
 				<%} %>
 				<!--다영수정-->
+				
 				<br> 
 				<div>
 				<input type="hidden"/>
 				<input type="button" value="Sign Up" id="signUp"
-					class="btn btn-primary btn-block" /><br>
+					class="btn btn-primary btn-block" onclick="chkNull()"/><br>
 					</div>
 			</form>
 		</div>
@@ -624,7 +571,7 @@
 							<p
 								style="font-size: 20px; font-weight: bold; color: red; font-style: inherit;">매주
 								월요일은 정기 휴무입니다.</p>
-							<p style="font-size: 60px; font-weight: bold;">Goyan Tour</p>
+							<p style="font-size: 60px; font-weight: bold;">Goyang Tour</p>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-4 " style="margin: 0 0 0 auto">

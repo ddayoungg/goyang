@@ -1,5 +1,10 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
+<%@page import="java.io.PrintWriter"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+   <%@ page import="kr.co.goyang.manager.dao.ReviewManagerDAO" %>
+   <%@ page import="kr.co.goyang.manager.vo.ReviewManagerVO" %>
  <!-- /*
 * Template Name: Tour
 * Template Author: Untree.co
@@ -35,15 +40,88 @@
 <link rel="stylesheet" href="../../css/style.css">
 <link rel="stylesheet" href="../../css/bootstrap.min.css">
 <style type="text/css">
+	.mainBtn {
+	width: 80px;
+	height: 35px;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+}
+
+.mainBtn:hover {
+	border: 1px solid grey;
+	background-color: #ebebeb;
+}
+	.deleteBtn {
+	width: 70px;
+	height: 35px;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	color:black;
+	text-align:center;
+	vertical-align:middle;
 	
+}
+.delBtn{
+	padding-top:5px;
+	color:black;
+	width:100%;
+	height:100%;
+	display:block;
+	vertical:middle;
+}
+
+.delBtn:hover {
+	border: 1px solid grey;
+	background-color: #ebebeb;
+	color:black;
+	text-decoration:none;
+}
+
 </style>
-	
+<script type="text/javascript">
+$(function(){
+	$("#deleteBtn").click(function(){
+		$("#frm").submit();
+	});
+});
+</script>
 <title>관리자화면-후기관리</title>
 </head>
 
 <body>
 
+	<%
+	String upComContent = request.getParameter("comContent");
+	if(upComContent == null){
+		upComContent="";
+	}
+		int reviewNum=0;
+		if(request.getParameter("reviewNum")!=null){
+			reviewNum=Integer.parseInt(request.getParameter("reviewNum"));	
+		}
+		if(reviewNum == 0){
+			PrintWriter pw=response.getWriter();
+			pw.println("<script>");
+			pw.println("alert('유효하지 않은 글입니다.')");
+			pw.println("location.href='manager_review.jsp'");
+			pw.println("</script>");
 
+		}
+		ReviewManagerVO rmVO = new ReviewManagerVO();
+
+		ReviewManagerDAO rmDAO=ReviewManagerDAO.getInstance();
+		ReviewManagerVO rv = rmDAO.getreviewDetail(reviewNum);
+		List<ReviewManagerVO> commList = rmDAO.selectCommend(reviewNum);
+
+		
+		List<ReviewManagerVO> rmList = rmDAO.selectSearchReview(rmVO);
+		List<Integer> reviewNumList = new ArrayList<Integer>();
+		for(int i=0; i<rmList.size(); i++){
+			rmVO = rmList.get(i);
+			reviewNumList.add(rmVO.getReviewNum());
+		}
+		int reviewIdx = reviewNumList.indexOf(reviewNum);
+	%>
 	<div class="site-mobile-menu site-navbar-target">
 		<div class="site-mobile-menu-header">
 			<div class="site-mobile-menu-close">
@@ -108,50 +186,59 @@
 	<!-- 대제목 끝 -->
 	
 	<div class="container">
-		<form>
+		
 			<div style="font-size: 23px;padding: 10px 0px 10px 0px;display: flex;justify-content: space-between; border-bottom: 2px solid #bbbbbb;">
 				<div style="font-weight: bold;"> 관광 후기</div>
 			</div>
 			
 			<div style="display:flex; align-items:center;justify-content:space-between; font-size: 20px; height: 70px; width: 100%; padding: 24px 0; border-bottom: 1px solid #ebebeb; font-weight: bold;">
-				<div>화요나들이 재밌어요~!</div>
-				<div style="font-size: 14px; font-weight: lighter;">홍*영 | 2022.09.07</div>
+				<div><%= rv.getTitle()%></div>
+				<div style="font-size: 14px; font-weight: lighter;"><%=rv.getId()%> | <%=rv.getRevWriteDate()%></div>
 			</div>
 			
 			<div>
 				<div style="width: 100%; padding: 24px 0; ">
-					화요나들이 정말 재밌어요~!<br>
-					가족들과 함께 놀러가기 좋아요<br>
-					엄마도 좋아하셨어요<br>
-					아빠도 좋아하셨어요<br>
-					추천합니다!!
+					<%=rv.getRevContent() %>
 				</div>
 				<div><img src="../../images/gal_1.jpg"></div>
 			</div>
 			
-			<div style="font-size: 15px; margin: 50px 0px 10px 10px;">댓글 <strong>1</strong></div>
+			<div style="font-size: 15px; margin: 50px 0px 10px 10px;">댓글 <strong><%= commList.size() %></strong></div>
 			
 			<div style="padding: 30px; border-top: 1px solid #ebebeb; background-color: #fafafa">
-				<div style="margin-bottom: 10px;">
-					<div style="display: flex; justify-content: space-between; font-size: 13px;">
-						<div>thgu**** <span>2022.09.08</span></div>
+				<%for(int i=0; i<commList.size(); i++){
+						ReviewManagerVO commVO = commList.get(i);%>
+					<div id="comm<%=commVO.getCommendNum()%>" style="margin-bottom: 10px;">
+						<div style="display: flex; justify-content: space-between; font-size: 13px;">
+							<div><%= commVO.getId().substring(0, commVO.getId().length()/2) %>**** <span><%= commVO.getComWriteDate() %></span></div>
+							<%-- <%if(id.equals(commVO.getId())){%>
+							<div class="hide popup">
+							<%}else{ %> --%>
+						</div>
+						<div style="min-height: 50px; padding: 7px 0 20px 0;"><%= commVO.getComContent() %></div>
 					</div>
-					<div style="min-height: 50px; padding: 7px 0 20px 0;">저도 다녀와봤는데 정말 추천합니다~</div>
-				</div>
+				<%} %>
+		
+				
 			</div>
 			
 			<div style="display: flex; justify-content: space-between; margin-bottom: 100px; margin: 20px 0px 20px; width: 100%; height: 32px;">
 				<div>
-					<input type="button" value="이전 글" style="margin-left: 10px; width: 70px;" class="mainBtn">
-					<input type="button" value="목록" style="margin-left: 10px; width: 70px;" class="mainBtn" onclick="location.href='manager_review.jsp'">
-					<input type="button" value="다음 글" style="margin-left: 10px; width: 70px;" class="mainBtn">
+					<%if(reviewIdx>0){ %>
+					<input type="button" value="이전 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='manager_reviewDetail.jsp?reviewNum=<%= reviewNumList.get(reviewIdx-1) %>'">
+					<%}if(reviewIdx<reviewNumList.size()-1){ %>
+					<input type="button" value="다음 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='manager_reviewDetail.jsp?reviewNum=<%= reviewNumList.get(reviewIdx+1) %>'">
+					<%} %>
 				</div>
+				
 				<div style="display: flex;">
-					<input type="button" value="삭제" style="margin-left: 10px; width: 70px;" class="mainBtn" onclick="showPopup(true)">
+					<input type="button" value="목록" style="margin-left: 10px; width: 70px;" class="mainBtn" onclick="location.href='manager_review.jsp'">&nbsp;&nbsp;
+					<div class="deleteBtn"><a href="manager_review_deleteAction.jsp?reviewNum=<%=reviewNum %>" class="delBtn">삭제</a></div>
 				</div>
+				
 			</div>
 
-		</form>
+		
 	</div>
 <div id="popup" class="hide popup">
 <div class="content">

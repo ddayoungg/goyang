@@ -27,9 +27,10 @@
     <jsp:useBean id="uVO" class="kr.co.goyang.user.vo.UserVO" scope="page"/>
     <jsp:setProperty name="uVO" property="*"/>
 <%
-	/* 다영수정 */
-	uVO.setTourNum(Integer.parseInt(request.getParameter("cose")));
-	/* 다영수정 */
+
+/* 다영수정 */
+uVO.setTourNum(Integer.parseInt(request.getParameter("cose")));
+/* 다영수정 */
 
 if(uVO.getId()!=null || uVO.getPassword()!=null || uVO.getEmail()!=null ||
 	uVO.getName()!=null || uVO.getPhone()!=null || uVO.getZipcode()!=null ||
