@@ -1,5 +1,6 @@
-<%@page import="kr.co.goyang.manager.dao.SpotListDAO"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Arrays"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
    <%@ page import="kr.co.goyang.manager.dao.ReviewManagerDAO" %>
@@ -23,6 +24,7 @@
 	href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Source+Serif+Pro:wght@400;700&display=swap"
 	rel="stylesheet">
 
+<link rel="stylesheet" href="../../css/bootstrap.min.css">
 <link rel="stylesheet" href="../../css/owl.carousel.min.css">
 <link rel="stylesheet" href="../../css/owl.theme.default.min.css">
 <link rel="stylesheet" href="../../css/jquery.fancybox.min.css">
@@ -31,13 +33,99 @@
 <link rel="stylesheet" href="../../css/daterangepicker.css">
 <link rel="stylesheet" href="../../css/aos.css">
 <link rel="stylesheet" href="../../css/style.css">
-<link rel="stylesheet" href="../../css/bootstrap.min.css">
 
 <style type="text/css">
 
 	
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	<%
+	/* String name=(String)session.getAttribute("name"); */
+	String id="tester";
+	int reviewNum = 0;
+	ReviewManagerDAO trDAO = ReviewManagerDAO.getInstance();
+	
+	// 검색 : 투어 코스 선택
+	String selectTour = request.getParameter("selTour"); // 1, 화
+	
+	List<String> tourNames = trDAO.selectTourName(); // 화, 수, 목, 금
+	
+	ReviewManagerVO search = new ReviewManagerVO();
+	if(selectTour!=null){
+		search.setTourNum(Integer.valueOf(selectTour)+1);
+	}
+	
+	// 검색 : 검색어 입력
+	String textSearch = request.getParameter("textSearch");
+	search.setTextSearch(textSearch);
+	
+	List<ReviewManagerVO> reviewList = trDAO.selectSearchReview(search);
+	
+	ReviewManagerVO trVO1 = new ReviewManagerVO();
+	List<Integer> reviewNumList = new ArrayList<Integer>();
+	for(int i=reviewList.size(); i-->0;){
+		trVO1 = reviewList.get(i);
+		reviewNumList.add(trVO1.getReviewNum());
+	}
+	%>
+	$("#<%= selectTour%>").prop("selected", true);
+	
+	$("#search").click(function () {
+		$("#frm").submit();
+	});
+	
+	pagenation();
+	
+	function pagenation() {
+		var pagenationHTML = ``;
+		<% 
+		// total_page
+		int totalPage = (int)Math.ceil((double)reviewList.size()/10);
+		System.out.println("totalPage : "+totalPage);
+		
+		// page
+		String nowPage = request.getParameter("nowPage");
+		System.out.println("nowPage : "+nowPage);
+		if(nowPage==null){
+			nowPage = "1";
+			System.out.println("nowPage : "+nowPage);
+		}
+		
+		// page_group
+		int pageGroup=(int)Math.ceil(Double.valueOf(nowPage)/10);
+		System.out.println("pageGroup : "+pageGroup);
+		
+		// last
+		int lastIdx = Integer.valueOf(nowPage)*10;
+		System.out.println("lastIdx : "+lastIdx);
+		
+		// first
+		int firstIdx = lastIdx-9;
+		System.out.println("firstIdx : "+firstIdx);%>
+		
+		// first~last 페이지 프린트
+		pagenationHTML += 
+			`<li class="page-item">
+				<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+		    </li>`;
+		<%for(int i=1; i<=totalPage; i++){%>
+			pagenationHTML += 
+			`<li class="page-item"><a class="page-link" href="manager_review.jsp?nowPage=<%=i%>"><%=i%></a></li>`;
+		<%}%>
+		pagenationHTML += 
+			`<li class="page-item">
+		      <a class="page-link" href="#" aria-label="Next">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li>`;
+		document.querySelector(".pagination").innerHTML = pagenationHTML;
+	}
+	
+});//ready
 
+</script>
 <title>관리자화면-후기관리</title>
 </head>
 
@@ -115,63 +203,58 @@
 	<!-- 대제목 끝 -->
 	
 		<div class="container">
-		<form>
 			<div style="font-size: 23px;margin: 10px 0px 10px 0px;display: flex;justify-content: space-between;">
 				<div style="font-weight: bold;"> 관광 후기</div>
 				<div style="font-size: 13px;display: flex;align-items: end;">목록보기</div>
 			</div>
 
-			<div style="font-size: 15px;">
+			<div>
 				<table class="member" style="width: 100%">
 					<tr>
-						<th>번호</th>
-						<th>제목</th>
-						<th style="min-width: 500px;">내용</th>
-						<th>작성일</th>
-						<th>아이디</th>
-						<th>투어</th>
-					</tr>
-					<%
-						ReviewManagerDAO dao = new ReviewManagerDAO(); 
-						ArrayList<ReviewManagerVO> list = dao.getList(pageNumber);
-						List<ReviewManagerVO> tournameList=dao.selectTourNameNum();
-						for(int i=0; i<list.size(); i++){
-					%>					
-					<tr>
-						<td><%= list.get(i).getReviewNum() %></td>
-						<td><%= list.get(i).getTitle() %></td>
-						<td><a href="manager_reviewDetail.jsp?ReviewNum=<%=list.get(i).getReviewNum() %>"><%= list.get(i).getRevContent() %></a></td>
-						<td><%= list.get(i).getRevWriteDate() %></td>
-						<td><%= list.get(i).getId()%></td>
-						<td><%= tournameList.get(i).getTourName()%></td>
-					</tr>
-					<%
-						}
-					%>
+					<th>번호</th>
+					<th>코스</th>
+					<th style="min-width: 500px;">글제목</th>
+					<th>글쓴이</th>
+					<th>작성일</th>
+				</tr>
+				<%for(int i=reviewList.size(); i-->0;){
+					ReviewManagerVO trVO = reviewList.get(i);
+					if(reviewNumList.indexOf(trVO.getReviewNum())>=firstIdx-1 && reviewNumList.indexOf(trVO.getReviewNum())<=lastIdx-1){%>
+				<tr>
+					<td><%= trVO.getReviewNum() %></td>
+					<td><%= tourNames.get(trVO.getTourNum()-1) %></td>
+					<td><a href="manager_reviewDetail.jsp?reviewNum=<%= trVO.getReviewNum() %>"><%= trVO.getTitle() %></a></td>
+					<td><%= trVO.getId().substring(0,trVO.getId().length()/2) %>****</td>
+					<td><%= trVO.getRevWriteDate() %></td>
+				</tr>
+				<%}} %>
 					
 				</table>
+				
 			</div>
 			
 			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
-				<input class="pagination" type="button" value="<">
-				<input class="pagination pageNow" type="button" value="1">
-				<input class="pagination" type="button" value=">">
-			</div>
-			<!--다영수정-->
-			<%
-				SpotListDAO spotDAO=SpotListDAO.getInstance();
-				String[] spots=spotDAO.selectTourList();
-			%>
+			<nav aria-label="Page navigation example">
+				<ul class="pagination">
+				</ul>
+			</nav>
+			
+			<%-- <input class="pagination" type="button" value="<">
+			<input class="pagination pageNow" type="button" value="1">
+			<input class="pagination" type="button" value=">"> --%>
+		</div>
+			
 				
+			<form id="frm" action="user_review.jsp" method="get">
 			<div style="display: flex; justify-content: center; margin-bottom: 50px; height: 32px;">
-				<select>
-					<% for(int i=0;i<spots.length;i++){ %>
-					<option value="<%=spots[i] %>"><%=spots[i] %></option>
-					<%}%>
+				<select name="selTour" style="border: 1px solid #bbb;">
+					<option value=-1>코스 선택</option>
+					<% for(int i=0; i<tourNames.size(); i++){ %>
+					<option id="<%= i %>" value="<%= i %>"><%= tourNames.get(i) %></option>
+					<% } %>
 				</select>
-				<!--다영수정-->
-				<input type="text" placeholder="검색어를 입력하세요." style="margin: 0px 10px 0px 10px; min-width: 300px;">
-				<input type="button" value="검색" class="mainBtn" style="width: 80px;">
+				<input id="textSearch" name="textSearch" type="text" placeholder="제목을 입력하세요." style="border: 1px solid #bbb; margin: 0px 10px 0px 10px; min-width: 300px;">
+				<input id="search" type="button" value="검색" class="mainBtn button222" style="width: 80px;">
 			</div>
 		</form>
 	</div>

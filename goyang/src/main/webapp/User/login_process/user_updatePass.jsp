@@ -35,7 +35,7 @@
 	
 	
 </style>
-<script>
+<script type="text/javascript">
 
 </script>
 
@@ -95,7 +95,7 @@
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">로그인</h1>
+						<h1 class="mb-0">비밀번호 찾기</h1>
 						<!-- <p class="text-white">로그인을 해주세요.</p> -->
 					</div>
 				</div>

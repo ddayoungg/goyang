@@ -46,7 +46,7 @@ public class UserDAO {
 
 			selectTourNames.append("	select tour_num,tour_name	")
 			.append("	from tour	")
-			.append("	order by tour_num	");
+			.append("	where run_flag=1 order by tour_num	");
 
 			pstmt = con.prepareStatement(selectTourNames.toString());
 			
@@ -66,7 +66,6 @@ public class UserDAO {
 		}
 		return tourNames;
 	}
-	
 	
 	//회원가입
 	public int insertUser(UserVO userVo) throws SQLException  {
@@ -97,7 +96,7 @@ public class UserDAO {
 			pstmt.setString(6, userVo.getZipcode());
 			pstmt.setString(7, userVo.getAddr());
 			pstmt.setString(8, userVo.getDeAddr());
-			pstmt.setInt(9, userVo.getTourNum());
+			pstmt.setInt(9, 1);
 			//5.쿼리문 수행 후 결과 얻기
 			chk=pstmt.executeUpdate();
 		}catch(Exception e) {
