@@ -194,7 +194,7 @@ public class ReservaManagerDAO {
 		DbConnection dbCon = DbConnection.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		/* ResultSet rs = null; */
 		try {
 			
 		conn = dbCon.getConn();	
@@ -212,7 +212,7 @@ public class ReservaManagerDAO {
 	}catch(Exception e) {
 		e.printStackTrace();
 	}finally {
-		try {rs.close();}catch(SQLException s) {}
+		/* try {rs.close();}catch(SQLException s) {} */
 		try {pstmt.close();}catch(SQLException s) {}
 		try {conn.close();}catch(SQLException s) {}
 	}
@@ -348,7 +348,7 @@ public class ReservaManagerDAO {
 		DbConnection dbCon = DbConnection.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		/* ResultSet rs = null; */
 		
 		String sql = " update tour_reserva set reser_flag =4 where reser_num= ? ";
 			/*	+ " delete from bus_seat where reser_num= ? ";	*/	
@@ -386,7 +386,7 @@ public class ReservaManagerDAO {
 		DbConnection dbCon = DbConnection.getInstance();
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		/* ResultSet rs = null; */
 		
 		String sql = " delete from bus_seat where reser_num= ? ";
 			/*	+ " delete from bus_seat where reser_num= ? ";	*/	
