@@ -10,9 +10,10 @@
 String id=request.getParameter("id");
 String password=request.getParameter("password");
 
+
 UserDAO dao=UserDAO.getInstance();
 
-System.out.println("확인============="+id);	
+
 	if(dao.updatePass(id, password)!=-1){
 		PrintWriter pw=response.getWriter();
 		pw.println("<script>");

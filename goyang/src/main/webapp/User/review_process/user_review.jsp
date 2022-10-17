@@ -70,7 +70,7 @@ $(function(){
 	
 	TourReviewVO trVO1 = new TourReviewVO();
 	List<Integer> reviewNumList = new ArrayList<Integer>();
-	for(int i=0; i<reviewList.size(); i++){
+	for(int i=reviewList.size(); i-->0;){
 		trVO1 = reviewList.get(i);
 		reviewNumList.add(trVO1.getReviewNum());
 	}
@@ -223,7 +223,7 @@ $(function(){
 					<th>글쓴이</th>
 					<th>작성일</th>
 				</tr>
-				<%for(int i=0;i<reviewList.size(); i++){
+				<%for(int i=reviewList.size(); i-->0;){
 					TourReviewVO trVO = reviewList.get(i);
 					if(reviewNumList.indexOf(trVO.getReviewNum())>=firstIdx-1 && reviewNumList.indexOf(trVO.getReviewNum())<=lastIdx-1){%>
 				<tr>
