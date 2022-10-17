@@ -184,7 +184,7 @@ $(function(){
 						</td>
 						<td>
 							<div style="display: flex; flex-direction: column;">
-								<div style="font-size: 17px; padding-bottom: 2px;"><a href="http://localhost/goyang/User/user_introduceDay.jsp?tourNum=${ cosList.tourNum }" class="aLineNone">${ cosList.tourName }</a></div>
+								<div style="font-size: 17px; padding-bottom: 2px;"><a href="http://localhost/goyang/User/spot_process/user_introduceDay.jsp?tourNum=${ cosList.tourNum }" class="aLineNone">${ cosList.tourName }</a></div>
 								<div style="font-size: 13px;">${ cosList.explain }</div>
 							</div>
 						</td>
