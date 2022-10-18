@@ -40,7 +40,8 @@ public class TourMainDAO {
 			StringBuilder selectAllTour = new StringBuilder();
 			selectAllTour
 			.append("	select tour_name,explain,thum_img ")
-			.append("	from tour");
+			.append("	from tour")
+			.append("	where run_flag=1");
 			pstmt = conn.prepareStatement(selectAllTour.toString());
 			// 4. 바인드 변수에 값 설정
 			// pstmt.setString(1, dong+"%");

@@ -1,3 +1,6 @@
+<%@page import="kr.co.goyang.user.vo.TourMainVO"%>
+<%@page import="java.util.List"%>
+<%@page import="kr.co.goyang.user.dao.TourMainDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -292,62 +295,19 @@ marker.setMap(map);
 			</div>
 
 			<div class="owl-carousel owl-3-slider">
-
+			<%
+				TourMainDAO tmDAO=TourMainDAO.getInstance();
+				List<TourMainVO> list=tmDAO.selectMainTour();
+				for(TourMainVO tmVO:list){
+			%>
 				<div class="item">
 					<a class="media-thumb" href="user_introduceDay.html">
 						<div class="media-text">
-							<h3>화요나들이</h3>
-							<span class="location">벽제</span>
-						</div> <img src="../../images/tues.jpg" alt="Image" class="img-fluid">
+							<h3 style="color:#FFFFFF;"><%=tmVO.getTourName() %></h3>
+						</div> <img src="../../images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
 					</a>
 				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
-						<div class="media-text">
-							<h3>수요나들이</h3>
-							<span class="location">행주</span>
-						</div> <img src="../../images/wed.jpg" alt="Image" class="img-fluid">
-					</a>
-				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
-						<div class="media-text">
-							<h3>목요나들이</h3>
-							<span class="location">일산</span>
-						</div> <img src="../../images/thur.jpg" alt="Image" class="img-fluid">
-					</a>
-				</div>
-
-
-				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
-						<div class="media-text">
-							<h3>금요나들이</h3>
-							<span class="location">고양관광특구</span>
-						</div> <img src="../../images/fri.jpg" alt="Image" class="img-fluid">
-					</a>
-				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
-						<div class="media-text">
-							<h3>토요나들이</h3>
-							<span class="location">왕릉</span>
-						</div> <img src="../../images/satur.jpg" alt="Image" class="img-fluid">
-					</a>
-				</div>
-
-				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
-						<div class="media-text">
-							<h3>일요나들이</h3>
-							<span class="location">패밀리</span>
-						</div> <img src="../../images/sun.jpg" alt="Image" class="img-fluid">
-					</a>
-				</div>
-
+			<%} %>
 			</div>
 
 		</div>
