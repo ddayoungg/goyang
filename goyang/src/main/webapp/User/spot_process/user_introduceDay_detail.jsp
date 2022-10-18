@@ -115,7 +115,23 @@
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0"><%=spotTourVO.getSpotsName()%></h1>
+						<%
+							String weekDay="";
+							if ( spotTourVO.getTourNum() == 1){
+								weekDay="화요나들이";
+							} else if ( spotTourVO.getTourNum() == 2){
+								weekDay="수요나들이";
+							} else if ( spotTourVO.getTourNum() == 3){
+								weekDay="목요나들이";
+							} else if ( spotTourVO.getTourNum() == 4){
+								weekDay="금요나들이";
+							}  else if ( spotTourVO.getTourNum() == 5){					
+								weekDay="토요나들이";
+							}  else if ( spotTourVO.getTourNum() == 6){	
+								weekDay="일요나들이";
+							}
+							%>
+						<h1 class="mb-0"><%=weekDay %></h1>
 					</div>
 				</div>
 			</div>
@@ -131,10 +147,10 @@
 			<li class="_sub">
 				<%
 				  for (int i=0; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
+				  TourListVO toVO = (TourListVO) list.get(i);	
 						 
-						int tourNum = toVO.getTourNum();
-				%> 
+				   int tourNum = toVO.getTourNum();%>
+			
 			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
 			</a>
 			<%break; } %> 
@@ -224,23 +240,7 @@
 	<!-- 소제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
-		<p>
-						<%
-							String weekDay="";
-							if ( spotTourVO.getTourNum() == 1){
-								weekDay="화요나들이";
-							} else if ( spotTourVO.getTourNum() == 2){
-								weekDay="수요나들이";
-							} else if ( spotTourVO.getTourNum() == 3){
-								weekDay="목요나들이";
-							} else if ( spotTourVO.getTourNum() == 4){
-								weekDay="금요나들이";
-							}  else if ( spotTourVO.getTourNum() == 5){					
-								weekDay="토요나들이";
-							}  else if ( spotTourVO.getTourNum() == 6){	
-								weekDay="일요나들이";
-							}
-							%>
+		<p>	
 			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
 	</div>
