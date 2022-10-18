@@ -1,3 +1,6 @@
+<%@page import="kr.co.goyang.user.vo.UserVO"%>
+<%@page import="kr.co.goyang.user.dao.UserDAO"%>
+<%@page import="kr.co.goyang.user.vo.ReviewMainVO"%>
 <%@page import="kr.co.goyang.user.vo.TourMainVO"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.goyang.user.dao.TourMainDAO"%>
@@ -37,7 +40,17 @@
 
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c2b7dbcfb30a29ea8ee41ab3f0eb7a30"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>	
 <script type="text/javascript">
+$(function(){
+	$("#revBtn").click(function () {
+		var value_tour = document.getElementById('selTour');
+		var tourNumVal=value_tour.options[value_tour.selectedIndex].value;
+		location.href="../reservation_process/user_reservation_date.jsp?tourNum="+tourNumVal;
+	});
+})
+
+
 window.onload=function(){
    mapFunc();
    
@@ -145,28 +158,26 @@ marker.setMap(map);
 								class="typed-words"></span>
 						</h1>
 
-						<div class="row">
-							<div class="col-12">
+						<div class="row" >
+							<div class="col-12" >
 								<form class="form">
 									<div class="row mb-2">
 										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
-											<select name="" id="" class="form-control custom-select">
-												<option value="">화요나들이</option>
-												<option value="">수요나들이</option>
-												<option value="">목요나들이</option>
-												<option value="">금요나들이</option>
-												<option value="">토요나들이</option>
-												<option value="">일요나들이</option>
+									
+											<select name="selTour" id="selTour" class="form-control custom-select">
+											<%
+											UserDAO uDAO=UserDAO.getInstance();
+											List<UserVO> tourList=uDAO.selectTourNameNum();
+											for(UserVO uVO:tourList){
+											%>
+												<option value="<%=uVO.getTourNum()%>"><%=uVO.getTourName()%></option>
+											<%} %>
 											</select>
-										</div>
-										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-5" >
-											<input type="text" class="form-control" id="datepicker">
 										</div>								
-										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-3">
-											<input type="submit" class="btn btn-primary btn-block"
+										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
+											<input type="button" id="revBtn" class="btn btn-primary btn-block"
 												value="투어예약">
 										</div>
-
 									</div>
 								</form>
 							</div>
@@ -301,7 +312,7 @@ marker.setMap(map);
 				for(TourMainVO tmVO:list){
 			%>
 				<div class="item">
-					<a class="media-thumb" href="user_introduceDay.html">
+					<a class="media-thumb" href="../spot_process/user_introduceDay.jsp?tourNum=<%=tmVO.getTourNum()%>">
 						<div class="media-text">
 							<h3 style="color:#FFFFFF;"><%=tmVO.getTourName() %></h3>
 						</div> <img src="../../images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
@@ -374,27 +385,19 @@ marker.setMap(map);
 							<th>글쓴이</th>
 							<th>작성일</th>
 						</tr>
+						<% 
+							List<ReviewMainVO> rmlist=tmDAO.selectMainReivew();
+							for(int i=0;i<rmlist.size();i++){
+								ReviewMainVO rmVO=rmlist.get(i);
+						%>
 						<tr>
-							<td>1</td>
-							<td>화요나들이(백제)</td>
-							<td>화요날들이 재밌어요~!!</td>
-							<td>김*현</td>
-							<td>2022.09.07</td>
+							<td><%=rmVO.getReviewNum() %></td>
+							<td><%=rmVO.getTourName() %></td>
+							<td><%=rmVO.getTitle() %></td>
+							<td><%=rmVO.getId() %></td>
+							<td><%=rmVO.getRevDate() %></td>
 						</tr>
-						<tr>
-							<td>2</td>
-							<td>금요나들이(고양관광특구)</td>
-							<td>금요나들이 다들 추천해요!! 알찬 코스~~</td>
-							<td>김*희</td>
-							<td>2022.09.07</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>일요나들이</td>
-							<td>가족들끼리 아주 즐거운여행!!</td>
-							<td>홍*영</td>
-							<td>2022.09.07</td>
-						</tr>
+						<%} %>
 					</table>
 				</div>
 			</div>

@@ -39,7 +39,7 @@ public class TourMainDAO {
 			
 			StringBuilder selectAllTour = new StringBuilder();
 			selectAllTour
-			.append("	select tour_name,explain,thum_img ")
+			.append("	select tour_name,explain,thum_img,tour_num ")
 			.append("	from tour")
 			.append("	where run_flag=1");
 			pstmt = conn.prepareStatement(selectAllTour.toString());
@@ -55,6 +55,7 @@ public class TourMainDAO {
 				tmVO.setTourName(rs.getString("tour_name"));
 				tmVO.setExplain(rs.getString("explain"));
 				tmVO.setThum_img(rs.getString("thum_img"));
+				tmVO.setTourNum(rs.getInt("tour_num"));
 				mainList.add(tmVO);
 			}
 			return mainList;
@@ -80,7 +81,8 @@ public class TourMainDAO {
 			selectReview
 			.append("	select tour_name,review_num,title,id,rev_write_date")
 			.append("	from tour,tour_review")
-			.append("	where tour.tour_num=tour_review.tour_num and rownum<6");
+			.append("	where tour.tour_num=tour_review.tour_num and rownum<6")
+			.append("	order by review_num desc");
 			pstmt = conn.prepareStatement(selectReview.toString());
 			// 4. 바인드 변수에 값 설정
 			// pstmt.setString(1, dong+"%");

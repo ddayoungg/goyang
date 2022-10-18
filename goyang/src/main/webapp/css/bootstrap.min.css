@@ -736,7 +736,7 @@ pre code {
 .col-12 {
 	-ms-flex: 0 0 100%;
 	flex: 0 0 100%;
-	max-width: 100%
+	max-width: 100%;
 }
 
 .order-first {
@@ -5425,7 +5425,7 @@ a.badge-dark.focus, a.badge-dark:focus {
 @
 -webkit-keyframes progress-bar-stripes {
 	from {background-position: 1rem 0
-}
+} 
 
 to {
 	background-position: 0 0
