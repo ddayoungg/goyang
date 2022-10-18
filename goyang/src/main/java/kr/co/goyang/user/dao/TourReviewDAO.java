@@ -9,6 +9,7 @@ import java.util.List;
 
 import kr.co.goyang.user.vo.TourReviewVO;
 import kr.co.goyang.dbConnection.DbConnection;
+import kr.co.goyang.manager.vo.UserManagerVO;
 
 public class TourReviewDAO {
 
@@ -372,7 +373,7 @@ public class TourReviewDAO {
 					cnt++;
 				}
 			}
-			selectReview.append("	order by review_num	");
+			selectReview.append("	order by review_num desc	");
 			
 			pstmt = con.prepareStatement(selectReview.toString());
 
@@ -415,33 +416,26 @@ public class TourReviewDAO {
 		return reviewList;
 	}// selectSearchReview
 
-	public int deleteReview(int reviewNum) throws SQLException { // 후기 삭제
+	public int deleteReview(int reviewNum, Connection con) throws SQLException { // 후기 삭제
 		int delCnt = 0;
-		Connection con = null;
 		PreparedStatement pstmt = null;
+		
+		// 1. 드라이버 로딩
+		// 2. connection 얻기
 
-		DbConnection db = DbConnection.getInstance();
+		// 3. 쿼리문 생성 객체 얻기
+		String deleteReview = "delete from tour_review where review_num=?";
+		pstmt = con.prepareStatement(deleteReview);
 
-		try {
-			// 1. 드라이버 로딩
-			// 2. connection 얻기
-			con = db.getConn();
+		// 4. 바인드 변수에 값 설정
+		pstmt.setInt(1, reviewNum);
 
-			// 3. 쿼리문 생성 객체 얻기
-			String deleteReview = "delete from tour_review where review_num=?";
-			pstmt = con.prepareStatement(deleteReview);
+		// 5. 쿼리문 수행 결과 얻기
+		delCnt = pstmt.executeUpdate(); // 리턴되는 값 : 0(사원번호가 없음, 삭제된 행 없음) 또는 1(삭제된 행이 1개)
 
-			// 4. 바인드 변수에 값 설정
-			pstmt.setInt(1, reviewNum);
-
-			// 5. 쿼리문 수행 결과 얻기
-			delCnt = pstmt.executeUpdate(); // 리턴되는 값 : 0(사원번호가 없음, 삭제된 행 없음) 또는 1(삭제된 행이 1개)
-
-		} finally {
-			// 6. 연결 끊기
-			db.dbClose(null, pstmt, con);
-		}
-
+		// 연결 끊기
+		if(pstmt!=null) { pstmt.close(); };
+				
 		return delCnt;
 	}// deleteReview
 	
@@ -474,5 +468,70 @@ public class TourReviewDAO {
 		
 		return delCnt;
 	}// deleteReview
+	
+	public int deleteCommRev(int reviewNum, Connection con) throws SQLException { // 댓글 삭제
+		System.out.println("aa");
+		int delCnt = 0;
+		PreparedStatement pstmt = null;
+		
+		// 1. 드라이버 로딩
+		// 2. connection 얻기
+		
+		// 3. 쿼리문 생성 객체 얻기
+		System.out.println("b");
+		String deleteComm = "delete from tour_commend where review_num=?";
+		pstmt = con.prepareStatement(deleteComm);
+		System.out.println("c");
+		
+		// 4. 바인드 변수에 값 설정
+		pstmt.setInt(1, reviewNum);
+		System.out.println("d");
+		
+		// 5. 쿼리문 수행 결과 얻기
+		delCnt = pstmt.executeUpdate(); // 리턴되는 값 : 0(사원번호가 없음, 삭제된 행 없음) 또는 1(삭제된 행이 1개)
+		System.out.println(delCnt);
+			
+		// 연결 끊기
+		if(pstmt!=null) { pstmt.close(); };
+		System.out.println("f");
+				
+		return delCnt;
+	}// deleteReview
+	
+	
+	public void tranReview(int reviewNum) { // 트랜잭션 처리
+		System.out.println("3");
+		DbConnection dc=DbConnection.getInstance();
+		
+		Connection con=null;
+		try {
+			con=dc.getConn();
+			con.setAutoCommit(false);
+			
+			System.out.println("4");
+			deleteCommRev(reviewNum, con);
+			System.out.println("5");
+			deleteReview(reviewNum, con);
+			System.out.println("6");
+			
+			con.commit();
+			System.out.println("commit 성공");
+		} catch (SQLException e) {
+			try {
+				System.out.println("트랜잭션 실패");
+				con.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			} // end catch
+			e.printStackTrace();
+		}finally {
+			try {//6.연결 끊기
+				con.setAutoCommit(true);//오토커밋 설정
+				if(con!=null) {con.close();}//end if
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}//end catch
+		}//end finally
+	}//tranUser
 
 }// class

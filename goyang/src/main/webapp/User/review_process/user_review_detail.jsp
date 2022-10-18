@@ -81,13 +81,6 @@ if(session.getAttribute("id")!=null){
 		int reviewIdx = reviewNumList.indexOf(reviewNum);
 		%>
 		<%
-		//세션에 존재하는 값을 얻는다.
-		/* String id = (String)session.getAttribute("id");
-		if( id == null ){//세션에 값이 없음.(1.interval이 초과, 2.직접 요청(비정상적 요청).)
-			//redirect 페이지 이동.
-			response.sendRedirect("로그인페이지.jsp");
-			return;
-		}//end if */
 		if(id.equals(reviewVO.getId())){%>
 			document.querySelector("#corBtn").classList.remove('hide');
 			document.querySelector("#corBtn").classList.remove('popup');
@@ -261,7 +254,7 @@ if(session.getAttribute("id")!=null){
 					<%= reviewVO.getRevContent() %>
 				</div>
 				<%if(reviewVO.getReviewImg() != null){ %>
-   				<div class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="../../images/<%=reviewVO.getReviewImg()%>"/></div>
+   				<div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="../../images/<%=reviewVO.getReviewImg() %>"/></div>
 				<%} %>
 			</div>
 			

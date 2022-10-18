@@ -130,16 +130,13 @@ function accessChk(){
 		// 화면 출력
 		showUserList();
 		
-		function showUserDetail() {
-			
-		
 		<%
-		/* String id = request.getParameter("id");
-		System.out.println("id : "+id); */
+		String id = request.getParameter("id");
+		System.out.println("id : "+id);
 		
-		if(!manageId.equals("")){
+		if(id!=null){
 			System.out.println("id != null");
-			UserManagerVO detailVO = umDAO.selectUser(manageId);
+			UserManagerVO detailVO = umDAO.selectUser(id);
 			System.out.println(detailVO);%>
 		
 		function showUserDetail(){
@@ -172,15 +169,15 @@ function accessChk(){
 					<th>관심코스</th><td><%=detailVO.getTourName()%></td>
 				</tr>`;
 			document.getElementById("detailPopup").innerHTML = detailHTML;
-			showPopup(true, 'popup');
+			document.querySelector('#popup').classList.remove('hide');
 		}
-		showUserDetail();
 		<%}%>
+		showUserDetail();
 		
 		$("#<%=listSearch%>").prop("selected", true);
 		if(textSearch == null){
 			$("#textSearch").val("<%=textSearch%>");
-		}}
+		}
 		
 	}); // ready
 	

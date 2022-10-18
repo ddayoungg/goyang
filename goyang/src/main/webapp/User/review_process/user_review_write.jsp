@@ -53,6 +53,10 @@ td{
 <script type="text/javascript">
 
 	$(function () {
+		$("#thumImgFile").change(function () {
+			setFile();
+		});
+		
 		<%
 		/* nsm 22-10-17 세션 추가 시작 */
 		//아이디 세션 

@@ -128,7 +128,7 @@ public class UserManagerDAO {
 				}else if(umVO.getListSearch().equals("이름")) {
 					selectUserList.append("	where name like ?	");
 				}else {
-					selectUserList.append("	where join_date=?	");
+					selectUserList.append("	where join_date like ?	");
 				}
 			}
 			
