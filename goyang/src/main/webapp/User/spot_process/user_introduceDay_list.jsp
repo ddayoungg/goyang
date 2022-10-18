@@ -210,13 +210,7 @@
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝-->
-<%-- <%
-	int num = Integer.parseInt(request.getParameter("tourNum"));
-	TourListVO tourVO = new TourListVO();
-	TourListDAO tourDAO = TourListDAO.getInstance();
-	TourListVO toli = new TourListVO();
-	toli= tourDAO.selectTourSpots(num);
-	%> --%>
+	
 	<!-- 대제목 -->
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
@@ -237,7 +231,7 @@
 	<div class="container">
 		<img src="../../images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p>
-			<span style="color: #ba202a; font-weight: bold;">화요나들이</span><span>&nbsp;코스안내</span>
+			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
 	</div>
 	<!-- 소제목 끝 -->

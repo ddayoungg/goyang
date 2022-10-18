@@ -1,4 +1,3 @@
-<%@page import="java.util.Date"%>
 <%@page import="java.lang.reflect.Array"%>
 <%@page import="kr.co.goyang.user.vo.TourListVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -40,6 +39,7 @@
 	<style type="text/css">
 		
 	</style>
+	
 <!-- google jquery CDN -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
@@ -56,11 +56,6 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 $(function(){
 	
 	accessChk();//접근 권한 체크
-	
-	$("#searcthBtn").click(function(){
-		/* location.href="http://manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); */
-	location.href="http://localhost/goyang/Manager/reservation_manager_process/manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); 
-	});//click
 });//ready
 
 function accessChk(){
@@ -74,6 +69,14 @@ function accessChk(){
 }//accessChk
 
 </script>
+	
+	<script type="text/javascript">
+/* 	$(function (){
+		$("searchMember").click(function (){
+			$("#popupdetal").submit();
+		})
+	}) */
+	</script>
 
 	<title>관리자화면-예약관리</title>
 </head>
@@ -165,61 +168,44 @@ function accessChk(){
 				</form>
 				<form id="popupFrm" action="manager_reser_all.jsp"> 
 				<table class="member" style="width: 100%">
-				<%
-				request.setCharacterEncoding("utf-8");
-				int flag = Integer.parseInt(request.getParameter("reserFlags"));
-				ReservaManagerVO reserVO = new ReservaManagerVO();
-				ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
-				/* reserVO.setReserFlag(flag); */
-				List <ReservaManagerVO> reserFlagsList = reserDAO.ListReserFlags(flag);
-				
-				//System.out.println(reserFlagsList);
-				
-				 int total = 0;
-				int totalPage = 0; 
-				%>
 					<tr>
 						<th>예약번호</th>
 						<th>고객명</th>
-						<th>예약일</th>
+						<th>투어 시작 날짜</th>
+						<th>예약 신청 날짜</th>
 						<th>투어코스명</th>
 						<th>요금</th>
 						<th>상태</th>
 						<th>기타내용</th>
 					</tr>
 			<%
-			ReservaManagerVO reVO=null;
-			for (int i=0; i<reserFlagsList.size(); i++){
-				reVO= (ReservaManagerVO) reserFlagsList.get(i);
-				
-				  int reserNum = reVO.getReserNum();
-				  String name = reVO.getName();
-				  String reserDate = reVO.getReserDate();
-				  Date reserRegist =  reVO.getReserRegist();
-				  String tourName =  reVO.getTourName();
-				  int adultCnt =  reVO.getAdultCnt();
-				  int adultFee = reVO.getAdultFee();
-				  int otherCnt =reVO.getOtherCnt();
-				  int otherFee =reVO.getOtherFee();
-				  int reserFlag = reVO.getReserFlag();
-				  String cancelReas = reVO.getCancelReas();
-
-			if ( reVO.getReserFlag() == 1 ) {
-				reVO.getReserFlag="예약대기";
+			ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
+			ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva();
+			ReservaManagerVO reVO =new ReservaManagerVO();
+			
+			int total = 0;
+			int totalPage = 0;
+			
+				for ( ReservaManagerVO reserVO : list ){
+					reVO=reserVO;
+				if ( reVO.getReserFlag() == 1 ) {
+					reVO.getReserFlag="예약대기";
 				} else if ( reVO.getReserFlag() == 2 ) {
 					reVO.getReserFlag="예약확정";
 				} else if ( reVO.getReserFlag() == 3) {
 					reVO.getReserFlag="취소요청"; 
 				} else if ( reVO.getReserFlag() == 4) {
 					reVO.getReserFlag="취소확정"; 
-				} 
+				}
 				
-				/* String cancelReas = reserVO.getCancelReas(); */
+				String cancelReas = reVO.getCancelReas();
 				if ( reVO.getCancelReas() == null ) {
 					cancelReas=" ";
 				} else {
 					cancelReas="취소사유";
 				}
+				
+	
 			%>
 					<%
 					//페이지네이션
@@ -250,39 +236,37 @@ function accessChk(){
 					//System.out.println("firstIdx : "+ firstIdx );
 					
 					//firstIdx ~ lastIdx까지 출력
-					//if (reserFlagsList.indexOf(reserVO)>=firstIdx-1 && reserFlagsList.indexOf(reserVO)<=lastIdx-1){
+					if (list.indexOf(reserVO)>=firstIdx-1 && list.indexOf(reserVO)<=lastIdx-1){
 					%>
 					<tr>
-						<td><%=reserNum%></td>					
- 						<td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reVO.getReserNum() %>'"><%=name%></span></a></td>			 
-						<td><%=reserDate %></td>
-						<td><%=reserRegist%></td>
-						<td><%=tourName%></td>
-						<td><%= adultCnt*adultFee+otherCnt*otherFee%></td>
-						<td><%= reVO.getReserFlag %></td>
-						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
+						<td><%= reserVO.getReserNum()%></td>					
+		 				<td><a  href="manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>"><%= reserVO.getName() %></a> </td>
+						<td><%= reserVO.getReserDate()%></td>
+						<td><%=reserVO.getReserRegist() %></td>
+						<td><%= reserVO.getTourName( ) %></td>
+						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
+						<td><%= reserVO.getReserFlag %></td>
+						<td><a href="manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>"><%= cancelReas %></a></td>
 					</tr>
 			<%
-				//}
-					}	
+				}}
 			%>
 				</table>
 			</form> 
 			</div>
 	
-		
-			
-
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<div>
-					<select id="reserFlags" name="reserFlags" style="height: 32px; min-width: 120px;">
+				<form action="manager_reser_flags.jsp" method="get">
+					<select name="reserFlags" style="height: 32px; min-width: 120px;">
 						<option value="0">상태 검색</option>
 						<option value="1">예약대기</option>
 						<option value="2">예약확정</option>
 						<option value="3">취소요청</option>
 						<option value="4">취소확정</option>
 					</select>
-					<input type="button"  id="searcthBtn" value="검색" style="height: 32px" class="mainBtn">
+					<input type="submit"  value="검색" style="height: 32px" class="mainBtn">
+				</form>
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
@@ -298,7 +282,8 @@ function accessChk(){
 							 		<a class="page-link" href="manager_reservation.jsp?nowPage=<%= i %>"><%= i %></a>
 							 	</li>
 							 	<%} %>
-							 	<li class="page-item">			 
+							 	<li class="page-item">
+							 			<%-- <a class="page-link" href="manager_reservation.jsp?nowPage=<%=lastIdx %>" aria-label="Next">  --%>
 							 		<a class="page-link" href="#" aria-label="Next"> 
 							 				<span aria-hidden="true">&raquo;</span>
 							 			</a>
@@ -368,14 +353,13 @@ function accessChk(){
 	</div>
 	<!-- 팝업창 : manager_reservation_detail -->
 	<div id="popupDetail" class="hide popup">
-	<%
- 	/* int i = Integer.parseInt(request.getParameter("num"));  */
-	reserVO = reserDAO.selectReserva(reserVO.getReserNum());
-	
-	%> 
-		<div class="content">
+<%-- 	<% 
+	 int num = Integer.parseInt(request.getParameter("reserNum"));  
+	System.out.println("reserNum : " +num);
+	ReservaManagerVO reserVO = reserDAO.selectReserva(num); 
+%> --%>
+	 <div class="content">
 			<div style="width: 800px;">
-	<!-- <form method="post"> -->
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
 		display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">예약 상세
 				</div>
@@ -384,36 +368,35 @@ function accessChk(){
 					<table class="member" style="width: 100%">
 						<tr>
 							<th>예약자명</th>
-							<%--  <td><%=reserVO.getNum()%></td> --%>
-						<td><%=reserVO.getName() %></td> 
+						<td>dd</td> 
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td><%=reserVO.getEmail()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>휴대폰 번호</th>
-							<td><%=reserVO.getPhone()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>날짜</th>
-							<td><%=reserVO.getReserDate()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>투어코스</th>
-							<td><%=reserVO.getTourName()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>인원수 </th>
-							<td>성인(<%=reserVO.getAdultFee()%>원) : <%=reserVO.getAdultCnt()%>명<br>기타(<%=reserVO.getOtherFee() %>원) : <%=reserVO.getOtherCnt() %>명</td>
+							<td>dd<br>dd</td>
 						</tr>
 						<tr>
 							<th>예약한 좌석 번호</th>
-							<td><%=reserVO.getSeatNum()%></td>
+							<td>dd</td>
 						</tr>
 					</table>
 				</div>
-			<!-- 	</form> -->
+
 
 				<div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
 					<input type="button" value="예약확정" class="popupBtn" onclick="showPopup(true,'popupConfirm_1')">
@@ -425,9 +408,10 @@ function accessChk(){
 	
 	<!-- 팝업창 : manager_reservation_cancel -->
 	<div id="popupCancel" class="hide popup">
-	<%
-	reserDAO.selectDelReserva(reserVO.getReserNum());
-	%>
+<%-- 	<%
+	
+	reserDAO.selectDelReserva(reVO.getReserNum());
+	%> --%>
 		<div class="content">
 			<div style="width: 800px;">
 				<div style="font-weight: bold; font-size: 15px; width: 800px; height: 40px; padding-left: 15px;
@@ -438,35 +422,35 @@ function accessChk(){
 					<table class="member" style="width: 100%">
 						<tr>
 							<th>예약자명</th>
-							<td><%=reserVO.getName() %></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>이메일</th>
-							<td><%=reserVO.getEmail()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>휴대폰 번호</th>
-							<td><%=reserVO.getPhone()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>날짜</th>
-							<td><%=reserVO.getReserDate()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>투어코스</th>
-							<td><%=reserVO.getTourName()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>인원수 </th>
-						<td>성인(<%=reserVO.getAdultFee()%>원) : <%=reserVO.getAdultCnt()%>명<br>기타(<%=reserVO.getOtherFee() %>원) : <%=reserVO.getOtherCnt() %>명</td>
+						<td>dd<br>dd</td>
 						</tr>
 						<tr>
 							<th>예약한 좌석 번호</th>
-							<td><%=reserVO.getSeatNum()%></td>
+							<td>dd</td>
 						</tr>
 						<tr>
 							<th>취소 사유</th>
-							<td><%=reserVO.getCancelReas() %></td>
+							<td>dd</td>
 						</tr>
 					</table>
 				</div>
@@ -590,7 +574,22 @@ function accessChk(){
 			const popup = document.querySelector('#' + id);
 			popup.classList.add('hide');
 		}	
-				
+		
+		$(document).ready(function()
+				{
+			$('td a').hover(function(){
+				$(this).css('text-decoration','underline');
+			/* 	$(this).css('color','#008b8b'); */
+			},function(){
+				$(this).css('text-decoration','none');
+				/* $(this).css('color','#1A374D'); */
+			});
+		});
+
+		
+			
+		
+		
 	
 	</script>
 </body>

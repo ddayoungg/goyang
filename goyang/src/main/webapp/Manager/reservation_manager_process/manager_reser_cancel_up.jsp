@@ -174,6 +174,10 @@ function accessChk(){
 			ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
 			ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva();
 			ReservaManagerVO reVO =new ReservaManagerVO();
+			
+			int total = 0;
+			int totalPage = 0;
+			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
@@ -193,7 +197,37 @@ function accessChk(){
 					cancelReas="취소사유";
 				}
 			%>
+					<%
+					//페이지네이션
+					reserVO.setTotal(reserDAO.searchReserTotal(reserVO));
 					
+					//총 예약 개수
+					total = reserVO.getTotal();
+					//System.out.println( "total : " + total);
+					
+					//10개씩 보여줄 때 총 페이지 개수
+					totalPage = (int)Math.ceil((double)total/10);
+					//System.out.println("totalPage : " + totalPage);
+					
+					//현재 페이지 번호
+					String nowPage = request.getParameter("nowPage");
+					//System.out.println("nowPage : "+ nowPage);
+					if( nowPage == null ){
+						nowPage = "1";
+						//System.out.println("nowPage : "+ nowPage);
+					}
+					
+					//페이지에서 보여줄 마지막 목록
+					int lastIdx = Integer.valueOf(nowPage)*10;
+					//System.out.println("lastIdx : "+ lastIdx );
+					
+					//페이지에서 보여줄 첫번째 목록
+					int firstIdx = lastIdx-9;
+					//System.out.println("firstIdx : "+ firstIdx );
+					
+					//firstIdx ~ lastIdx까지 출력
+					if (list.indexOf(reserVO)>=firstIdx-1 && list.indexOf(reserVO)<=lastIdx-1){
+					%>
 					<tr>
 						<td><%= reserVO.getReserNum()%></td>
 				 <td><a href="#"><span onclick="location.href='manager_reser_search.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
@@ -205,7 +239,7 @@ function accessChk(){
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 					</tr>
 			<%
-				}					
+					}}					
 			%>
 				</table>
 			</div>
@@ -217,24 +251,41 @@ function accessChk(){
 				<div>
 				<form action="manager_reservation_search.jsp" method="post">
 					<select name="state" style="height: 32px; min-width: 120px;">
-						<option value="">상태 검색</option>
-						<option value="1">예약확정</option>
-						<option value="2">예약대기</option>
-						<option value="3">취소확정</option>
-						<option value="4">취소요청</option>
+						<option value="0">상태 검색</option>
+						<option value="1">예약대기</option>
+						<option value="2">예약확정</option>
+						<option value="3">취소요청</option>
+						<option value="4">취소확정</option>
 					</select>
 					<input type="submit" value="검색" style="height: 32px" class="mainBtn">
 				</form>
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-					<input class="pagination" type="button" value="<">
-					<input class="pagination pageNow" type="button" value="1">
-					<input class="pagination" type="button" value=">">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination">
+							<li class="page-item">
+							 	<a class="page-link" href="#" aria-label="Previous">
+							 		<span aria-hidden="true">&laquo;</span>
+							 	</a>
+							 	</li>
+							 	<% for(int i=1; i<=totalPage; i++){ %>
+							 	<li class="page-item">
+							 		<a class="page-link" href="manager_reservation.jsp?nowPage=<%= i %>"><%= i %></a>
+							 	</li>
+							 	<%} %>
+							 	<li class="page-item">
+							 			<%-- <a class="page-link" href="manager_reservation.jsp?nowPage=<%=lastIdx %>" aria-label="Next">  --%>
+							 		<a class="page-link" href="#" aria-label="Next"> 
+							 				<span aria-hidden="true">&raquo;</span>
+							 			</a>
+							 	</li>
+						</ul>
+					</nav>
 				</div>
 
 				<div>
-					총 <span>1</span>건의 예약 / 1~2번째
+					총 <span><%=total%></span>건의 예약 
 				</div>
 			</div>
 

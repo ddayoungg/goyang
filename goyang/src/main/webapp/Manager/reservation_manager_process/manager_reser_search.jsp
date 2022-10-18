@@ -57,6 +57,10 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 $(function(){
 	
 	accessChk();//접근 권한 체크
+	$("#searcthBtn").click(function(){
+		/* location.href="http://manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); */
+	location.href="http://localhost/goyang/Manager/reservation_manager_process/manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); 
+	});//click
 });//ready
 
 function accessChk(){
@@ -158,9 +162,13 @@ function accessChk(){
 				 request.setCharacterEncoding("utf-8");
 				String name_1 = request.getParameter("name");
 				ReservaManagerVO reserVO = new ReservaManagerVO();
+				/* ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva(); */
 				reserVO.setName(name_1);
 				 ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance(); 
 				List <ReservaManagerVO> membersList = reserDAO.Listmembers ( reserVO );
+				
+				int total = 0;
+				int totalPage = 0;
 				%> 
 				<table class="member" style="width: 100%">
 					<tr>
@@ -178,6 +186,7 @@ function accessChk(){
 						 
 						  int reserNum = reVO.getReserNum();
 						  String name = reVO.getName();
+						  String reserDate = reVO.getReserDate();
 						  Date reserRegist =  reVO.getReserRegist();
 						  String tourName =  reVO.getTourName();
 						  int adultCnt =  reVO.getAdultCnt();
@@ -203,53 +212,91 @@ function accessChk(){
 						} else {
 							cancelReas="취소사유";
 						}
-					%>				
+					%>			
+					<%
+					//페이지네이션
+					reVO.setTotal(reserDAO.searchReserTotal(reVO));
+					
+					//총 예약 개수
+					total = reVO.getTotal();
+					//System.out.println( "total : " + total);
+					
+					//10개씩 보여줄 때 총 페이지 개수
+					totalPage = (int)Math.ceil((double)total/10);
+					//System.out.println("totalPage : " + totalPage);
+					
+					//현재 페이지 번호
+					String nowPage = request.getParameter("nowPage");
+					//System.out.println("nowPage : "+ nowPage);
+					if( nowPage == null ){
+						nowPage = "1";
+						//System.out.println("nowPage : "+ nowPage);
+					}
+					
+					//페이지에서 보여줄 마지막 목록
+					int lastIdx = Integer.valueOf(nowPage)*10;
+					//System.out.println("lastIdx : "+ lastIdx );
+					
+					//페이지에서 보여줄 첫번째 목록
+					int firstIdx = lastIdx-9;
+					//System.out.println("firstIdx : "+ firstIdx );
+					
+					//firstIdx ~ lastIdx까지 출력
+					if (membersList.indexOf(reVO)>=firstIdx-1 && membersList.indexOf(reVO)<=lastIdx-1){
+					%>	
 					<tr>
 						<td><%= reserNum%></td>
 				 <td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reVO.getReserNum() %>'"><%= name%></span></a></td>
+						<td><%=reserDate %></td>
 						<td><%= reserRegist%></td>
 						<td><%= tourName%></td>
 						<td><%= adultCnt*adultFee+otherCnt*otherFee%></td>
 						<td><%= reVO.getReserFlag%></td>
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 				</tr> 
-				<%-- 	<tr>
-						<td><%=reserVO.getReserNum()%></td>
-				 <td><a href="#"><span onclick="location.href='manager_reser_detail.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= reserVO.getName() %></span></a></td>
-						<td><%= reserVO.getReserRegist()%></td>
-						<td><%=reserVO.getTourName( )%></td>
-						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee()%></td>
-						<td><%=reserVO.getReserFlag%></td>
-						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
-				</tr> --%>
 	<%
-				}	
+					}}	
 			%> 
 				</table>
 			</div>
 			
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<div>
-				<form action="manager_reservation_search.jsp" method="post">
-					<select name="state" style="height: 32px; min-width: 120px;">
-						<option value="">상태 검색</option>
-						<option value="1">예약확정</option>
-						<option value="2">예약대기</option>
-						<option value="3">취소확정</option>
-						<option value="4">취소요청</option>
+					<select id="reserFlags" name="reserFlags" style="height: 32px; min-width: 120px;">
+						<option value="0">상태 검색</option>
+						<option value="1">예약대기</option>
+						<option value="2">예약확정</option>
+						<option value="3">취소요청</option>
+						<option value="4">취소확정</option>
 					</select>
-					<input type="submit" value="검색" style="height: 32px" class="mainBtn">
-				</form>
+					<input type="button"  id="searcthBtn" value="검색" style="height: 32px" class="mainBtn">
 				</div>
 
 				<div style="margin: 20px 0px 20px; display: flex; justify-content: center; height: 32px;">
-					<input class="pagination" type="button" value="<">
-					<input class="pagination pageNow" type="button" value="1">
-					<input class="pagination" type="button" value=">">
+					<nav aria-label="Page navigation example">
+						<ul class="pagination">
+							<li class="page-item">
+							 	<a class="page-link" href="#" aria-label="Previous">
+							 		<span aria-hidden="true">&laquo;</span>
+							 	</a>
+							 	</li>
+							 	<% for(int i=1; i<=totalPage; i++){ %>
+							 	<li class="page-item">
+							 		<a class="page-link" href="manager_reservation.jsp?nowPage=<%= i %>"><%= i %></a>
+							 	</li>
+							 	<%} %>
+							 	<li class="page-item">
+							 			<%-- <a class="page-link" href="manager_reservation.jsp?nowPage=<%=lastIdx %>" aria-label="Next">  --%>
+							 		<a class="page-link" href="#" aria-label="Next"> 
+							 				<span aria-hidden="true">&raquo;</span>
+							 			</a>
+							 	</li>
+						</ul>
+					</nav>
 				</div>
 
 				<div>
-					총 <span>1</span>건의 예약 / 1~2번째
+					총 <span><%=total%></span>건의 예약 
 				</div>
 			</div>
 
