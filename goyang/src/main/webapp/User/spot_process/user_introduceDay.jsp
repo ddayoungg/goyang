@@ -135,12 +135,7 @@
 			</div>
 		</div>
 	</div>
-	<%-- <%
-	request.setCharacterEncoding("utf-8");
-	String spot = request.getParameter("spotsName");
-	TourListVO spotTourVO= tourDAO.selectSpots(spot);
-	System.out.println(spotTourVO.getSpotsName());
-	%>  --%>
+	
 	<!-- 상단 투어 메뉴 -->
 	<div class="untree_co-section">
 		<ul class="list_sub_menu">
@@ -220,14 +215,7 @@
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝 -->
- <%-- 	<%
-	int num = Integer.parseInt(request.getParameter("tourNum"));
-	tourVO = new TourListVO();
-	tourDAO = TourListDAO.getInstance();
-	TourListVO toli = new TourListVO();
-	toli= tourDAO.selectTourSpots(num);
-	System.out.println(toli.getTourNum()+toli.getSpotsName());
-	%>  --%>
+
 	<%
 	request.setCharacterEncoding("utf-8");
 	String spot = request.getParameter("spotsName");
@@ -286,7 +274,7 @@
 						<%
 						List<TourListVO> spotList = tourDAO.selectTourCourse(num);		
 						%>
-					<tbody align="center">
+					<tbody align="center" >
 						<tr>
 							<td rowspan="3"
 							<%
@@ -310,13 +298,13 @@
 								 text-align: center;">
 									<%=circle %>
 								 </td>
-							<td style="color: #7895b2; font-weight: bold;">
+							<td style="color: #7895b2; font-weight: bold;" >
 							<%for ( int i=0; i<spotList.size(); ){
 										tourVO = (TourListVO) spotList.get(i);	
 										String startHour = tourVO.getStartHour();
 										String endHour = tourVO.getEndHour();
 									%>
-									<%=startHour%>
+									<%=startHour%>&nbsp;~&nbsp;<%=endHour %>
 									<%break; }%>
 							</td>
 							<td style="color: #7895b2; font-weight: bold;">
@@ -356,7 +344,7 @@
 									<%break; }%>
 							</td>
 							<td style="color: #7895b2; font-weight: bold;">
-							16:00
+									16:00
 							</td>
 						</tr>
 						<tr
@@ -401,8 +389,8 @@
 							<%=tourOrder %>
 							<%break; }%>
 							</td>
-							<td>
-							도착
+							<td  width="180px">
+							-
 							</td>
 						</tr>
 						<tr>
@@ -411,16 +399,19 @@
 										tourVO = (TourListVO) spotList.get(i);	
 										 String spotsName=tourVO.getSpotsName(); 
 									%>
+							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> 
+							<span style="text-decoration: underline; color: #168;">
 							<%=spotsName %>
 							<%break; }%>
+							</span></a>
 							</td>
 							<td>
 							<%for ( int i=1; i<spotList.size(); ){
 										tourVO = (TourListVO) spotList.get(i);	
 										 String spotsName=tourVO.getSpotsName(); 
 									%>
-							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> <span
-									style="text-decoration: underline; color: #168;">
+							<a href="user_introduceDay_detail.jsp?spotsName=<%=spotsName%>"> 
+							<span style="text-decoration: underline; color: #168;">
 									<%=spotsName %>
 									<%break; }%>
 									</span></a>
@@ -456,12 +447,7 @@
 									<%break; }%>
 									</span></a></td> 
 							<td>
-								<%for ( int i=0; i<spotList.size(); ){
-										tourVO = (TourListVO) spotList.get(i);	
-										 String spotsName=tourVO.getSpotsName(); 
-									%>
-							<%=spotsName %>
-							<%break; }%>
+							도착
 							</td>
 						</tr>
 					</tbody>

@@ -295,9 +295,8 @@
 						  int otherFee = toVO.getOtherFee(); 
 				%>
 					<div class="img-align">
-						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><img
-							src=<%=thumImg%> alt="Image" class="img-fluid">
-<%-- 							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"> --%>
+						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" >
+						<img  src="../../images/<%=thumImg%>"  alt="Image" class="img-fluid">
 							</a>
 					</div>
 					<div class="d-flex">

@@ -92,10 +92,10 @@ int updateCnt=0;
 	<%if (updateCnt == 1) {%>
 		
 		alert("수정완료.");
-		location.href="manager_spot_list.jsp";
+		location.href="manager_spot_list.jsp?selTour=<%=TourName %>";
 	<%}else {%>
 		alert("수정실패.");
-		location.href="manager_spot_list.jsp";
+		location.href="manager_spot_list.jsp?selTour=<%=TourName %>";
 	<%}%>
 	
 </script>

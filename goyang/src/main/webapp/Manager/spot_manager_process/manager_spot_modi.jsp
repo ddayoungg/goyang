@@ -252,7 +252,7 @@ function setFile(){
 						<tr>
 							<th>소개 내용</th>
 							<td style="padding-bottom: 10px";>
-								<input type="text" name="spot_info" id="spot_info" value="<%=SContent %>" style="width:100%; height:200px; border:1px solid #ddd;"></textarea>
+								<textarea name="spot_info" id="spot_info"  style="width:100%; height:200px; border:1px solid #ddd;"><%=SContent %></textarea>
 							</td>
 						</tr>
 						<tr>
@@ -364,7 +364,7 @@ function setFile(){
 				align-items: center; height: 70px ;background-color: #f0f6f9;">관광지 수정을 취소하였습니다.</div>
 				
 				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_spot_list.jsp'">
+					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_spot_list.jsp?selTour=<%=tourName %>'">
 				</div>
 			</div>
 		</div>
