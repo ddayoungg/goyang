@@ -154,10 +154,16 @@ function accessChk(){
 	<div class="container">
 
 			<div>
+			<form method="post" action="manager_reser_search.jsp">
 				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-					<input type="text" placeholder="고객명을 입력하세요.">
+					<input type="text"  name="name" placeholder="고객명을 입력하세요.">
 					<input type="submit" value="검색" class="mainBtn">
 				</div>
+				</form>
+				<!-- <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+					<input type="text" placeholder="고객명을 입력하세요.">
+					<input type="submit" value="검색" class="mainBtn">
+				</div> -->
 				<%
 				 request.setCharacterEncoding("utf-8");
 				String name_1 = request.getParameter("name");
