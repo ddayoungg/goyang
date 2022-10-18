@@ -215,11 +215,6 @@ function accessChk(){
 		popup.classList.add('hide');
 	}
 	
-	/* function update() {
-		alert("update");
-		$("#popupFrm").submit();
-	} */
-	
 </script>
 
 <title>관리자화면-회원관리</title>

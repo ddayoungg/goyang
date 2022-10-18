@@ -262,7 +262,7 @@ if(session.getAttribute("id")!=null){
 					<%= reviewVO.getRevContent() %>
 				</div>
 				<%if(reviewVO.getReviewImg() != null){ %>
-   				<div class="imgSize"><img class="imgSize" id="thumImgOutput" src="../../images/<%=reviewVO.getReviewImg()%>"/></div>
+   				<div style="max-height: 500px; max-width: 500px;" class="imgSize"><img class="imgSize" id="thumImgOutput" src="../../images/<%=reviewVO.getReviewImg()%>"/></div>
 				<%} %>
 			</div>
 			
@@ -280,7 +280,7 @@ if(session.getAttribute("id")!=null){
 							<%}else{ %> --%>
 							<div>
 							<%-- <%} %> --%>
-								<a href="user_commend_update_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comDelFlag=0&comContent=<%=commVO.getComContent()%>&comWriteDate=<%=commVO.getComWriteDate()%>">수정</a> | <a href="user_commend_delete_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comDelFlag=0&comContent=<%=commVO.getComContent()%>">삭제</a>
+								<a href="user_commend_update_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comContent=<%=commVO.getComContent()%>&comWriteDate=<%=commVO.getComWriteDate()%>">수정</a> | <a href="user_commend_delete_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comContent=<%=commVO.getComContent()%>">삭제</a>
 							</div>
 						</div>
 						<div style="min-height: 50px; padding: 7px 0 20px 0;"><%= commVO.getComContent() %></div>

@@ -259,10 +259,6 @@ $(function(){
 				<ul class="pagination">
 				</ul>
 			</nav>
-			
-			<%-- <input class="pagination" type="button" value="<">
-			<input class="pagination pageNow" type="button" value="1">
-			<input class="pagination" type="button" value=">"> --%>
 		</div>
 		
 		<span style="position: relative; float: right; margin-top: -52px;">

@@ -181,7 +181,7 @@ public class TourReviewDAO {
 			// 3. 쿼리문 생성 객체 얻기
 			StringBuilder insertComm = new StringBuilder();
 			insertComm
-			.append("	insert into tour_commend(commend_num, com_content, com_write_date, com_del_flag, review_num, id)	")
+			.append("	insert into tour_commend(commend_num, com_content, com_write_date, review_num, id)	")
 			.append("	values(?,?,sysdate,?,?,?)	");
 
 			pstmt = con.prepareStatement(insertComm.toString());// 쿼리문을 넣어 쿼리문 실행 객체를 얻는다.
@@ -189,9 +189,8 @@ public class TourReviewDAO {
 			// 4. 바인드 변수에 값 설정
 			pstmt.setInt(1, commendNumber);
 			pstmt.setString(2, trVO.getComContent());
-			pstmt.setString(3, trVO.getComDelFlag());
-			pstmt.setInt(4, trVO.getReviewNum());
-			pstmt.setString(5, trVO.getId());
+			pstmt.setInt(3, trVO.getReviewNum());
+			pstmt.setString(4, trVO.getId());
 			// 5. 쿼리문 수행 결과 얻기
 			pstmt.executeUpdate();
 
@@ -217,7 +216,7 @@ public class TourReviewDAO {
 			StringBuilder updateComm = new StringBuilder();
 			updateComm
 			.append("	update	tour_commend	")
-			.append("	set		com_content=?, com_write_date=?, com_del_flag=?	")
+			.append("	set		com_content=?, com_write_date=?	")
 			.append("	where	commend_num=?	");
 
 			pstmt = con.prepareStatement(updateComm.toString());
@@ -225,8 +224,7 @@ public class TourReviewDAO {
 			// 4.바인드 변수에 값 설정
 			pstmt.setString(1, trVO.getComContent());
 			pstmt.setDate(2, trVO.getComWriteDate());
-			pstmt.setString(3, trVO.getComDelFlag());
-			pstmt.setInt(4, trVO.getCommendNum());
+			pstmt.setInt(3, trVO.getCommendNum());
 
 			// 5.쿼리문 수행 결과 얻기
 			upCnt = pstmt.executeUpdate();
@@ -304,9 +302,9 @@ public class TourReviewDAO {
 			StringBuilder selectCommend = new StringBuilder();
 
 			selectCommend
-			.append("	select commend_num, com_content, com_write_date, com_del_flag, review_num, id	")
+			.append("	select commend_num, com_content, com_write_date, review_num, id	")
 			.append("	from	tour_commend	")
-			.append("	where	com_del_flag=1 and review_num=?	")
+			.append("	where	review_num=?	")
 			.append("	order by commend_num	");
 
 			pstmt = con.prepareStatement(selectCommend.toString());
@@ -324,7 +322,6 @@ public class TourReviewDAO {
 				trVO.setCommendNum(rs.getInt("commend_num"));
 				trVO.setComContent(rs.getString("com_content"));
 				trVO.setComWriteDate(rs.getDate("com_write_date"));
-				trVO.setComDelFlag(rs.getString("com_del_flag"));
 				trVO.setReviewNum(rs.getInt("review_num"));
 				trVO.setId(rs.getString("id"));
 

@@ -16,13 +16,10 @@ String commendNum = request.getParameter("commendNum");
 System.out.println("commendNum : "+commendNum);
 String comContent = request.getParameter("comContent");
 System.out.println("comContent : "+comContent);
-String comDelFlag = request.getParameter("comDelFlag");
-System.out.println("comDelFlag : "+comDelFlag);
 
 TourReviewVO commVO = new TourReviewVO();
 commVO.setCommendNum(Integer.valueOf(commendNum));
 commVO.setComContent(comContent);
-commVO.setComDelFlag(comDelFlag);
 
 TourReviewDAO trDAO = TourReviewDAO.getInstance();
 trDAO.updateCommend(commVO);

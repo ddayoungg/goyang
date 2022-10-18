@@ -24,7 +24,6 @@ System.out.println("upComWriteDate : "+upComWriteDate);
 TourReviewVO commVO = new TourReviewVO();
 commVO.setReviewNum(Integer.valueOf(reviewNum));
 commVO.setComContent(comContent);
-commVO.setComDelFlag("1");
 commVO.setId(id);
 System.out.println(commVO);
 
