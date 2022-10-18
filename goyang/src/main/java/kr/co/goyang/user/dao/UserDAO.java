@@ -96,7 +96,7 @@ public class UserDAO {
 			pstmt.setString(6, userVo.getZipcode());
 			pstmt.setString(7, userVo.getAddr());
 			pstmt.setString(8, userVo.getDeAddr());
-			pstmt.setInt(9, 1);
+			pstmt.setInt(9, userVo.getTourNum());
 			//5.쿼리문 수행 후 결과 얻기
 			chk=pstmt.executeUpdate();
 		}catch(Exception e) {
