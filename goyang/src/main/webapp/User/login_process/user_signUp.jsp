@@ -546,7 +546,7 @@
 				<%
 					for(UserVO uVO:tourNames){
 				%>
-				<input type="radio" name="cose" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
+				<input type="radio" name="cose" id="tournum" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
 				<%} %>
 				<!--다영수정-->
 				

@@ -1,3 +1,4 @@
+<%@page import="kr.co.goyang.utility.Utility"%>
 <%@page import="kr.co.goyang.user.vo.UserVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -32,11 +33,38 @@
 uVO.setTourNum(Integer.parseInt(request.getParameter("cose")));
 /* 다영수정 */
 
-if(uVO.getId()!=null || uVO.getPassword()!=null || uVO.getEmail()!=null ||
-	uVO.getName()!=null || uVO.getPhone()!=null || uVO.getZipcode()!=null ||
-	uVO.getAddr()!=null || uVO.getDeAddr()!=null){
-	UserDAO dao=new UserDAO();
-	int result=dao.insertUser(uVO);
+String id=request.getParameter("id");
+String password=Utility.encoding(request.getParameter("password"));
+String email=request.getParameter("email");
+String name=request.getParameter("name");
+String phone=request.getParameter("phone");
+String zipcode=request.getParameter("zipcode");
+String addr=request.getParameter("addr");
+String deaddr=request.getParameter("deAddr");
+int tournum=0;
+if(request.getParameter("tournum")!=null){
+	tournum=Integer.parseInt(request.getParameter("tournum"));	
+}
+
+UserVO User=new UserVO();
+
+User.setId(id);
+User.setPassword(password);
+User.setEmail(email);
+User.setName(name);
+User.setPhone(phone);
+User.setZipcode(zipcode);
+User.setAddr(addr);
+User.setDeAddr(deaddr);
+User.setTourNum(tournum);
+
+
+
+if(id!=null || password!=null || email!=null ||
+name!=null || phone!=null || zipcode!=null ||
+addr!=null || deaddr!=null || tournum!=0){
+	UserDAO dao=UserDAO.getInstance();	
+	int result=dao.insertUser(User);
 	if(result==-1){
 		PrintWriter pw=response.getWriter();
 		pw.println("<script>");
