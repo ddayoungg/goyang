@@ -113,14 +113,14 @@ public class MyInfoDAO {
 		DbConnection dc = DbConnection.getInstance();
 		try {
 			conn = dc.getConn();
-			StringBuilder selectMyUesrInfo = new StringBuilder();
-			selectMyUesrInfo
+			StringBuilder selectTourList = new StringBuilder();
+			selectTourList
 			.append("	SELECT 		TOUR_NUM, TOUR_NAME			")
 			.append("	FROM		TOUR					")
 			.append("	WHERE		RUN_FLAG=1				")
 			.append("	ORDER BY	TOUR_NUM				");
 			
-			pstmt = conn.prepareStatement(selectMyUesrInfo.toString());
+			pstmt = conn.prepareStatement(selectTourList.toString());
 			
 			rs = pstmt.executeQuery();
 			
@@ -550,71 +550,6 @@ public class MyInfoDAO {
 
 		return totalCnt;
 	}//selectMyReviewTotal
-	
-//	public MyInfoVO selectReviewDetail(int reviewNum) throws SQLException { // 후기 상세보기 
-//		MyInfoVO miVO = new MyInfoVO();
-//
-//		Connection conn = null;
-//		PreparedStatement pstmt=null;
-//		ResultSet rs =null;
-//		
-//		DbConnection dc = DbConnection.getInstance();
-//		
-//		try {
-//		conn = dc.getConn();
-//		
-//		StringBuilder TOUR_REVIEW = new StringBuilder();
-//		TOUR_REVIEW
-//		.append("	select REVIEW_NUM, TITLE, REV_CONTENT, REVIEW_IMG,	REV_WRITE_DATE	, TOUR_NUM		")
-//		.append("	from TOUR_REVIEW					")
-//		.append("	where ID=?, RESER_NUM=?		");
-//		
-//		pstmt=conn.prepareStatement( TOUR_REVIEW.toString() );
-//		pstmt.setInt(1, miVO.getReviewNum());		
-//		pstmt.setString(2, miVO.getTitle());
-//		pstmt.setString(2, miVO.getRevContent());
-//		pstmt.setString(2, miVO.getReviewImg());
-//		pstmt.setDate(2, miVO.getRevWriteDate());
-//		pstmt.setInt(2, miVO.getTourNum());
-//		rs=pstmt.executeQuery();
-//		
-//		}finally{
-//			dc.dbClose(rs, pstmt, conn);
-//		}//end finally
-//
-//		return miVO;
-//	}// selectReviewDetail
-
-	/* 후기 수정 페이지로 이동.
-	public int updateReviewChange(MyInfoVO miVO) throws SQLException { // 후기 수정
-		int upCnt = 0;
-
-		DbConnection dc = DbConnection.getInstance();
-		
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			conn=dc.getConn();
-			StringBuilder TOUR_REVIEW = new StringBuilder();
-			TOUR_REVIEW
-			.append("	select REVIEW_NUM, TITLE, REV_CONTENT, REVIEW_IMG,	REV_WRITE_DATE	, TOUR_NUM		")
-			.append("	from TOUR_REVIEW					")
-			.append("	where ID=?, RESER_NUM=?		"); 
-			
-//			pstmt.setString(1, miVO.get);
-			
-			upCnt=pstmt.executeUpdate();
-			
-		}finally {
-			dc.dbClose(null, pstmt, conn);
-			
-		}
-		
-		return upCnt;
-
-	}// updateReviewChange
-	*/
 
 	public List<MyInfoVO> selectMyCommList(MyInfoVO miVO) throws SQLException { // 내 댓글 리스트
 		List<MyInfoVO> list = new ArrayList<MyInfoVO>();
@@ -695,37 +630,6 @@ public class MyInfoDAO {
 
 		return totalCnt;
 	}//selectMyCommTotal
-
-	
-	/* 해당 후기 페이지로 이동
-	public int updateCommChange(MyInfoVO miVO) throws SQLException { // 댓글 수정
-		int upCnt = 0;
-
-		DbConnection dc = DbConnection.getInstance();	
-
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		
-		try {
-			conn=dc.getConn();
-			StringBuilder TOUR_COMMEND=new StringBuilder();
-			TOUR_COMMEND
-			.append("	update 		TOUR_COMMEND										")
-			.append("	set 			COM_CONTENT=?, COM_WRITE_DATE=?			")
-			.append("	where   		ID=?														");
-			
-			pstmt=conn.prepareStatement(TOUR_COMMEND.toString());
-			upCnt=pstmt.executeUpdate();
-			
-			
-		}finally {
-			dc.dbClose(null, pstmt, conn);
-			
-		}
-
-		return upCnt;
-	}// updateCommChange
-*/
 	
 	public static void main(String[] args) {
 		MyInfoDAO miDAO = MyInfoDAO.getInstance();

@@ -257,7 +257,7 @@ function changePage(value){                     
 	<!-- 라인 구분 선 끝-->
 
  <div class="container">
-		<form action="user_mypage_rectify_process.jsp" method="get" id="recFrm">
+		<form action="user_mypage_rectify_process.jsp" method="post" id="recFrm">
 			<div style="font-size:23px; display:flex; justify-content:space-between;">
 				<!-- <div style="font-weight: bold;"> 내 정보 수정 </div> -->
 			</div>		

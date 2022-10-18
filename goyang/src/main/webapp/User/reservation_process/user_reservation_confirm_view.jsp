@@ -211,7 +211,7 @@ function accessChk(){
 	<!-- 소제목 끝 -->
 	
 	<div class="container">
-		<form action="user_reservation_confirm_process.jsp" id="payFrm">
+		<form action="user_reservation_confirm_process.jsp" id="payFrm" method="post">
 			<div style="margin-bottom: 30px;">
 				<table class="member" style="width: 100%;">
 					<tr>

@@ -104,6 +104,8 @@ $(function(){
 			reaserOutpotArr.push($(this).val()+"번 ");//출력 배열
 		});//each
 		
+		reaserOutpotArr.sort();//버스좌석 정렬
+		
 		$("#seatNumOutput").html(reaserOutpotArr);//예약한 좌석번호 화면 출력
 		
 	});//click
@@ -249,7 +251,7 @@ function seatChk(reaserFrmArr, totalCnt){
 	<!-- 소제목 끝 -->
 	
 	<div class="container">
-	<form action="user_reservation_confirm.jsp" id="nextFrm" method="get">
+	<form action="user_reservation_confirm.jsp" id="nextFrm" method="post">
 			<div style="margin-bottom: 80px;">
 				<table class="member" style="width: 100%;">
 					<tr>

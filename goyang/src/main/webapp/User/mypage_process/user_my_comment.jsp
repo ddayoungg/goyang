@@ -236,7 +236,6 @@ function reviewMove(reviewNum){//해당 주소로 이동
 	<!-- 라인 구분 선 끝-->
 
  <div class="container">
-		<form>
 			<div style="font-size:23px; display:flex; justify-content:space-between;">
 				<!-- <div style="font-weight: bold;"> 내 댓글 </div> -->
 			</div>		
@@ -247,7 +246,6 @@ function reviewMove(reviewNum){//해당 주소로 이동
 			<div id="pageDiv" style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;"><!-- 페이지 블럭 -->
 				<!-- ajax 내 댓글 페이징 버튼 -->
 			</div>
-		</form>
 	</div>	
 
 	

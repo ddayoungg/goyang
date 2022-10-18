@@ -164,9 +164,7 @@ function chkNull(){
 		return;
 	}//end if
 	
-	var imgFlag=chkImg(); // 선택한 파일이 이미지 형식인지 검사
-	
-	if(!imgFlag){
+	if(!chkImg()){// 선택한 파일이 이미지 형식인지 검사
 		alert("이미지파일만 업로드 가능");
 		return;
 	}//end if
@@ -178,13 +176,15 @@ function chkImg(){
 	//확장자가 jpg, gif, jpeg, png, bmp만 업로드 가능하도록 JS 코드 작성
 	
 	var fileName=$("#hiddThumImg").val();
+	
+	console.log(fileName);
+	
+	if(fileName==null){//이미지 파일 선택을 안할 경우 임의의 이미지 파일을 추가
+		fileName="no.png";
+	}//end if
+	
 	var blockExt="jpg,gif,jpeg,png,bmp".split(",");
 	var flag=false;
-	
-	/* if(fileName==""){
-		alert("업로드할 파일을 선택해주세요.");
-		return;
-	}//end if */
 	
 	var fileExt=fileName.substring(fileName.lastIndexOf(".")+1);
 	for(var i=0; i < blockExt.length; i++){

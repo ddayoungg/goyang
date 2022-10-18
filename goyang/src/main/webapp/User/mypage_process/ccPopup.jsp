@@ -141,7 +141,7 @@ pageContext.setAttribute("reserInfo", reserInfo);
 			<div style="font-weight: bold; font-size: 15px; width: 800px; height: 50px; padding-left: 15px;
 			display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">예약 취소</div>
 			
-			<form action="user_mypage_rescancel_process.jsp" method="get" id="ccFrm">
+			<form action="user_mypage_rescancel_process.jsp" method="post" id="ccFrm">
 			
 			<div style="margin: 20px 0px 20px; display: flex; flex-direction: column; justify-content: center; width: 100%;">
 			<div><h3>예약 취소 사유</h3></div>

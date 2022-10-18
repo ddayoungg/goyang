@@ -336,7 +336,7 @@ function chkNull(reserDate){
 				<div> 일정 및 인원 선택</div>
 			</div> -->
 			<!-- 다음 form 시작 -->
-			<form action="user_reservation_seat.jsp" method="get" id="nextFrm">
+			<form action="user_reservation_seat.jsp" method="post" id="nextFrm">
 			
 			<div style="display: flex; justify-content: space-around; padding: 0 130px;">
 				<div>
