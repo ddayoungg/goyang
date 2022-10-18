@@ -76,7 +76,6 @@ function accessChk(){
 		
 		// 강제탈퇴 사유 작성
 		$("#outBtn").click(function () {
-			alert("outBtn 클릭");
 			$("#popupFrm").submit();
 		});
 		

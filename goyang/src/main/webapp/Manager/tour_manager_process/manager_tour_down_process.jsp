@@ -45,7 +45,7 @@ try{
 if(upResult==1){
 %>
 	alert("해당 투어가 종료되었습니다.");
-	history.back();
+	location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_detail.jsp?tourNum="+<%= tourNum %>;
 <%}else {%>
 	alert("해당 투어가 종료되지 못했습니다.");
 	history.back();

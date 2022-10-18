@@ -356,7 +356,7 @@ public class TourManagerDAO {
 			updateTourDown
 			.append("	update	TOUR			 ")
 			.append("	set		RUN_FLAG=0	")
-			.append("	where	TOUR_NUM=?			 ");
+			.append("	where	TOUR_NUM=? AND RUN_FLAG=1	");
 			
 			pstmt=con.prepareStatement(updateTourDown.toString());
 		//4.바인드 변수에 값 설정

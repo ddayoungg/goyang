@@ -179,6 +179,9 @@ function accessChk(){
   pageContext.setAttribute("tourInfo", tourInfo);
   %>
   <div><!-- 전체 테이블 -->
+  <c:if test="${ tourInfo.runFlag ne 1 }">
+  	<div><span style="color: red; font-size: 12px;">*현재 종료된 투어입니다.</span></div>
+  </c:if>
   <table class="member">
   <tr>
    <th><span><strong>코스명</strong></span></th>

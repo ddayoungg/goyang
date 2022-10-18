@@ -20,5 +20,5 @@
 %>
 	
 alert("탈퇴 완료");
-location.href="manager_member2.jsp";
+location.href="manager_member.jsp";
 </script>
