@@ -10,18 +10,23 @@ request.setCharacterEncoding("UTF-8");
 
 int reviewNum=Integer.parseInt(request.getParameter("reviewNum"));
 	ReviewManagerDAO rmDAO =new ReviewManagerDAO();
+	int rs=rmDAO.deleteCommned(reviewNum);
 	int result = rmDAO.deleteReview(reviewNum);
-	if(result == -1 || result ==-1){
-		System.out.println("실패");
-		PrintWriter pw=response.getWriter();  
-		pw.println("<script>");
-		pw.println("alert('글 삭제를 실패했습니다.')");
-		pw.println("history.back()");
-		pw.println("</script>");
-	}else{
-		PrintWriter pw=response.getWriter();
-		pw.println("<script>");
-		pw.println("location.href='manager_review.jsp'");
-		pw.println("</script>");
+	
+	if(rs != -1){
+		if(result == -1){
+			System.out.println("실패");
+			PrintWriter pw=response.getWriter();  
+			pw.println("<script>");
+			pw.println("alert('글 삭제를 실패했습니다.')");
+			pw.println("history.back()");
+			pw.println("</script>");
+		}else{
+			System.out.println("성공");
+			PrintWriter pw=response.getWriter();
+			pw.println("<script>");
+			pw.println("location.href='manager_review.jsp'");
+			pw.println("</script>");
+		}
 	}
 %>

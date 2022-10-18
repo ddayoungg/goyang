@@ -263,7 +263,7 @@ function accessChk(){
 				
 				<div style="display: flex;">
 					<input type="button" value="목록" style="margin-left: 10px; width: 70px;" class="mainBtn" onclick="location.href='manager_review.jsp'">&nbsp;&nbsp;
-					<div class="deleteBtn"><a href="manager_review_deleteAction.jsp?reviewNum=<%=reviewNum %>" class="delBtn">삭제</a></div>
+					<div class="deleteBtn"><a class="delBtn" onclick="showPopup(true,'popup')">삭제</a></div>
 				</div>
 				
 			</div>
@@ -281,13 +281,32 @@ function accessChk(){
 			align-items: center; height: 70px ;background-color: #f0f6f9;">삭제 하시겠습니까?</div>
 			
 			<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-				<input type="button" value="확인" class="popupBtn" onclick="closePopup()">
-				<input type="button" value="취소" class="popupBtn" onclick="closePopup()">
+				<input type="button" value="확인" class="popupBtn" onclick="showPopup(true,'popup2')">
+				<input type="button" value="취소" class="popupBtn" onclick="closePopup('popup')">
 			</div>
 		</div>
 	</div>
 </div>
 </div>
+
+<!-- 팝업창 : user_review_post -->
+	<div id="popup2" class="hide popup">
+		<div class="content">
+			<div style="width: 412px;">
+				<div style="font-size: 10px; width: 400px; height: 30px; padding-left: 10px;
+				display: flex; align-items: center; background-color: #f0f6f9; border: 1px solid #ddd; margin-bottom: 5px">게시글 삭제 확인</div>
+				
+				<div style="background-color: #f0f6f9;">
+					<div style="font-size: 16px; display: flex; justify-content: center; 
+					align-items: center; height: 70px ;background-color: #f0f6f9;">게시글이 삭제 되었습니다.</div>
+					
+					<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
+						<input type="button" value="확인" class="mainBtn" onclick="location.href='manager_review_deleteAction.jsp?reviewNum=<%=reviewNum%>'">
+					</div>
+				</div>
+			</div>
+	  </div>
+	</div>
 
 
 	<div class="site-footer">
@@ -358,22 +377,26 @@ function accessChk(){
 
 	<script src="../../js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-		function showPopup(hasFilter) {
-			const popup = document.querySelector('#popup');
-		  
-		  if (hasFilter) {
-		  	popup.classList.add('has-filter');
-		  } else {
-		  	popup.classList.remove('has-filter');
-		  }
-		  
-		  popup.classList.remove('hide');
+	function showPopup(hasFilter,id) {
+		const popup = document.querySelector("#"+id);
+		
+		if(id=='popup2'){
+			document.querySelector('#popup').classList.add('hide');
 		}
 		
-		function closePopup() {
-			const popup = document.querySelector('#popup');
-		  popup.classList.add('hide');
+		if (hasFilter) {
+			popup.classList.add('has-filter');
+		} else {
+			popup.classList.remove('has-filter');
 		}
+			
+		popup.classList.remove('hide');
+	}
+	
+	function closePopup(id) {
+		const popup = document.querySelector("#"+id);
+		popup.classList.add('hide');
+	}
 	</script>
 </body>
 

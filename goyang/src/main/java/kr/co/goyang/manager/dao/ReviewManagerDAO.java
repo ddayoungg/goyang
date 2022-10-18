@@ -296,7 +296,36 @@ public class ReviewManagerDAO {
 		return -1;
 	}// deleteReview
 	
+	public int deleteCommned(int reviewNum) throws SQLException  { // 후기 삭제
+		Connection con = null;
+		PreparedStatement pstmt = null;
 
+		DbConnection db = DbConnection.getInstance();
+
+		try {
+			// 1. 드라이버 로딩
+			
+			// 2. connection 얻기
+			con = db.getConn();
+
+			// 3. 쿼리문 생성 객체 얻기
+			String deleteReview = "delete from tour_commend where review_num=?";
+			pstmt = con.prepareStatement(deleteReview);
+
+			// 4. 바인드 변수에 값 설정
+			pstmt.setInt(1, reviewNum);
+
+			// 5. 쿼리문 수행 결과 얻기
+			 return pstmt.executeUpdate();
+		} catch(Exception ne	) {
+			ne.printStackTrace();
+		} finally {
+			// 6. 연결 끊기
+			db.dbClose(null, pstmt, con);
+		}
+
+		return -1;
+	}// deleteReview
 	
 	public List<String> selectTourName() throws SQLException { // 투어이름
 		List<String> tourNames = null;
