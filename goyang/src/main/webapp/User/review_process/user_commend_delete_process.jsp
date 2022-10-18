@@ -7,22 +7,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>  
 <script type="text/javascript">
 <%
+System.out.println("delete");
 request.setCharacterEncoding("UTF-8");
 
 //commend_num, com_content, com_write_date, com_del_flag, review_num, id
 String reviewNum = request.getParameter("reviewNum");
-System.out.println("reviewNum : "+reviewNum);
+System.out.println(reviewNum);
 String commendNum = request.getParameter("commendNum");
-System.out.println("commendNum : "+commendNum);
-String comContent = request.getParameter("comContent");
-System.out.println("comContent : "+comContent);
-
-TourReviewVO commVO = new TourReviewVO();
-commVO.setCommendNum(Integer.valueOf(commendNum));
-commVO.setComContent(comContent);
+System.out.println(commendNum);
 
 TourReviewDAO trDAO = TourReviewDAO.getInstance();
-trDAO.updateCommend(commVO);
+trDAO.deleteComm(Integer.parseInt(commendNum));
 %>
 location.href="user_review_detail.jsp?reviewNum=<%=reviewNum%>";
 </script>

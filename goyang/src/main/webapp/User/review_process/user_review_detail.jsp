@@ -49,7 +49,7 @@
 <%
 /* nsm 22-10-17 추가 시작 */
 //아이디 세션 
-	String id ="";
+String id ="";
 if(session.getAttribute("id")!=null){
 	id=(String)session.getAttribute("id");
 }//end if
@@ -80,21 +80,20 @@ if(session.getAttribute("id")!=null){
 		}
 		int reviewIdx = reviewNumList.indexOf(reviewNum);
 		%>
-		
-		<%--//세션에 존재하는 값을 얻는다.
-		String id=(String)session.getAttribute("id");
-		 String id="";
+		<%
+		//세션에 존재하는 값을 얻는다.
+		/* String id = (String)session.getAttribute("id");
 		if( id == null ){//세션에 값이 없음.(1.interval이 초과, 2.직접 요청(비정상적 요청).)
 			//redirect 페이지 이동.
 			response.sendRedirect("로그인페이지.jsp");
 			return;
-		}//end if
+		}//end if */
 		if(id.equals(reviewVO.getId())){%>
-		document.querySelector("#corBtn").classList.remove('hide');
-		document.querySelector("#corBtn").classList.remove('popup');
-		document.querySelector("#delBtn").classList.remove('hide');
-		document.querySelector("#delBtn").classList.remove('popup'); 
-		<%}%>--%>
+			document.querySelector("#corBtn").classList.remove('hide');
+			document.querySelector("#corBtn").classList.remove('popup');
+			document.querySelector("#delBtn").classList.remove('hide');
+			document.querySelector("#delBtn").classList.remove('popup'); 
+		<%}%>
 		
 		$("#commBtn").click(function () {
 			
@@ -262,7 +261,7 @@ if(session.getAttribute("id")!=null){
 					<%= reviewVO.getRevContent() %>
 				</div>
 				<%if(reviewVO.getReviewImg() != null){ %>
-   				<div style="max-height: 500px; max-width: 500px;" class="imgSize"><img class="imgSize" id="thumImgOutput" src="../../images/<%=reviewVO.getReviewImg()%>"/></div>
+   				<div class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="../../images/<%=reviewVO.getReviewImg()%>"/></div>
 				<%} %>
 			</div>
 			
@@ -275,11 +274,11 @@ if(session.getAttribute("id")!=null){
 					<div id="comm<%=commVO.getCommendNum()%>" style="margin-bottom: 10px;">
 						<div style="display: flex; justify-content: space-between; font-size: 13px;">
 							<div><%= commVO.getId().substring(0, commVO.getId().length()/2) %>**** <span><%= commVO.getComWriteDate() %></span></div>
-							<%-- <%if(id.equals(commVO.getId())){%>
+							<%if(!id.equals(commVO.getId())){%>
 							<div class="hide popup">
-							<%}else{ %> --%>
+							<%}else{ %>
 							<div>
-							<%-- <%} %> --%>
+							<%} %>
 								<a href="user_commend_update_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comContent=<%=commVO.getComContent()%>&comWriteDate=<%=commVO.getComWriteDate()%>">수정</a> | <a href="user_commend_delete_process.jsp?reviewNum=<%=reviewNum%>&commendNum=<%=commVO.getCommendNum()%>&comContent=<%=commVO.getComContent()%>">삭제</a>
 							</div>
 						</div>

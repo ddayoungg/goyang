@@ -182,7 +182,7 @@ public class TourReviewDAO {
 			StringBuilder insertComm = new StringBuilder();
 			insertComm
 			.append("	insert into tour_commend(commend_num, com_content, com_write_date, review_num, id)	")
-			.append("	values(?,?,sysdate,?,?,?)	");
+			.append("	values(?,?,sysdate,?,?)	");
 
 			pstmt = con.prepareStatement(insertComm.toString());// 쿼리문을 넣어 쿼리문 실행 객체를 얻는다.
 
@@ -363,12 +363,16 @@ public class TourReviewDAO {
 					cnt++;
 				}
 				
-				if (trVO.getTextSearch() != null && trVO.getTextSearch() != "") {
-					selectReview.append("	where title like ?	");
+				if (trVO.getTextSearch() != null && trVO.getTextSearch() != "" ) {
+					if(cnt==0) {
+						selectReview.append("	where title like ?	");
+					}else {
+						selectReview.append("	and title like ?	");
+					}
 					cnt++;
 				}
 			}
-			selectReview.append("	order by review_num desc	");
+			selectReview.append("	order by review_num	");
 			
 			pstmt = con.prepareStatement(selectReview.toString());
 
@@ -438,6 +442,36 @@ public class TourReviewDAO {
 			db.dbClose(null, pstmt, con);
 		}
 
+		return delCnt;
+	}// deleteReview
+	
+	public int deleteComm(int commendNum) throws SQLException { // 댓글 삭제
+		int delCnt = 0;
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		DbConnection db = DbConnection.getInstance();
+		
+		try {
+			// 1. 드라이버 로딩
+			// 2. connection 얻기
+			con = db.getConn();
+			
+			// 3. 쿼리문 생성 객체 얻기
+			String deleteComm = "delete from tour_commend where commend_num=?";
+			pstmt = con.prepareStatement(deleteComm);
+			
+			// 4. 바인드 변수에 값 설정
+			pstmt.setInt(1, commendNum);
+			
+			// 5. 쿼리문 수행 결과 얻기
+			delCnt = pstmt.executeUpdate(); // 리턴되는 값 : 0(사원번호가 없음, 삭제된 행 없음) 또는 1(삭제된 행이 1개)
+			
+		} finally {
+			// 6. 연결 끊기
+			db.dbClose(null, pstmt, con);
+		}
+		
 		return delCnt;
 	}// deleteReview
 

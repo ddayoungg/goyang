@@ -90,7 +90,7 @@ public class UserManagerDAO {
 			// 6. 연결 끊기
 			db.dbClose(rs, pstmt, con);
 		}
-		return umVO;		
+		return umVO;
 	}
 	
 	public List<UserManagerVO> selectSearchUser(UserManagerVO umVO) throws SQLException{ // 회원 검색
