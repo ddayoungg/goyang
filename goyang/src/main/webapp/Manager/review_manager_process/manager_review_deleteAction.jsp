@@ -11,7 +11,7 @@ request.setCharacterEncoding("UTF-8");
 int reviewNum=Integer.parseInt(request.getParameter("reviewNum"));
 	ReviewManagerDAO rmDAO =new ReviewManagerDAO();
 	int result = rmDAO.deleteReview(reviewNum);
-	if(result == -1){
+	if(result == -1 || result ==-1){
 		System.out.println("실패");
 		PrintWriter pw=response.getWriter();  
 		pw.println("<script>");

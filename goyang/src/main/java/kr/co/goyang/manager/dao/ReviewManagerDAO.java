@@ -187,78 +187,83 @@ public class ReviewManagerDAO {
 		return rv; //db오류
 	}
 	
-	public List<ReviewManagerVO> selectSearchReview(ReviewManagerVO rmVO) throws SQLException { // 후기 검색
-		List<ReviewManagerVO> reviewList = new ArrayList<ReviewManagerVO>();
+	   public List<ReviewManagerVO> selectSearchReview(ReviewManagerVO rmVO) throws SQLException { // 후기 검색
+		      List<ReviewManagerVO> reviewList = new ArrayList<ReviewManagerVO>();
 
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		int cnt = 0;
+		      Connection con = null;
+		      PreparedStatement pstmt = null;
+		      ResultSet rs = null;
+		      int cnt = 0;
 
-		DbConnection db = DbConnection.getInstance();
-		try {
-			// 1. 드라이버 로딩
-			// 2. 커넥션 얻기
-			con = db.getConn();
+		      DbConnection db = DbConnection.getInstance();
+		      try {
+		         // 1. 드라이버 로딩
+		         // 2. 커넥션 얻기
+		         con = db.getConn();
 
-			// 3. 쿼리문 생성 객체 얻기
-			StringBuilder selectReview = new StringBuilder();
-			selectReview
-			.append("	select	review_num, title, rev_content, review_img, rev_write_date, id, tour_num	")
-			.append("	from	tour_review	");
+		         // 3. 쿼리문 생성 객체 얻기
+		         StringBuilder selectReview = new StringBuilder();
+		         selectReview
+		         .append("   select   review_num, title, rev_content, review_img, rev_write_date, id, tour_num   ")
+		         .append("   from   tour_review   ");
 
-			if(rmVO.getTourNum() != 0 || (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "")) {
-				if (rmVO.getTourNum() != 0) {
-					selectReview.append("	where tour_num=?	");
-					cnt++;
-				}
-				
-				if (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "") {
-					selectReview.append("	where title like ?	");
-					cnt++;
-				}
-			}
-			selectReview.append("	order by review_num	");
-			
-			pstmt = con.prepareStatement(selectReview.toString());
+		         if(rmVO.getTourNum() != 0 || (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "")) {
+		            if (rmVO.getTourNum() != 0) {
+		               selectReview.append("   where tour_num=?   ");
+		               cnt++;
+		            }
+		            
+		            if (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "" ) {
+		               if(cnt==0) {
+		                  selectReview.append("   where title like ?   ");
+		               }else {
+		                  selectReview.append("   and title like ?   ");
+		               }
+		               cnt++;
+		            }
+		            
+		         }
+		         selectReview.append("   order by review_num    ");
+		         
+		         pstmt = con.prepareStatement(selectReview.toString());
 
-			// 4. 바인드 변수에 값 설정
-			if(cnt == 2) {
-				pstmt.setInt(1, rmVO.getTourNum());
-				pstmt.setString(2, '%'+rmVO.getTextSearch()+'%');
-			}else {
-				if (rmVO.getTourNum() != 0) {
-					pstmt.setInt(1, rmVO.getTourNum());
-				}
-				
-				if (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "") {
-					pstmt.setString(1, '%'+rmVO.getTextSearch()+'%');
-				}
-			}
-			
-			// 5. 쿼리문 수행 결과 얻기
-			rs = pstmt.executeQuery();
+		         // 4. 바인드 변수에 값 설정
+		         if(cnt == 2) {
+		            pstmt.setInt(1, rmVO.getTourNum());
+		            pstmt.setString(2, '%'+rmVO.getTextSearch()+'%');
+		         }else {
+		            if (rmVO.getTourNum() != 0) {
+		               pstmt.setInt(1, rmVO.getTourNum());
+		            }
+		            
+		            if (rmVO.getTextSearch() != null && rmVO.getTextSearch() != "") {
+		               pstmt.setString(1, '%'+rmVO.getTextSearch()+'%');
+		            }
+		         }
+		         
+		         // 5. 쿼리문 수행 결과 얻기
+		         rs = pstmt.executeQuery();
 
-			while (rs.next()) {// 조회된 레코드가 있음
-				rmVO = new ReviewManagerVO();
-				// setter method를 호출하여 값을 설정 => 필요한 값만 넣을 수 있고 어떤 값을 넣는지 알 수 있음
-				rmVO.setReviewNum(rs.getInt("review_num"));
-				rmVO.setTitle(rs.getString("title"));
-				rmVO.setRevContent(rs.getString("rev_content"));
-				rmVO.setReviewImg(rs.getString("review_img"));
-				rmVO.setRevWriteDate(rs.getDate("rev_write_date"));
-				rmVO.setId(rs.getString("id"));
-				rmVO.setTourNum(rs.getInt("tour_num"));
+		         while (rs.next()) {// 조회된 레코드가 있음
+		            rmVO = new ReviewManagerVO();
+		            // setter method를 호출하여 값을 설정 => 필요한 값만 넣을 수 있고 어떤 값을 넣는지 알 수 있음
+		            rmVO.setReviewNum(rs.getInt("review_num"));
+		            rmVO.setTitle(rs.getString("title"));
+		            rmVO.setRevContent(rs.getString("rev_content"));
+		            rmVO.setReviewImg(rs.getString("review_img"));
+		            rmVO.setRevWriteDate(rs.getDate("rev_write_date"));
+		            rmVO.setId(rs.getString("id"));
+		            rmVO.setTourNum(rs.getInt("tour_num"));
 
-				reviewList.add(rmVO);
-			}
-		} finally {
-			// 6. 연결 끊기
-			db.dbClose(rs, pstmt, con);
-		}
+		            reviewList.add(rmVO);
+		         }
+		      } finally {
+		         // 6. 연결 끊기
+		         db.dbClose(rs, pstmt, con);
+		      }
 
-		return reviewList;
-	}// selectSearchReview
+		      return reviewList;
+		   }// selectSearchReview
 	
 	public int deleteReview(int reviewNum) throws SQLException  { // 후기 삭제
 		Connection con = null;
@@ -268,6 +273,7 @@ public class ReviewManagerDAO {
 
 		try {
 			// 1. 드라이버 로딩
+			
 			// 2. connection 얻기
 			con = db.getConn();
 
@@ -279,7 +285,7 @@ public class ReviewManagerDAO {
 			pstmt.setInt(1, reviewNum);
 
 			// 5. 쿼리문 수행 결과 얻기
-			return pstmt.executeUpdate(); // 리턴되는 값 : 0(사원번호가 없음, 삭제된 행 없음) 또는 1(삭제된 행이 1개)
+			 return pstmt.executeUpdate();
 		} catch(Exception ne	) {
 			ne.printStackTrace();
 		} finally {
@@ -289,6 +295,8 @@ public class ReviewManagerDAO {
 
 		return -1;
 	}// deleteReview
+	
+
 	
 	public List<String> selectTourName() throws SQLException { // 투어이름
 		List<String> tourNames = null;
@@ -346,7 +354,7 @@ public class ReviewManagerDAO {
 			selectCommend
 			.append("	select commend_num, com_content, com_write_date,  review_num, id	")
 			.append("	from	tour_commend	")
-			.append("	where	com_del_flag=1 and review_num=?	")
+			.append("	where	review_num=?	")
 			.append("	order by commend_num	");
 
 			pstmt = con.prepareStatement(selectCommend.toString());

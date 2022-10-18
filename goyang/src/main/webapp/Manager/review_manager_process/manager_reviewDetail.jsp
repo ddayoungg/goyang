@@ -228,7 +228,9 @@ function accessChk(){
 				<div style="width: 100%; padding: 24px 0; ">
 					<%=rv.getRevContent() %>
 				</div>
-				<div><img src="../../images/gal_1.jpg"></div>
+								<%if(rv.getReviewImg() != null){ %>
+   				<div  class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="../../images/<%=rv.getReviewImg()%>"/></div>
+				<%} %>
 			</div>
 			
 			<div style="font-size: 15px; margin: 50px 0px 10px 10px;">댓글 <strong><%= commList.size() %></strong></div>
