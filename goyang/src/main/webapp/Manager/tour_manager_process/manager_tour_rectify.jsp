@@ -165,7 +165,7 @@ function chkNull(){
 	}//end if
 	
 	if(!chkImg()){// 선택한 파일이 이미지 형식인지 검사
-		alert("이미지파일만 업로드 가능");
+		alert("이미지 파일을 선택해주세요.");
 		return;
 	}//end if
 	
