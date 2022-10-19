@@ -45,6 +45,7 @@ public class TourReviewDAO {
 
 			selectTourNames.append("	select tour_name	")
 			.append("	from tour	")
+			.append("	where run_flag=1	")
 			.append("	order by tour_num	");
 
 			pstmt = con.prepareStatement(selectTourNames.toString());

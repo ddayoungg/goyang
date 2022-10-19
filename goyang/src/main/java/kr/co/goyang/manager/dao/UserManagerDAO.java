@@ -128,17 +128,21 @@ public class UserManagerDAO {
 				}else if(umVO.getListSearch().equals("이름")) {
 					selectUserList.append("	where name like ?	");
 				}else {
-					selectUserList.append("	where join_date like ?	");
+					selectUserList.append("	where to_char(join_date,'YYYY-MM-DD') like to_char(?,'YYYY-MM-DD')	");
 				}
 			}
 			
 			selectUserList.append("	order by out_flag desc, join_date	");
+			System.out.println(selectUserList.toString());
 			pstmt = con.prepareStatement(selectUserList.toString());
 			
 			System.out.println("umVO.getTextSearch() : "+umVO.getTextSearch());
 			if(!umVO.getListSearch().equals("선택")) {
+				System.out.println("0");
 				if(umVO.getListSearch().equals("가입일자")) {
+					System.out.println("1");
 					pstmt.setDate(1, Date.valueOf(umVO.getTextSearch()));
+					System.out.println("2");
 				}else{
 					pstmt.setString(1, '%'+umVO.getTextSearch()+'%');
 				}
@@ -174,8 +178,11 @@ public class UserManagerDAO {
 			con=dc.getConn();
 			con.setAutoCommit(false);
 			
+			System.out.println("1");
 			insertDelReasUser(umVO, con);
+			System.out.println("2");
 			updateOutFlag(umVO, con);
+			System.out.println("3");
 			
 			con.commit();
 			System.out.println("commit 성공");
@@ -201,20 +208,25 @@ public class UserManagerDAO {
 
 		PreparedStatement pstmt = null;
 
+		System.out.println("id : "+umVO.getId());
+		System.out.println("reas : "+umVO.getOutReas());
 		// 3.쿼리문 생성 객체 얻기
 		StringBuilder insertDelRea = new StringBuilder();
 		insertDelRea
 		.append("	insert into user_out(id, out_reas, out_date)	")
 		.append("	values(?, ?, sysdate)	");
-
+		
 		pstmt = con.prepareStatement(insertDelRea.toString());
+		System.out.println("pstmt : "+pstmt);
 
 		// 4.바인드 변수에 값 설정
 		pstmt.setString(1, umVO.getId());
 		pstmt.setString(2, umVO.getOutReas());
+		System.out.println("121212");
 
 		// 5.쿼리문 수행 결과 얻기
 		pstmt.executeUpdate();
+		System.out.println("33333333333");
 
 		if(pstmt!=null) { pstmt.close(); }
 	}
@@ -225,12 +237,13 @@ public class UserManagerDAO {
 
 		PreparedStatement pstmt = null;
 
+		System.out.println("umVO.getId() :"+umVO.getId());
 		// 3.쿼리문 생성 객체 얻기
 		StringBuilder updateReview = new StringBuilder();
 		updateReview
 		.append("	update	tour_user	")
 		.append("	set		out_flag=0	")
-		.append("	where	id=?		");
+		.append("	where	id=?	");
 
 		pstmt = con.prepareStatement(updateReview.toString());
 

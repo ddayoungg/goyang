@@ -85,58 +85,115 @@ function accessChk(){
 		
 		String listSearch = request.getParameter("listSearch");
 		String textSearch = request.getParameter("textSearch");
-		System.out.println(listSearch);
-		System.out.println(textSearch);
 		
 		umVO.setListSearch(listSearch);
 		umVO.setTextSearch(textSearch);
 		
 		// 회원 목록 
 		List<UserManagerVO> userList = umDAO.selectSearchUser(umVO);
-		System.out.println(userList);
 		%>
+		
+		function pagenation() {
+			var pagenationHTML = ``;
+			<% 
+			int totalPage = 0;
+			String cnt = request.getParameter("cnt");
+			
+			if(cnt==null){
+				// total_page : 10개씩 보여줄 때 총 페이지 개수
+				cnt = String.valueOf(userList.size());
+				totalPage = (int)Math.ceil((double)userList.size()/10);
+				System.out.println("totalPage : "+totalPage);
+			}else{
+				System.out.println("cnt : "+cnt);
+				totalPage = (int)Math.ceil(Double.parseDouble(cnt)/10);
+				System.out.println("totalPage : "+totalPage);
+			}
+			
+			// page : 현재 위치한 페이지
+			String nowPage = request.getParameter("nowPage");
+			System.out.println("nowPage : "+nowPage);
+			if(nowPage==null){
+				nowPage = "1";
+				System.out.println("nowPage : "+nowPage);
+			}
+			
+			// last : 현재 페이지에서 보여줄 마지막 목록의 인덱스
+			int lastIdx = Integer.valueOf(nowPage)*10;
+			System.out.println("lastIdx : "+lastIdx);
+			
+			// first : 현재 페이지에서 보여줄 첫번째 목록의 인덱스
+			int firstIdx = lastIdx-9;
+			System.out.println("firstIdx : "+firstIdx);%>
+			
+			// first~last 페이지 프린트
+			pagenationHTML += 
+				`<li class="page-item">
+					<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+			    </li>`;
+			<%for(int i=1; i<=totalPage; i++){%>
+				pagenationHTML += 
+				`<li class="page-item"><a class="page-link" href="manager_member.jsp?nowPage=<%=i%>"><%=i%></a></li>`;
+			<%}%>
+			pagenationHTML += 
+				`<li class="page-item">
+			      <a class="page-link" href="#" aria-label="Next">
+			        <span aria-hidden="true">&raquo;</span>
+			      </a>
+			    </li>`;
+			document.querySelector(".pagination").innerHTML = pagenationHTML;
+		}
+		
 		function showUserList(){
 			var userHTML=``;
 			<%
 			// 가입(1) | 탈퇴(0)
 			String outFlag = request.getParameter("outFlag");
 			int outCnt = 0;
+			int index = 0;
 			String bgcolor="";
 			
 			for(int i=0; i<userList.size(); i++){
 				umVO = userList.get(i);
-				String flag = Integer.toString(umVO.getOutFlag());
 				
-				if(flag.equals("0")){ // 탈퇴 회원 클릭 시
-					outCnt++; // 탈퇴 회원 수 증가
-					bgcolor = "#ebebeb"; // 탈퇴 회원 배경 회색
-				}
-				
-				if(outFlag==null || flag.equals(outFlag)){
-					flag = flag.equals("1") ? "가입" : "탈퇴";%> 
+					String flag = Integer.toString(umVO.getOutFlag());
 					
-					userHTML += 
-					`<tr bgcolor='<%=bgcolor%>'>
-						<td><%= umVO.getName() %></td>
-						<td><%= umVO.getId() %></td>
-						<td><%= umVO.getJoinDate() %></td>
-						<td><%= flag %></td>
-						<td><input id="<%=umVO.getId()%>" type="button" value="상세보기" class="mainBtn button222" onclick="location.href='manager_member.jsp?id=<%=umVO.getId()%>'"></td>
-					</tr>`;
-				<%}}%>
+					if(flag.equals("0")){ // 탈퇴 회원 클릭 시
+						outCnt++; // 탈퇴 회원 수 증가
+						bgcolor = "#ebebeb"; // 탈퇴 회원 배경 회색
+					}
+				
+					if(outFlag==null || flag.equals(outFlag)){
+						System.out.println("outFlag : "+outFlag);
+						flag = flag.equals("1") ? "가입" : "탈퇴";
+						index ++;
+						System.out.println("firstIdx:"+firstIdx);
+						System.out.println("lastIdx:"+lastIdx);
+						System.out.println(Integer.valueOf(cnt));
+						System.out.println(index);
+						System.out.println(Integer.valueOf(cnt) - index);
+						if(Integer.valueOf(cnt) - index >= firstIdx && Integer.valueOf(cnt) - index <= lastIdx){//해당 페이지에 해당하는 목록만 보여주기
+						%>
+						
+						userHTML += 
+						`<tr bgcolor='<%=bgcolor%>'>
+							<td><%= umVO.getName() %></td>
+							<td><%= umVO.getId() %></td>
+							<td><%= umVO.getJoinDate()%></td>
+							<td><%= flag %></td>
+							<td><input id="<%=umVO.getId()%>" type="button" value="상세보기" class="mainBtn button222" onclick="location.href='manager_member.jsp?id=<%=umVO.getId()%>'"></td>
+						</tr>`;
+				<%}}}%>
 			document.getElementById("userTable").innerHTML = userHTML;
 		}
 		// 화면 출력
 		showUserList();
-		
-		<%
-		String id = request.getParameter("id");
-		System.out.println("id : "+id);
+		pagenation();
+
+		<%String id = request.getParameter("id");
 		
 		if(id!=null){
-			System.out.println("id != null");
-			UserManagerVO detailVO = umDAO.selectUser(id);
-			System.out.println(detailVO);%>
+			UserManagerVO detailVO = umDAO.selectUser(id);%>
 		
 		function showUserDetail(){
 			console.log("detail");
@@ -170,8 +227,8 @@ function accessChk(){
 			document.getElementById("detailPopup").innerHTML = detailHTML;
 			document.querySelector('#popup').classList.remove('hide');
 		}
-		<%}%>
 		showUserDetail();
+		<%}%>
 		
 		$("#<%=listSearch%>").prop("selected", true);
 		if(textSearch == null){
@@ -236,7 +293,7 @@ function accessChk(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
 					<li class="active"><a href="../dashboard_process/manager_dashboard.jsp">dash board</a></li>
-					<li><a href="manager_member_popup.jsp">회원관리</a></li>
+					<li><a href="../user_manager_process/manager_member.jsp">회원관리</a></li>
 					<li><a href="../tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
 					<li><a href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
 					<li><a href="../spot_manager_process/manager_spot_list.jsp">관광지 관리</a></li>
@@ -296,15 +353,15 @@ function accessChk(){
 		<div style="display: flex; justify-content: center; margin: 20px;">
 			<div style="display: flex; align-items: center;flex-direction: column; background-color: #f0f6f9; width: 350px; height: 150px;">
 				<div style="padding-top: 25px; padding-bottom: 15px">총 회원 수</div>
-				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp"><%=userList.size()%></a></span><span style="padding-left: 5px">명</span></div>
+				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp?cnt=<%=userList.size()%>"><%=userList.size()%></a></span><span style="padding-left: 5px">명</span></div>
 			</div>
 			<div style="display: flex; align-items: center;flex-direction: column; background-color: #f0f6f9; width: 350px; height: 150px; margin-left: 40px;">
 				<div style="padding-top: 25px; padding-bottom: 15px">가입 회원 수</div>
-				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp?outFlag=1"><%=userList.size()-outCnt%></a></span><span style="padding-left: 5px">명</span></div>
+				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp?nowPage=1&outFlag=1&cnt=<%=userList.size()-outCnt%>"><%=userList.size()-outCnt%></a></span><span style="padding-left: 5px">명</span></div>
 			</div>
 			<div style="display: flex; align-items: center;flex-direction: column; background-color: #f0f6f9; width: 350px; height: 150px; margin-left: 40px;">
 				<div style="padding-top: 25px; padding-bottom: 15px">탈퇴 회원 수</div>
-				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp?outFlag=0"><%=outCnt%></a></span><span style="padding-left: 5px">명</span></div>
+				<div><span style="font-size: 40px; font-weight: bold;"><a href="manager_member.jsp?nowPage=1&outFlag=0&cnt=<%=outCnt%>"><%=outCnt%></a></span><span style="padding-left: 5px">명</span></div>
 			</div>
 		</div>
 		
@@ -336,9 +393,10 @@ function accessChk(){
 		</div>
 		
 		<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
-			<input class="pagination" type="button" value="<">
-			<input class="pagination pageNow" type="button" value="1">
-			<input class="pagination" type="button" value=">">
+			<nav aria-label="Page navigation example">
+				<ul class="pagination">
+				</ul>
+			</nav>
 		</div>
 	</div>
 
@@ -446,7 +504,7 @@ function accessChk(){
 			
 			<div style="background-color: #f0f6f9;display: flex;flex-direction: column;align-items: center;height: 280px;">
 				<div style="font-size: 16px; background-color: #f0f6f9; padding: 15px;">회원 강제탈퇴 사유를 작성하세요.</div>
-				<input type="hidden" name="id" value="<%= manageId %>">
+				<input type="hidden" name="id" value="<%= id %>">
 				<textarea name="outReas" rows="10" cols="50"></textarea>
 				<div style="display: flex; align-items: center; justify-content: center; padding: 20px;">
 					<input type="button" value="확인" class="mainBtn" id="outBtn">
@@ -467,7 +525,7 @@ function accessChk(){
 			
 			<div style="background-color: #f0f6f9;">
 				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">해당 회원이 강제탈퇴 되었습니다.</div>
+				align-items: center; height: 70px ;background-color: #f0f6f9;">해d당 회원이 강제탈퇴 되었습니다.</div>
 				
 				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
 					<input type="button" value="확인" class="mainBtn" onclick="closePopup('popup4')">

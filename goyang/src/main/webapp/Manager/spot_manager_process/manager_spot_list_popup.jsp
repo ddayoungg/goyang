@@ -143,7 +143,7 @@ $(function(){
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
 					<li class="active"><a href="../dashboard_process/manager_dashboard.jsp">dash board</a></li>
-					<li><a href="../user_manager_process/manager_member_popup.jsp">회원관리</a></li>
+					<li><a href="../user_manager_process/manager_member.jsp">회원관리</a></li>
 					<li><a href="../tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
 					<li><a href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
 					<li><a href="manager_spot_list.jsp">관광지 관리</a></li>
@@ -169,7 +169,7 @@ $(function(){
       <div class="row align-items-center">
         <div class="col-lg-6 mx-auto text-center">
           <div class="intro-wrap">
-            <h1 class="mb-0">관리자 화면</h1>
+            <h1 class="mb-0">관광지 관리</h1>
           </div>
         </div>
       </div>
