@@ -101,20 +101,20 @@ $(function(){
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="../dashboard_process/manager_dashboard.jsp"
+				<a href="http://211.63.89.140/Manager/dashboard_process/manager_dashboard.jsp"
 					class="logo m-0">고양<span class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
 					<li class="active"><a
-						href="../dashboard_process/manager_dashboard.jsp">dash board</a></li>
-					<li><a href="../user_manager_process/manager_member.jsp">회원관리</a></li>
-					<li><a href="../tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
+						href="http://211.63.89.140/Manager/dashboard_process/manager_dashboard.jsp">dash board</a></li>
+					<li><a href="http://211.63.89.140/Manager/user_manager_process/manager_member.jsp">회원관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
 					<li><a
-						href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
-					<li><a href="../spot_manager_process/manager_spot_list.jsp">관광지
+						href="http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/spot_manager_process/manager_spot_list.jsp">관광지
 							관리</a></li>
-					<li><a href="../review_manager_process/manager_review.jsp">후기관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/review_manager_process/manager_review.jsp">후기관리</a></li>
 				</ul>
 
 				<ul

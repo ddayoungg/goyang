@@ -39,7 +39,7 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 	manageId = (String) session.getAttribute("manageId");
 }//end if
 if(manageId==""){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
+	response.sendRedirect("http://211.63.89.140/Manager/login_manager/manager_signIn.jsp");
 	return;
 }//end if
 

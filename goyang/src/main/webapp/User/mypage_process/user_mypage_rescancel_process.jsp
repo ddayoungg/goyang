@@ -30,7 +30,7 @@ if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
 if(id==""){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/mypage_process/ccPopup.jsp?closeFlag=close");
+	response.sendRedirect("http://211.63.89.140/User/mypage_process/ccPopup.jsp?closeFlag=close");
 	return;
 }//end if
 
@@ -40,7 +40,7 @@ if(request.getParameter("reserNum") !=null) {
 	reserNum=Integer.parseInt(request.getParameter("reserNum"));
 }//end if
 if(reserNum==0){//예약번호가 없을 경우
-	response.sendRedirect("http://localhost/goyang/User/mypage_process/ccPopup.jsp?closeFlag=reserNum");
+	response.sendRedirect("http://211.63.89.140/User/mypage_process/ccPopup.jsp?closeFlag=reserNum");
 	return;
 }//end if
 %>
@@ -111,10 +111,10 @@ try {
 
 <%if(rowCnt==2){%>
 	alert("예약이 취소되었습니다.");
-	location.href="http://localhost/goyang/User/mypage_process/ccPopup.jsp?closeFlag=commit";
+	location.href="http://211.63.89.140/User/mypage_process/ccPopup.jsp?closeFlag=commit";
 <%}else if(rowCnt==1){%>
 	alert("예약 사유가 수정되었습니다.");
-	location.href="http://localhost/goyang/User/mypage_process/ccPopup.jsp?&closeFlag=commit";
+	location.href="http://211.63.89.140/User/mypage_process/ccPopup.jsp?&closeFlag=commit";
 <%}else {%>
 	alert("예약이 취소되지 못했습니다.");
 	history.back();

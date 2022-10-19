@@ -174,12 +174,12 @@ $(function(){
 						<td style="max-width: 100px; height: 140px;">
 							
 							<div style="display: flex; justify-content: center; align-items: center;">
-								<img src="http://localhost/goyang/images/${ cosList.thumImg }" style="width: 150px; height: 100px;">
+								<img src="http://211.63.89.140/images/${ cosList.thumImg }" style="width: 150px; height: 100px;">
 							</div>
 						</td>
 						<td>
 							<div style="display: flex; flex-direction: column;">
-								<div style="font-size: 17px; padding-bottom: 2px;"><a href="http://localhost/goyang/User/spot_process/user_introduceDay.jsp?tourNum=${ cosList.tourNum }" class="aLineNone">${ cosList.tourName }</a></div>
+								<div style="font-size: 17px; padding-bottom: 2px;"><a href="http://211.63.89.140/User/spot_process/user_introduceDay.jsp?tourNum=${ cosList.tourNum }" class="aLineNone">${ cosList.tourName }</a></div>
 								<div style="font-size: 13px;">${ cosList.explain }</div>
 							</div>
 						</td>

@@ -23,7 +23,7 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 }//end if
 
 if(manageId==""){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/Manager/login_manager/manager_signIn.jsp");
+	response.sendRedirect("http://211.63.89.140/Manager/login_manager/manager_signIn.jsp");
 	return;
 }//end if
 //투어 번호
@@ -45,7 +45,7 @@ try{
 if(upResult==1){
 %>
 	alert("해당 투어가 종료되었습니다.");
-	location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_detail.jsp?tourNum="+<%= tourNum %>;
+	location.href="http://211.63.89.140/Manager/tour_manager_process/manager_tour_detail.jsp?tourNum="+<%= tourNum %>;
 <%}else {%>
 	alert("해당 투어가 종료되지 못했습니다.");
 	history.back();

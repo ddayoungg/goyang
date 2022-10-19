@@ -76,12 +76,12 @@ function accessChk(){
 		
 	if(id==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		location.href="http://211.63.89.140/User/login_process/user_signIn.jsp";
 		return;
 	}//end if
 	
 	if(reserNum==0){//예약번호 파라미터 값이 없을 경우
-		location.href="http://localhost/goyang/User/main/index.jsp";
+		location.href="http://211.63.89.140/User/main/index.jsp";
 		return;
 	}//end if
 		

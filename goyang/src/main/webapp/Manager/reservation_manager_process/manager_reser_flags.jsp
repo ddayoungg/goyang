@@ -59,7 +59,7 @@ $(function(){
 	
 	$("#searcthBtn").click(function(){
 		/* location.href="http://manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); */
-	location.href="http://localhost/goyang/Manager/reservation_manager_process/manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); 
+	location.href="http://211.63.89.140/Manager/reservation_manager_process/manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); 
 	});//click
 });//ready
 
@@ -68,7 +68,7 @@ function accessChk(){
 	
 	if(Msess==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		location.href="http://211.63.89.140/Manager/login_manager/manager_signIn.jsp";
 		return;
 	}//end if
 }//accessChk

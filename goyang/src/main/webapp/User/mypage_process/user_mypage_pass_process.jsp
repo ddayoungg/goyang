@@ -22,7 +22,7 @@ if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
 if(id==""){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	response.sendRedirect("http://211.63.89.140/User/login_process/user_signIn.jsp");
 	return;
 }//end if
 %>
@@ -46,7 +46,7 @@ flag=miDAO.selectMyPassConfirm(miVO);//비밀번호 확인
 <%if(flag){
 	session.setAttribute("passFlag", "pass");//비밀번호 확인에 대한 세션값 할당.
 %>
-	location.href="http://localhost/goyang/User/mypage_process/user_mypage.jsp";
+	location.href="http://211.63.89.140/User/mypage_process/user_mypage.jsp";
 <%}else {%>
 	alert("비밀번호가 틀렸습니다.");
 	history.back();

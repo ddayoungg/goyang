@@ -111,13 +111,13 @@ function accessChk(){
 	
 	if(Msess==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		location.href="http://211.63.89.140/Manager/login_manager/manager_signIn.jsp";
 		return;
 	}//end if
 	
 	if(tourNum==0){
 		alert("투어를 선택해주세요.");
-		location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp";
+		location.href="http://211.63.89.140/Manager/tour_manager_process/manager_tour_manager.jsp";
 		return;
 	}//end if
 	
@@ -315,7 +315,7 @@ function setFile(){
       <div>
        <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="${ tourInfo.thumImg }"/>
       </div>
-       <div class="imgSize"><img class="imgSize" id="thumImgOutput" src="http://localhost/goyang/images/${ tourInfo.thumImg }"/></div>
+       <div class="imgSize"><img class="imgSize" id="thumImgOutput" src="http://211.63.89.140/images/${ tourInfo.thumImg }"/></div>
      </div>
     </td>
   </tr>

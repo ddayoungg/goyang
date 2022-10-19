@@ -19,7 +19,7 @@ if(session.getAttribute("id") !=null){//세션에서 아이디 가져오기.
 	id = (String) session.getAttribute("id");
 }//end if
 if(id==""){//로그인되지 않았다면
-	response.sendRedirect("http://localhost/goyang/User/login_process/user_signIn.jsp");
+	response.sendRedirect("http://211.63.89.140/User/login_process/user_signIn.jsp");
 	return;
 }//end if
 %>

@@ -98,7 +98,7 @@ function accessChk(){
 		
 	if(id==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		location.href="http://211.63.89.140/User/login_process/user_signIn.jsp";
 		return;
 	}else if(tourNum==0){
 		alert("투어를 선택해주세요.");
@@ -109,7 +109,7 @@ function accessChk(){
 	}//end else if
 	
 	if(!chkFlag){//필요한 파라미터 값이 없을 경우 코스 선택 페이지로 이동
-		location.href="http://localhost/goyang/User/reservation_process/user_reservation_course.jsp";
+		location.href="http://211.63.89.140/User/reservation_process/user_reservation_course.jsp";
 	}//end if
 		
 }//accessChk

@@ -42,7 +42,7 @@
 	 //로그인 정보를 세션 객체에 저장.
 	 session.setAttribute("manageId", id);
 	 //메인으로 이동.
-	 response.sendRedirect("../dashboard_process/manager_dashboard.jsp");
+	 response.sendRedirect("http://211.63.89.140/Manager/dashboard_process/manager_dashboard.jsp");
  }
  
  

@@ -71,7 +71,7 @@ $(function(){
 	var Msess="<%=manageId%>";
 	if(Msess==""){
 		alert("로그인 해주세요.");
-		location.href="../login_manager/manager_signIn.jsp";
+		location.href="http://211.63.89.140/Manager/login_manager/manager_signIn.jsp";
 	}
 });//ready
 </script>
@@ -186,24 +186,24 @@ $(function(){
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="manager_dashboard.jsp" class="logo m-0">고양<span
+				<a href="http://211.63.89.140/Manager/dashboard_process/manager_dashboard.jsp" class="logo m-0">고양<span
 					class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
-					<li class="active"><a href="manager_dashboard.jsp">dash board</a></li>
-					<li><a href="../user_manager_process/manager_member.jsp">회원관리</a></li>
-					<li><a href="../tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
-					<li><a href="../reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
-					<li><a href="../spot_manager_process/manager_spot_list.jsp">관광지 관리</a></li>
-					<li><a href="../review_manager_process/manager_review.jsp">후기관리</a></li>
+					<li class="active"><a href="http://211.63.89.140/Manager/dashboard_process/manager_dashboard.jsp">dash board</a></li>
+					<li><a href="http://211.63.89.140/Manager/user_manager_process/manager_member.jsp">회원관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/tour_manager_process/manager_tour_manager.jsp">투어관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp">예약관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/spot_manager_process/manager_spot_list.jsp">관광지 관리</a></li>
+					<li><a href="http://211.63.89.140/Manager/review_manager_process/manager_review.jsp">후기관리</a></li>
 				</ul>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %></a>
+						href="http://211.63.89.140/Manager/login_manager/manage_logout.jsp">로그아웃&nbsp;&nbsp;&nbsp;<%=manageId %></a>
 						</li>
 				</ul>
 

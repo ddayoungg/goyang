@@ -88,20 +88,20 @@ function accessChk(){
 		if(closeFlag != "logout") {//user_mypage_rescancel_process에서 로그인 하지 않은 상태에서 넘어올 경우
 			alert("로그인 해주세요.");
 		}//end if
-		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=logout";
+		opener.location.href="http://211.63.89.140/User/mypage_process/resDetailPopup.jsp?closeFlag=logout";
 		window.close();
 		return;
 	}//end if
 	
 	if(closeFlag=="commit") {//예약취소 성공 시 팝업 닫기
-		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=commit";
+		opener.location.href="http://211.63.89.140/User/mypage_process/resDetailPopup.jsp?closeFlag=commit";
 		window.close();
 		return;
 	}//end if
 	
 	if(reserNum==0){
 		alert("존재하지 않은 예약번호 입니다.");
-		opener.location.href="http://localhost/goyang/User/mypage_process/resDetailPopup.jsp?closeFlag=reserNum";
+		opener.location.href="http://211.63.89.140/User/mypage_process/resDetailPopup.jsp?closeFlag=reserNum";
 		window.close();
 		return;
 	}//end if

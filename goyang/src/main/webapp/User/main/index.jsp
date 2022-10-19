@@ -46,7 +46,7 @@ $(function(){
 	$("#revBtn").click(function () {
 		var value_tour = document.getElementById('selTour');
 		var tourNumVal=value_tour.options[value_tour.selectedIndex].value;
-		location.href="../reservation_process/user_reservation_date.jsp?tourNum="+tourNumVal;
+		location.href="http://211.63.89.140/User/reservation_process/user_reservation_date.jsp?tourNum="+tourNumVal;
 	});
 })
 
@@ -101,16 +101,16 @@ marker.setMap(map);
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="index.jsp" class="logo m-0">고양<span
+				<a href="http://211.63.89.140/User/main/index.jsp" class="logo m-0">고양<span
 					class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
-					<li class="active"><a href="index.jsp">home</a></li>
-					<li><a href="../reservation_process/user_reservation_course.jsp">투어예약</a></li>
-					<li><a href="../spot_process/user_introduceTour.jsp">관광지소개</a></li>
-					<li><a href="../review_process/user_review.jsp">관광지후기</a></li>
-					<li><a href="../mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
+					<li class="active"><a href="http://211.63.89.140/User/main/index.jsp">home</a></li>
+					<li><a href="http://211.63.89.140/User/reservation_process/user_reservation_course.jsp">투어예약</a></li>
+					<li><a href="http://211.63.89.140/User/spot_process/user_introduceTour.jsp">관광지소개</a></li>
+					<li><a href="http://211.63.89.140/User/review_process/user_review.jsp">관광지후기</a></li>
+					<li><a href="http://211.63.89.140/User/mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
 				</ul>
 				
 				
@@ -125,14 +125,14 @@ marker.setMap(map);
 					if(id==null){
 				%>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_process/user_signIn.jsp">로그인</a></li>
+						href="http://211.63.89.140/User/login_process/user_signIn.jsp">로그인</a></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_process/user_signUp.jsp">회원가입</a></li>
+						href="http://211.63.89.140/User/login_process/user_signUp.jsp">회원가입</a></li>
 				<%
 					}else{
 				%>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="../login_process/user_logout.jsp">로그아웃</a></li>
+						href="http://211.63.89.140/User/login_process/user_logout.jsp">로그아웃</a></li>
 				<%
 					}
 				%>
@@ -160,9 +160,9 @@ marker.setMap(map);
 
 						<div class="row" >
 							<div class="col-12" >
-								<form class="form">
-									<div class="row mb-2">
-										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
+								<form class="form" style="display:flex;width: 500px;justify-content: space-evenly">
+									<div class="row mb-2" style="width: 100%; justify-content: space-evenly">
+										<div>
 									
 											<select name="selTour" id="selTour" class="form-control custom-select">
 											<%
@@ -174,7 +174,7 @@ marker.setMap(map);
 											<%} %>
 											</select>
 										</div>								
-										<div class="col-sm-12 col-md-6 mb-3 mb-lg-0 col-lg-4">
+										<div>
 											<input type="button" id="revBtn" class="btn btn-primary btn-block"
 												value="투어예약">
 										</div>
@@ -312,7 +312,7 @@ marker.setMap(map);
 				for(TourMainVO tmVO:list){
 			%>
 				<div class="item">
-					<a class="media-thumb" href="../spot_process/user_introduceDay.jsp?tourNum=<%=tmVO.getTourNum()%>">
+					<a class="media-thumb" href="http://211.63.89.140/User/spot_process/user_introduceDay.jsp?tourNum=<%=tmVO.getTourNum()%>">
 						<div class="media-text">
 							<h3 style="color:#FFFFFF;"><%=tmVO.getTourName() %></h3>
 						</div> <img src="../../images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
@@ -403,7 +403,7 @@ marker.setMap(map);
 			</div>
 			<div id="reviewBtn">
 				<input type="submit" class="btn btn-primary " value="후기 더보기"
-					size="50px" onclick="location.href='../review_process/user_review.jsp'">
+					size="50px" onclick="location.href='http://211.63.89.140/User/review_process/user_review.jsp'">
 			</div>
 		</div>
 	</div>

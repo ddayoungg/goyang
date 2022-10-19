@@ -96,7 +96,7 @@ function accessChk(){
 		
 	if(id==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		location.href="http://211.63.89.140/User/login_process/user_signIn.jsp";
 		return;
 	}//end if
 	

@@ -90,7 +90,7 @@ function accessChk(){
 		<%if(!closeFlag.equals("logout")) {%>//자식 팝업 창에서 이미 메시지를 띄울 경우
 			alert("로그인 해주세요.");
 		<%}//end if%>
-		opener.location.href="http://localhost/goyang/User/login_process/user_signIn.jsp";
+		opener.location.href="http://211.63.89.140/User/login_process/user_signIn.jsp";
 		window.close();
 		return;
 	}//end if

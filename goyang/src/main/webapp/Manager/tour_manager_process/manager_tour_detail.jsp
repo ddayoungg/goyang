@@ -76,13 +76,13 @@ function accessChk(){
 	
 	if(Msess==""){
 		alert("로그인 해주세요.");
-		location.href="http://localhost/goyang/Manager/login_manager/manager_signIn.jsp";
+		location.href="http://211.63.89.140/Manager/login_manager/manager_signIn.jsp";
 		return;
 	}//end if
 	
 	if(tourNum==null){
 		alert("투어를 선택해주세요.");
-		location.href="http://localhost/goyang/Manager/tour_manager_process/manager_tour_manager.jsp";
+		location.href="http://211.63.89.140/Manager/tour_manager_process/manager_tour_manager.jsp";
 		return;
 	}//end if
 	
@@ -193,7 +193,7 @@ function accessChk(){
   </tr>
   <tr>
    <th><span><strong>사진</strong></span></th>
-   <td><div class="imgSize"><img class="imgSize" name="thumImg" src="http://localhost/goyang/images/${ tourInfo.thumImg }"></div></td>
+   <td><div class="imgSize"><img class="imgSize" name="thumImg" src="http://211.63.89.140/images/${ tourInfo.thumImg }"></div></td>
   </tr>
   <tr><!-- 관광지 등록 -->
    <th><span><strong>코스</strong></span></th>
