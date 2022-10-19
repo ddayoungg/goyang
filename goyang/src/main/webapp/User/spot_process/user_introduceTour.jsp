@@ -225,7 +225,7 @@
 					<div class="img-align">
 						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>">
 						<%-- <img src="/goyang/<%=request.getContextPath()+thumImg%>" alt="Image" class="img-fluid"> --%>
-						<img src="../../images/<%=thumImg%>" alt="Image" class="img-fluid">
+						<img src="http://211.63.89.140/images/<%=thumImg%>" alt="Image" class="img-fluid">
 						</a>
 					</div>
 					<!-- </form> -->
@@ -262,7 +262,7 @@
 				%>
 					<div class="img-align">
 						<a class="d-block mb-3"  href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><img
-							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
+							src="http://211.63.89.140/images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
@@ -296,7 +296,7 @@
 				%>
 					<div class="img-align">
 						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" >
-						<img  src="../../images/<%=thumImg%>"  alt="Image" class="img-fluid">
+						<img  src="http://211.63.89.140/images/<%=thumImg%>"  alt="Image" class="img-fluid">
 							</a>
 					</div>
 					<div class="d-flex">
@@ -331,7 +331,7 @@
 				%>
 					<div class="img-align">
 						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"  ><img
-							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
+							src="http://211.63.89.140/images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
@@ -383,7 +383,7 @@
 				%>
 					<div class="img-align">
 						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>" ><img
-							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
+							src="http://211.63.89.140/images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
@@ -418,7 +418,7 @@
 						  int otherFee = toVO.getOtherFee(); 
 				%>
 						<a class="d-block mb-3" href="user_introduceDay.jsp?tourNum=<%=toVO.getTourNum() %>"><img
-							src="../../images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
+							src="http://211.63.89.140/images/<%=thumImg%>" alt="Image" class="img-fluid"></a>
 					</div>
 					<div class="d-flex">
 						<div>
@@ -464,7 +464,7 @@
 					<div class="h-100">
 						<div class="frame h-100">
 							<div class="feature-img-bg h-100"
-								style="background-image: url('../../images/버스사진.jpg'); background-size: contain;"></div>
+								style="background-image: url('http://211.63.89.140/images/버스사진.jpg'); background-size: contain;"></div>
 						</div>
 					</div>
 					<!--           <div class="h-100"><div class="frame h-100"><div class="feature-img-bg h-100" style="background-image: url('images/버스사진.jpg'); "></div></div></div> -->

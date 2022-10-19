@@ -207,7 +207,7 @@ $(function(){
 	
 	<!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
 	</div>
 	<!-- 대제목 끝 -->
 	

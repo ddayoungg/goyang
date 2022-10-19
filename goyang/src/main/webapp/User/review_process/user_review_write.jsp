@@ -189,7 +189,7 @@ function accessChk(){
 	
 	<!-- 대제목 -->
 	<div class="container">
-		<img src="../../images/bullet_Tues_sub_style_blue.png" alt="image">
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt="image">
 	</div>
 	<!-- 대제목 끝 -->
 	
@@ -242,7 +242,7 @@ function accessChk(){
 							<td style="padding-top:0px;">
    							  <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="<%=reviewVO.getReviewImg() %>">
    							  <input type="hidden" id="hiddThumImg" name="thumImg" value="<%=reviewVO.getReviewImg() %>">
-   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="../../images/<%=reviewVO.getReviewImg() %>"/></div>
+   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="http://211.63.89.140/images/<%=reviewVO.getReviewImg() %>"/></div>
 							</td>
 						</tr>
 					</tbody>

@@ -64,5 +64,5 @@ if(reviewNum.equals("null")){
 }
 %>
 	
-location.href="user_review.jsp";
+location.href="http://211.63.89.140/User/review_process/user_review.jsp";
 </script>

@@ -206,7 +206,7 @@ function accessChk(){
 	
 	<!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
 	</div>
 	<!-- 대제목 끝 -->
 	
@@ -226,7 +226,7 @@ function accessChk(){
 					<%=rv.getRevContent() %>
 				</div>
 								<%if(rv.getReviewImg() != null){ %>
-   				<div  class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="../../images/<%=rv.getReviewImg()%>"/></div>
+   				<div  class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="http://211.63.89.140/images/<%=rv.getReviewImg()%>"/></div>
 				<%} %>
 			</div>
 			
