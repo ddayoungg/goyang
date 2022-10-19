@@ -113,7 +113,7 @@ function tourList(listSearch, textSearch){
 			$("#tableDiv").show();
 			
 			var output="<table class='member' style='width: 100%'>";
-			output+="<tr><th>코스번호</th><th>코스명</th><th>시간</th><th>요금</th><th></th></tr>";
+			output+="<tr><th>투어번호</th><th>투어명</th><th>시간</th><th>요금</th><th></th></tr>";
 			if(!jsonObj.isEmpty){
 				$(jsonObj.list).each(function(i, json){
 					output+="<tr>";

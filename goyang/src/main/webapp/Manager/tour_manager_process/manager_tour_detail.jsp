@@ -184,7 +184,7 @@ function accessChk(){
   </c:if>
   <table class="member">
   <tr>
-   <th><span><strong>코스명</strong></span></th>
+   <th><span><strong>투어명</strong></span></th>
    <td><span class="margin20">${ tourInfo.tourName }</span></td>
   </tr>
   <tr>
@@ -196,7 +196,7 @@ function accessChk(){
    <td><div class="imgSize"><img class="imgSize" name="thumImg" src="http://211.63.89.140/images/${ tourInfo.thumImg }"></div></td>
   </tr>
   <tr><!-- 관광지 등록 -->
-   <th><span><strong>코스</strong></span></th>
+   <th><span><strong>관광지</strong></span></th>
    <td>
     <div style="text-align: right">
      <span><strong>중심 위도, 경도</strong></span>

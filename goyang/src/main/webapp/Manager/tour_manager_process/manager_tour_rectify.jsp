@@ -301,7 +301,7 @@ function setFile(){
   <div><!-- 전체 테이블 -->
   <table class="member">
   <tr>
-   <th><span><strong>코스명</strong></span></th>
+   <th><span><strong>투어명</strong></span></th>
    <td><input type="text" class="textSize" name="tourName" id="tourName" value="${ tourInfo.tourName }" placeholder="코스명을 입력하세요." maxlength=20/></td>
   </tr>
   <tr>
@@ -320,7 +320,7 @@ function setFile(){
     </td>
   </tr>
   <tr><!-- 관광지 등록 -->
-   <th><span><strong>코스</strong></span></th>
+   <th><span><strong>관광지</strong></span></th>
    <td>
     <div style="text-align: right">
       
