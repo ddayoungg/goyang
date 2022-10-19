@@ -126,7 +126,7 @@ public class ReservaManagerDAO {
 			
 			/* conn=DriverManager.getConnection(url, uid, upw); */
 			
-			String sql = "select r.reser_num, u.name, u.email, u.phone, b.reser_date, r.reser_regist, r.reser_flag,"
+			String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_date, r.reser_regist, r.reser_flag,"
 					+ "t.tour_name, r.adult_cnt, r.other_cnt,"
 					+ "t.adult_fee, t.other_fee"
 					+ " from tour_user u, tour_reserva r, bus_seat b, tour t"
@@ -226,7 +226,7 @@ public class ReservaManagerDAO {
 			
 		conn = dbCon.getConn();	
 			/* conn=DriverManager.getConnection(url, uid, upw); */
-		String sql = "select r.reser_num, u.name, u.email, u.phone, b.reser_date, r.reser_regist, r.reser_flag, t.tour_name, r.adult_cnt, r.other_cnt, b.seat_num , t.adult_fee, t.other_fee, c.cancel_reas"
+		String sql = "select r.reser_num, u.name, u.email, u.phone, r.reser_date, r.reser_regist, r.reser_flag, t.tour_name, r.adult_cnt, r.other_cnt, b.seat_num , t.adult_fee, t.other_fee, c.cancel_reas"
 				+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
 				+ " where r.reser_num = ?"
 				/* + " and r.reser_num = b.reser_num" */

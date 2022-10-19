@@ -164,7 +164,8 @@ function accessChk(){
 					<tr>
 						<th>예약번호</th>
 						<th>고객명</th>
-						<th>예약일</th>
+						<th>투어 시작 날짜</th>
+						<th>예약 신청 날짜</th>
 						<th>투어코스명</th>
 						<th>요금</th>
 						<th>상태</th>
@@ -177,17 +178,18 @@ function accessChk(){
 			
 			int total = 0;
 			int totalPage = 0;
+			String flagContent ="";
 			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
-					reVO.getReserFlag="예약대기";
+					flagContent="예약대기";
 				} else if ( reVO.getReserFlag() == 2 ) {
-					reVO.getReserFlag="예약확정";
+					flagContent="예약확정";
 				} else if ( reVO.getReserFlag() == 3) {
-					reVO.getReserFlag="취소요청";
+					flagContent="취소요청";
 				} else if ( reVO.getReserFlag() == 4) {
-					reVO.getReserFlag="취소확정";
+					flagContent="취소확정";
 				}
 				
 				String cancelReas = reVO.getCancelReas();
@@ -235,7 +237,7 @@ function accessChk(){
 						<td><%= reserVO.getReserDate() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
-						<td><%= reserVO.getReserFlag %></td>
+						<td><%= flagContent %></td>
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 					</tr>
 			<%

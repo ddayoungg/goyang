@@ -185,17 +185,18 @@ function accessChk(){
 			
 			int total = 0;
 			int totalPage = 0;
+			String flagContent="";
 			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
-					reVO.getReserFlag="예약대기";
+					 flagContent="예약대기";
 				} else if ( reVO.getReserFlag() == 2 ) {
-					reVO.getReserFlag="예약확정";
+					 flagContent="예약확정";
 				} else if ( reVO.getReserFlag() == 3) {
-					reVO.getReserFlag="취소요청"; 
+					 flagContent="취소요청"; 
 				} else if ( reVO.getReserFlag() == 4) {
-					reVO.getReserFlag="취소확정"; 
+					 flagContent="취소확정"; 
 				}
 				
 				String cancelReas = reVO.getCancelReas();
@@ -245,7 +246,7 @@ function accessChk(){
 						<td><%=reserVO.getReserRegist() %></td>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
-						<td><%= reserVO.getReserFlag %></td>
+						<td><%=  flagContent %></td>
 						<td><a href="manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>"><%= cancelReas %></a></td>
 					</tr>
 			<%

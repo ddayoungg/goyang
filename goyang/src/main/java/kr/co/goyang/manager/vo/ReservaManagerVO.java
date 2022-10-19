@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 public class ReservaManagerVO {
-	private String tourName, email, name, phone, outReas, cancelReas,clientName,reserDate,reser;
-	String id;
-	private int tourNum, adultFee, otherFee, runFlag, reserNum, adultCnt, otherCnt, reserFlag, total;
-	private int seatNum; 
-	private Date tourRist, cancelDate, reserRegist;
-	public String getReserFlag;
-	public String getCancelReas;
+	private String tourName, id, email, name, phone, outReas, cancelReas,clientName,reserDate;
+	private int tourNum, adultFee, otherFee, runFlag, reserNum, adultCnt, otherCnt, reserFlag, total, seatNum;
+	private Date cancelDate, reserRegist;
 	private int[] seatNums;
 
 	
@@ -28,6 +24,16 @@ public class ReservaManagerVO {
 
 	public void setTourName(String tourName) {
 		this.tourName = tourName;
+	}
+
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 
@@ -98,26 +104,6 @@ public class ReservaManagerVO {
 
 	public void setReserDate(String reserDate) {
 		this.reserDate = reserDate;
-	}
-
-
-	public String getReser() {
-		return reser;
-	}
-
-
-	public void setReser(String reser) {
-		this.reser = reser;
-	}
-
-
-	public String getId() {
-		return id;
-	}
-
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 
@@ -221,16 +207,6 @@ public class ReservaManagerVO {
 	}
 
 
-	public Date getTourRist() {
-		return tourRist;
-	}
-
-
-	public void setTourRist(Date tourRist) {
-		this.tourRist = tourRist;
-	}
-
-
 	public Date getCancelDate() {
 		return cancelDate;
 	}
@@ -251,26 +227,6 @@ public class ReservaManagerVO {
 	}
 
 
-	public String getGetReserFlag() {
-		return getReserFlag;
-	}
-
-
-	public void setGetReserFlag(String getReserFlag) {
-		this.getReserFlag = getReserFlag;
-	}
-
-
-	public String getGetCancelReas() {
-		return getCancelReas;
-	}
-
-
-	public void setGetCancelReas(String getCancelReas) {
-		this.getCancelReas = getCancelReas;
-	}
-
-
 	public int[] getSeatNums() {
 		return seatNums;
 	}
@@ -283,23 +239,23 @@ public class ReservaManagerVO {
 
 	@Override
 	public String toString() {
-		return "ReservaManagerVO [tourName=" + tourName + ", email=" + email + ", name=" + name + ", phone=" + phone
-				+ ", outReas=" + outReas + ", cancelReas=" + cancelReas + ", clientName=" + clientName + ", reserDate="
-				+ reserDate + ", reser=" + reser + ", id=" + id + ", tourNum=" + tourNum + ", adultFee=" + adultFee
+		return "ReservaManagerVO [tourName=" + tourName + ", id=" + id + ", email=" + email + ", name=" + name
+				+ ", phone=" + phone + ", outReas=" + outReas + ", cancelReas=" + cancelReas + ", clientName="
+				+ clientName + ", reserDate=" + reserDate + ", tourNum=" + tourNum + ", adultFee=" + adultFee
 				+ ", otherFee=" + otherFee + ", runFlag=" + runFlag + ", reserNum=" + reserNum + ", adultCnt="
 				+ adultCnt + ", otherCnt=" + otherCnt + ", reserFlag=" + reserFlag + ", total=" + total + ", seatNum="
-				+ seatNum + ", tourRist=" + tourRist + ", cancelDate=" + cancelDate + ", reserRegist=" + reserRegist
-				+ ", getReserFlag=" + getReserFlag + ", getCancelReas=" + getCancelReas + ", seatNums="
+				+ seatNum + ", cancelDate=" + cancelDate + ", reserRegist=" + reserRegist + ", seatNums="
 				+ Arrays.toString(seatNums) + "]";
 	}
 
 
-	public ReservaManagerVO(String tourName, String email, String name, String phone, String outReas, String cancelReas,
-			String clientName, String reserDate, String reser, String id, int tourNum, int adultFee, int otherFee,
-			int runFlag, int reserNum, int adultCnt, int otherCnt, int reserFlag, int total, int seatNum, Date tourRist,
-			Date cancelDate, Date reserRegist, String getReserFlag, String getCancelReas, int[] seatNums) {
+	public ReservaManagerVO(String tourName, String id, String email, String name, String phone, String outReas,
+			String cancelReas, String clientName, String reserDate, int tourNum, int adultFee, int otherFee,
+			int runFlag, int reserNum, int adultCnt, int otherCnt, int reserFlag, int total, int seatNum,
+			Date cancelDate, Date reserRegist, int[] seatNums) {
 		super();
 		this.tourName = tourName;
+		this.id = id;
 		this.email = email;
 		this.name = name;
 		this.phone = phone;
@@ -307,8 +263,6 @@ public class ReservaManagerVO {
 		this.cancelReas = cancelReas;
 		this.clientName = clientName;
 		this.reserDate = reserDate;
-		this.reser = reser;
-		this.id = id;
 		this.tourNum = tourNum;
 		this.adultFee = adultFee;
 		this.otherFee = otherFee;
@@ -319,13 +273,14 @@ public class ReservaManagerVO {
 		this.reserFlag = reserFlag;
 		this.total = total;
 		this.seatNum = seatNum;
-		this.tourRist = tourRist;
 		this.cancelDate = cancelDate;
 		this.reserRegist = reserRegist;
-		this.getReserFlag = getReserFlag;
-		this.getCancelReas = getCancelReas;
 		this.seatNums = seatNums;
 	}
+
+
+
+
 
 
 	}

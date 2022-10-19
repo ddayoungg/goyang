@@ -182,17 +182,18 @@ function accessChk(){
 			
 			int total = 0;
 			int totalPage = 0;
+			String flagContent="";
 			
 				for ( ReservaManagerVO reserVO : list ){
 					reVO=reserVO;
 				if ( reVO.getReserFlag() == 1 ) {
-					reVO.getReserFlag="예약대기";
+					flagContent="예약대기";
 				} else if ( reVO.getReserFlag() == 2 ) {
-					reVO.getReserFlag="예약확정";
+					flagContent="예약확정";
 				} else if ( reVO.getReserFlag() == 3) {
-					reVO.getReserFlag="취소요청"; 
+					flagContent="취소요청"; 
 				} else if ( reVO.getReserFlag() == 4) {
-					reVO.getReserFlag="취소확정"; 
+					flagContent="취소확정"; 
 				}
 				
 				String cancelReas = reVO.getCancelReas();
@@ -240,7 +241,7 @@ function accessChk(){
 						<td><%=reserVO.getReserRegist() %>
 						<td><%= reserVO.getTourName( ) %></td>
 						<td><%= reserVO.getAdultCnt()*reserVO.getAdultFee()+reserVO.getOtherCnt()*reserVO.getOtherFee() %></td>
-						<td><%= reserVO.getReserFlag %></td>
+						<td><%=flagContent %></td>
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reserVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 					</tr>
 			<%
@@ -420,6 +421,10 @@ function accessChk(){
 				<div style="width: 800px">
 					<table class="member" style="width: 100%">
 						<tr>
+							<th>예약번호</th>
+						<td><%=reserVO.getReserNum()%></td> 
+						</tr>
+						<tr>
 							<th>예약자명</th>
 							<td><%=reserVO.getName() %></td>
 						</tr>
@@ -427,16 +432,16 @@ function accessChk(){
 							<th>예약상태</th>
 							<%
 							if ( reserVO.getReserFlag() == 1 ) {
-								reserVO.getReserFlag="예약대기";
+								flagContent="예약대기";
 							} else if ( reserVO.getReserFlag() == 2 ) {
-								reserVO.getReserFlag="예약확정";
+								flagContent="예약확정";
 							} else if ( reserVO.getReserFlag() == 3) {
-								reserVO.getReserFlag="취소요청"; 
+								flagContent="취소요청"; 
 							} else if ( reserVO.getReserFlag() == 4) {
-								reserVO.getReserFlag="취소확정"; 
-							} System.out.println(reserVO.getReserFlag);
+								flagContent="취소확정"; 
+							} 
 							%>
-							<td><%=reserVO.getReserFlag %></td>
+							<td><%=flagContent %></td>
 						</tr>
 						<tr>
 							<th>이메일</th>
