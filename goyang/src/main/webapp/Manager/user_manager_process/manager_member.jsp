@@ -97,34 +97,26 @@ function accessChk(){
 			var pagenationHTML = ``;
 			<% 
 			int totalPage = 0;
+			int index = 0;
 			String cnt = request.getParameter("cnt");
 			
 			if(cnt==null){
 				// total_page : 10개씩 보여줄 때 총 페이지 개수
 				cnt = String.valueOf(userList.size());
-				totalPage = (int)Math.ceil((double)userList.size()/10);
-				System.out.println("totalPage : "+totalPage);
-			}else{
-				System.out.println("cnt : "+cnt);
-				totalPage = (int)Math.ceil(Double.parseDouble(cnt)/10);
-				System.out.println("totalPage : "+totalPage);
 			}
+			totalPage = (int)Math.ceil(Double.parseDouble(cnt)/10);
 			
 			// page : 현재 위치한 페이지
 			String nowPage = request.getParameter("nowPage");
-			System.out.println("nowPage : "+nowPage);
 			if(nowPage==null){
 				nowPage = "1";
-				System.out.println("nowPage : "+nowPage);
 			}
 			
 			// last : 현재 페이지에서 보여줄 마지막 목록의 인덱스
 			int lastIdx = Integer.valueOf(nowPage)*10;
-			System.out.println("lastIdx : "+lastIdx);
 			
 			// first : 현재 페이지에서 보여줄 첫번째 목록의 인덱스
-			int firstIdx = lastIdx-9;
-			System.out.println("firstIdx : "+firstIdx);%>
+			int firstIdx = lastIdx-9;%>
 			
 			// first~last 페이지 프린트
 			pagenationHTML += 
@@ -150,35 +142,27 @@ function accessChk(){
 			// 가입(1) | 탈퇴(0)
 			String outFlag = request.getParameter("outFlag");
 			int outCnt = 0;
-			int index = 0;
+			if(!cnt.equals(String.valueOf(userList.size()))){index = firstIdx;};
 			String bgcolor="";
 			
 			for(int i=0; i<userList.size(); i++){
 				umVO = userList.get(i);
-				
-					String flag = Integer.toString(umVO.getOutFlag());
+				String flag = Integer.toString(umVO.getOutFlag());
 					
-					if(flag.equals("0")){ // 탈퇴 회원 클릭 시
-						outCnt++; // 탈퇴 회원 수 증가
-						bgcolor = "#ebebeb"; // 탈퇴 회원 배경 회색
-					}
+				if(flag.equals("0")){ // 탈퇴 회원 클릭 시
+					outCnt++; // 탈퇴 회원 수 증가
+					bgcolor = "#ebebeb"; // 탈퇴 회원 배경 회색
+				}
 				
-					if(outFlag==null || flag.equals(outFlag)){
-						System.out.println("outFlag : "+outFlag);
-						flag = flag.equals("1") ? "가입" : "탈퇴";
-						index ++;
-						System.out.println("firstIdx:"+firstIdx);
-						System.out.println("lastIdx:"+lastIdx);
-						System.out.println(Integer.valueOf(cnt));
-						System.out.println(index);
-						System.out.println(Integer.valueOf(cnt) - index);
-						if(Integer.valueOf(cnt) - index >= firstIdx && Integer.valueOf(cnt) - index <= lastIdx){//해당 페이지에 해당하는 목록만 보여주기
-						%>
-						
+				if(outFlag==null || flag.equals(outFlag)){
+					flag = flag.equals("1") ? "가입" : "탈퇴";
+					index++;
+					
+					if(lastIdx>=index && firstIdx<=index){//해당 페이지에 해당하는 목록만 보여주기%>
 						userHTML += 
 						`<tr bgcolor='<%=bgcolor%>'>
-							<td><%= umVO.getName() %></td>
 							<td><%= umVO.getId() %></td>
+							<td><%= umVO.getName() %></td>
 							<td><%= umVO.getJoinDate()%></td>
 							<td><%= flag %></td>
 							<td><input id="<%=umVO.getId()%>" type="button" value="상세보기" class="mainBtn button222" onclick="location.href='manager_member.jsp?id=<%=umVO.getId()%>'"></td>
