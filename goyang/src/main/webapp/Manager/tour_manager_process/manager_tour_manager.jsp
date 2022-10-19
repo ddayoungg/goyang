@@ -199,7 +199,7 @@ function typeChk(listSearch, textSearch){
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">관리자 화면</h1>
+						<h1 class="mb-0">투어 관리</h1>
 						<!-- <p class="text-white">로그인을 해주세요.</p> -->
 					</div>
 				</div>
@@ -232,8 +232,8 @@ function typeChk(listSearch, textSearch){
 			<div>
 				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
 					<select id="listSearch" name="listSearch">
-     					<option value="tourName" selected>코스명</option>
-     					<option value="tourNum">코스번호</option>
+     					<option value="tourName" selected>투어명</option>
+     					<option value="tourNum">투어번호</option>
     				</select>
 					<input type="text" id="textSearch" name="textSearch" placeholder="내용을 입력하세요." value="<%  %>">
 					<input type="button" id="searchBtn" value="검색" class="mainBtn">
