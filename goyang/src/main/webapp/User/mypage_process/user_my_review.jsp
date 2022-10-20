@@ -91,7 +91,7 @@ function pageClick(page){
 				/* 페이징 테이블 */
 				$("#tableDiv").show();
 				var tbOutput="<table class='member' style='width: 100%'>";
-				tbOutput+="<tr><th>게시글 번호</th><th>코스</th><th style='min-width:300px;'>게시글 제목</th><th>작성일</th><th></th></tr>";
+				tbOutput+="<tr><th>게시글 번호</th><th>투어명</th><th style='min-width:300px;'>게시글 제목</th><th>작성일</th><th></th></tr>";
 				if(!jsonObj.isEmpty){
 					$(jsonObj.list).each(function(i, json){
 						title=(json.title.length>20?json.title.substring(0,20)+"...":json.title);//게시글 제목 글자 수 초과시 자르기

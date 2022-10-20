@@ -106,7 +106,7 @@ function pageClick(page){
 						tbOutput+="</tr>";
 					});//each
 				}else {
-					tbOutput+="<tr><td colspan='5'>데이터가 존재하지 않습니다.</td></tr>";
+					tbOutput+="<tr><td colspan='7'>데이터가 존재하지 않습니다.</td></tr>";
 				}//end else
 				tbOutput+="</table>";
 					
