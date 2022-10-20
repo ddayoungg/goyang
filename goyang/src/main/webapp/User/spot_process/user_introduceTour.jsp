@@ -476,7 +476,7 @@
 
 					<div class="feature-1 p-introduce">
 						<!-- <div class="feature-1 d-md-flex p-introduce"> -->
-						<div class="align-self-center">
+						<div class="align-self-center" style="margin-bottom: 42px;">
 							<span class="text-primary"></span>
 							<!--               <span class="flaticon-house display-4 text-primary"></span> -->
 							<h3 class="p-text-align-tour" style="margin-bottom: 12px;">
@@ -583,7 +583,7 @@
 					<p class="mb-4 lead text-white text-white-opacity">고양시 시티투어는
 						요일마다 특색있게 운영됩니다.</p>
 					<p class="mb-0">
-						<a href="#"
+						<a href="../reservation_process/user_reservation_course.jsp"
 							class="btn btn-outline-white text-white btn-md font-weight-bold">예약하기</a>
 					</p>
 				</div>

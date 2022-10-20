@@ -519,7 +519,7 @@
 					<p style="font-size: 1.75rem; font-weight: bold;">지금 바로 떠나세요!</p>
 					<br>
 					<p class="mb-0">
-						<a href="#"
+						<a href="../reservation_process/user_reservation_course.jsp"
 							class="btn btn-outline-white text-white btn-md font-weight-bold"
 							style="background-color: #888888;"> 투어예약 </a>
 					</p>
