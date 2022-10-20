@@ -182,7 +182,7 @@ $(function(){
 
 <!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
 			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">관광지 소개</p>
 	</div>
@@ -360,7 +360,7 @@ $(function(){
        			 <h2 class="section-sub-title text-center mb-3"></h2>
      		 </div>
       		<div style="text-align: center; padding-top: 20px; padding-bottom: 20px;">
-     		   <img src="E:/web_service_goyang/images/<%=Simg %>" width="300px">
+     		   <img src="http://211.63.89.140/images/<%=Simg %>" width="300px">
      		</div>
       		<div style="padding-bottom: 80px;">
         		<div id="modalTitle" style="font-weight: bold; font-size: 16px; text-align: center;">

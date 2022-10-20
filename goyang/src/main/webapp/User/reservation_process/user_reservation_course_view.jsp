@@ -174,7 +174,7 @@ $(function(){
 						<td style="max-width: 100px; height: 140px;">
 							
 							<div style="display: flex; justify-content: center; align-items: center;">
-								<img src="E:/web_service_goyang/images/${ cosList.thumImg }" style="width: 150px; height: 100px;">
+								<img src="http://211.63.89.140/images/${ cosList.thumImg }" style="width: 150px; height: 100px;">
 							</div>
 						</td>
 						<td>

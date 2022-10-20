@@ -38,7 +38,7 @@ int updateCnt=0;
 	request.setCharacterEncoding("UTF-8");
 
 	//1. 업로드 경로 얻기
-	File uploadDir=new File("C:/Users/user/git/goyang/goyang/src/main/webapp/images");
+	File uploadDir=new File("E:/web_service_goyang/images");
 
 	//2. 업로드할 파일 크기를 연산
 	//600MByte까지의 파일을 업로드

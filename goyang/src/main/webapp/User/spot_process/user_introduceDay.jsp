@@ -225,7 +225,7 @@
 
 	<!-- 대제목 -->
 	<div class="container">
-		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p
 			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;"><%=toli.getTourName() %></p>
 	</div>
@@ -241,7 +241,7 @@
 
 	<!-- 소제목 -->
 	<div class="container">
-		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p>
 			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
@@ -252,7 +252,7 @@
 	<div class="container">
 		<div class="map_wrap">
 			<div class="map_tab_wrap"
-				style="background: url(E:/web_service_goyang/images/map_tap.png) no-repeat center top;">
+				style="background: url(http://211.63.89.140/images/map_tap.png) no-repeat center top;">
 				<p class="map_tab_1">
 					<a href="user_introduceDay.jsp?tourNum=<%=toli.getTourNum() %>"
 						style="color: #fff; padding-left: 30px; background: transparent;">MAP으로
@@ -525,7 +525,7 @@
 					</p>
 				</div>
 				<div>
-					<img src="E:/web_service_goyang/images/버스사진.jpg" width="350" height="250">
+					<img src="http://211.63.89.140/images/버스사진.jpg" width="350" height="250">
 				</div>
 			</div>
 		</div>

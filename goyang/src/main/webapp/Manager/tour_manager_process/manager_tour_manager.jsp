@@ -211,7 +211,7 @@ function typeChk(listSearch, textSearch){
 	
 	<!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
 			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 정보 관리</p>
 	</div>

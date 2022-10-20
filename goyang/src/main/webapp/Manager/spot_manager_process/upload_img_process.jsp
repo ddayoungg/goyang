@@ -31,7 +31,7 @@
 나이 : <strong><%=age %></strong> --%>
 <%
 	//업로드 경로 얻기
-	File uploadDir=new File("E:/dev/workspace/jsp_prj/src/main/webapp/upload");
+	File uploadDir=new File("http://211.63.89.140/images");
 	//업로드할 파일의 크기를 연산
 	//5MByte까지 업로드 가능
 	int maxSize=1024*1024*5;

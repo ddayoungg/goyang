@@ -232,7 +232,7 @@ if(session.getAttribute("id")!=null){
 	
 	<!-- 대제목 -->
 	<div class="container">
-		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt="image">
+		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt="image">
 	</div>
 	<!-- 대제목 끝 -->
 	
@@ -254,7 +254,7 @@ if(session.getAttribute("id")!=null){
 					<%= reviewVO.getRevContent() %>
 				</div>
 				<%if(reviewVO.getReviewImg() != null){ %>
-   				<div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="E:/web_service_goyang/images/<%=reviewVO.getReviewImg() %>"/></div>
+   				<div class="imgSize"><img style="max-width: 500px; max-height: 500px;" class="imgSize" id="thumImgOutput"  src="http://211.63.89.140/images/<%=reviewVO.getReviewImg() %>"/></div>
 				<%} %>
 			</div>
 			
