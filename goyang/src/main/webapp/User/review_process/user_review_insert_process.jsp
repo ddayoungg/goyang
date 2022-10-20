@@ -13,7 +13,7 @@ boolean flag=false;
 
 request.setCharacterEncoding("UTF-8");
 
-File uploadDir=new File("C:/Users/user/git/goyang/goyang/src/main/webapp/images");
+File uploadDir=new File("E:/web_service_goyang/images");
 
 int maxSize = 1024*1024*600;
 

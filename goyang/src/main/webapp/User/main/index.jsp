@@ -315,7 +315,7 @@ marker.setMap(map);
 					<a class="media-thumb" href="http://211.63.89.140/User/spot_process/user_introduceDay.jsp?tourNum=<%=tmVO.getTourNum()%>">
 						<div class="media-text">
 							<h3 style="color:#FFFFFF;"><%=tmVO.getTourName() %></h3>
-						</div> <img src="../../images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
+						</div> <img src="E:/web_service_goyang/images/<%=tmVO.getThum_img() %>" alt="Image" class="img-fluid">
 					</a>
 				</div>
 			<%} %>

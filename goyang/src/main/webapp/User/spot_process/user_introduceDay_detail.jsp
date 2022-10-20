@@ -223,7 +223,7 @@
 	%> --%>
 	<!-- 대제목 -->
 	<div class="container">
-		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt=image>
+		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p
 			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;"><%=spotTourVO.getTourName() %></p>
 	</div>
@@ -239,7 +239,7 @@
 
 	<!-- 소제목 -->
 	<div class="container">
-		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt=image>
+		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt=image>
 		<p>	
 			<span style="color: #ba202a; font-weight: bold;"><%=weekDay%></span><span>&nbsp;코스안내</span>
 		</p>
@@ -250,7 +250,7 @@
 	<div class="container">
 		<div class="map_wrap">
 			<div class="map_tab_wrap"
-				style="background: url(http://211.63.89.140/images/map_tap.png) no-repeat center top;">
+				style="background: url(E:/web_service_goyang/images/map_tap.png) no-repeat center top;">
 				<p class="map_tab_1">
 					<a href="user_introduceDay.jsp?tourNum=<%=spotTourVO.getTourNum() %>"
 						style="color: #fff; padding-left: 30px; background: transparent;">MAP으로
@@ -270,7 +270,7 @@
 			</div>
 			<div
 				style="text-align: center; padding-top: 20px; padding-bottom: 20px;">
-				<img src="http://211.63.89.140/images/<%=spotTourVO.getSpotsImg() %>" width="300px" alt="image">
+				<img src="E:/web_service_goyang/images/<%=spotTourVO.getSpotsImg() %>" width="300px" alt="image">
 			</div>
 			<div style="padding-bottom: 80px;">
 				<p style="font-weight: bold; font-size: 16px; text-align: center;">

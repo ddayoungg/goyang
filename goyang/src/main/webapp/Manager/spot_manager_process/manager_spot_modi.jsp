@@ -210,7 +210,7 @@ function setFile(){
 
 <!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
 			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">관광지 수정</p>
 	</div>
@@ -261,7 +261,7 @@ function setFile(){
 							<!-- 인화 수정 시작2 -->
    							  <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="<%=Simg %>">
    							  <input type="hidden" id="hiddThumImg" name="thumImg" value="<%=Simg %>">
-   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="http://211.63.89.140/images/<%=Simg %>"/></div>
+   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="E:/web_service_goyang/images/<%=Simg %>"/></div>
    							  <!-- 인화 수정 끝2 -->	
 							</td>
 						</tr>

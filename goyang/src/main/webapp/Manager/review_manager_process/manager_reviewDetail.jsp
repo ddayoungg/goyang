@@ -222,7 +222,7 @@ function setFile(){
 	
 	<!-- 대제목 -->
 	<div class="container" style="margin-top: 20px;">
-		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_green.png" alt=image>
+		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_green.png" alt=image>
 	</div>
 	<!-- 대제목 끝 -->
 	
@@ -242,7 +242,7 @@ function setFile(){
 					<%=rv.getRevContent() %>
 				</div>
 								<%if(rv.getReviewImg() != null){ %>
-   				<div  class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="http://211.63.89.140/images/<%=rv.getReviewImg()%>"/></div>
+   				<div  class="imgSize"><img style="max-height: 500px; max-width: 500px;" class="imgSize" id="thumImgOutput" src="E:/web_service_goyang/images/<%=rv.getReviewImg()%>"/></div>
 				<%} %>
 			</div>
 			

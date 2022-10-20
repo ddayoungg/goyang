@@ -191,7 +191,7 @@ function accessChk(){
 	
 	<!-- 대제목 -->
 	<div class="container">
-		<img src="http://211.63.89.140/images/bullet_Tues_sub_style_blue.png" alt="image">
+		<img src="E:/web_service_goyang/images/bullet_Tues_sub_style_blue.png" alt="image">
 	</div>
 	<!-- 대제목 끝 -->
 	
@@ -220,7 +220,13 @@ function accessChk(){
 							<th>코스</th>
 							<td>
 								<select name="selTour" style="width: 100%; height: 32px; border: 1px solid #ddd;">
-									<option><%= tourNames.get(reviewVO.getTourNum()-1) %></option>
+								<%if(reviewVO.getTourNum()!=0){ %>
+									<option value="<%= reviewVO.getTourNum()-1%>"><%= tourNames.get(reviewVO.getTourNum()-1) %></option>
+								<%}else{ %>
+									<option value="-1">코스 선택</option>
+									<%for(int i=0; i<tourNames.size(); i++){selectedTourName = tourNames.get(i); %>
+									<option value="<%=i%>"><%=tourNames.get(i) %></option>
+								<%}} %>
 								</select>
 							</td>
 						</tr>
@@ -241,7 +247,7 @@ function accessChk(){
 							<td style="padding-top:0px;">
    							  <input type='file' id="thumImgFile" name="thumImgFile" accept="image/*" value="<%=reviewVO.getReviewImg() %>">
    							  <input type="hidden" id="hiddThumImg" name="thumImg" value="<%=reviewVO.getReviewImg() %>">
-   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="http://211.63.89.140/images/<%=reviewVO.getReviewImg() %>"/></div>
+   							  <div class="imgSize"><img class="imgSize" id="thumImgOutput"  src="E:/web_service_goyang/images/<%=reviewVO.getReviewImg() %>"/></div>
 							</td>
 						</tr>
 					</tbody>
