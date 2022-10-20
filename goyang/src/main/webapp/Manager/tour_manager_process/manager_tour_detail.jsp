@@ -141,7 +141,7 @@ function accessChk(){
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">관리자 화면</h1>
+						<h1 class="mb-0">투어관리</h1>
 						<!-- <p class="text-white">로그인을 해주세요.</p> -->
 					</div>
 				</div>

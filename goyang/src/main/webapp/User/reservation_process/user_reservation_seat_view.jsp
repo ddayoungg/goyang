@@ -86,10 +86,13 @@ $(function(){
 		$("[name='seatNumIn'][value=<%=seat%>]").prop("disabled", true);
 	<%}//end for %>
 	
+	setSeatChk();//체크된 좌석 set
 	
 	$("[name='seatNumIn']").click(function(){
 		reaserFrmArr = new Array();
 		reaserOutpotArr = new Array();
+		
+		setSeatChk();//체크된 좌석 set
 		
 		reaserCnt=$("[name='seatNumIn']:checked:not(:disabled)").length;//체크된 좌석 수
 		if(reaserCnt==totalCnt){//예약한 인원 수보다 체크된 좌석 수가 같을 때
@@ -140,6 +143,15 @@ function accessChk(){
 	}//end if
 		
 }//accessChk
+
+function setSeatChk(){//체크된 좌석 set
+	reaserCnt=$("[name='seatNumIn']:checked:not(:disabled)").length;//체크된 좌석 수
+	if(reaserCnt==totalCnt){//예약한 인원 수보다 체크된 좌석 수가 같을 때
+		$("[name='seatNumIn']:not(:checked)").prop("disabled", true);
+	}else {
+		$("[name='seatNumIn']:not(:checked)").prop("disabled", false);
+	}//end else
+}//setSeatChk
 
 function seatChk(reaserFrmArr, totalCnt){
 	

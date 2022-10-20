@@ -82,6 +82,8 @@ $(function(){
 		seatNumOutput.push(<%= seat %>+"번 ");//seatNumOutput 세팅
 	<% }//end for %>
 	
+	seatNumOutput.sort();//버스 좌석 정렬
+	
 	$("#seatNumOutput").html(seatNumOutput);//예약한 좌석 번호
 	
 	$("#payBtn").click(function(){

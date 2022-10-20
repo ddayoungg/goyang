@@ -78,7 +78,7 @@ $(function(){
 	tableCnt=$("#tableAction tr").length;//생성된 테이블의 행의 수
 	
 	$('#btn-add-row').click(function() {
-		if($('#tableAction tr').length>12){
+		if($('#tableAction tr').length>4){
 			return;
 		}
 		var tableTemp ="<tr><td><input type='text' name='tourOrderIn' value='" + tableCnt++ + "' size=1 readonly='readonly' class='inputBorderNone centerText'/></td>"
@@ -261,7 +261,7 @@ function setFile(){
 			<div class="row align-items-center">
 				<div class="col-lg-6 mx-auto text-center">
 					<div class="intro-wrap">
-						<h1 class="mb-0">관리자 화면</h1>
+						<h1 class="mb-0">투어관리</h1>
 						<!-- <p class="text-white">로그인을 해주세요.</p> -->
 					</div>
 				</div>
