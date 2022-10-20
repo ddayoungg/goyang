@@ -139,10 +139,10 @@ function pageClick(page){
 	});//ajax
 }//pageClick
 
-function reviewMove(reviewNum){//해당 주소로 이동
+function reviewMove(reviewNum){//해당 후기 상세보기로 이동
 	location.href="http://211.63.89.140/User/review_process/user_review_detail.jsp?reviewNum="+reviewNum;
-}//urlReview
-      
+}//reviewMove
+
 /* function changePage(value){                     
 	if(value == "0"){ 								// HOME 버튼 클릭시 첫화면으로 이동                          
 		location.href="../main/index.jsp";            

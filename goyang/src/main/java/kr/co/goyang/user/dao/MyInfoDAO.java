@@ -570,7 +570,7 @@ public class MyInfoDAO {
 				.append("							TC.COMMEND_NUM, TR.REV_CONTENT, TC.COM_WRITE_DATE, TC.COM_CONTENT, TR.ID, TC.REVIEW_NUM	")
 				.append("				FROM		TOUR_COMMEND TC, TOUR_REVIEW TR			")
 				.append("				WHERE 		TC.REVIEW_NUM = TR.REVIEW_NUM			")
-				.append("							AND TR.ID=?								")
+				.append("							AND TC.ID=?								")
 				.append("				ORDER BY	TC.COMMEND_NUM DESC						")
 				.append("				)													")
 				.append("	WHERE 		RNUM BETWEEN ? AND ?								");

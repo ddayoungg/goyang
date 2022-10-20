@@ -101,7 +101,7 @@ function pageClick(page){
 						tbOutput+="<td>"+json.tourName+"</td>";
 						tbOutput+="<td><a href='#void' onclick='reviewMove("+json.reviewNum+")' >"+title+"</a></td>";
 						tbOutput+="<td>"+json.revWriteDate+"</td>";
-						tbOutput+="<td><input type='button' value='수정' class='mainBtn' onclick='reviewMove("+json.reviewNum+")' style='width:80px; height:32px;'/></td>";
+						tbOutput+="<td><input type='button' value='수정' class='mainBtn' onclick='rectifyMove("+json.reviewNum+")' style='width:80px; height:32px;'/></td>";
 						tbOutput+="</tr>";
 					});//each
 				}else {
@@ -132,9 +132,13 @@ function pageClick(page){
 	});//ajax
 }//pageClick
 
-function reviewMove(reviewNum){//해당 주소로 이동
+function reviewMove(reviewNum){//해당 후기 상세보기로 이동
 	location.href="http://211.63.89.140/User/review_process/user_review_detail.jsp?reviewNum="+reviewNum;
-}//urlReview
+}//reviewMove
+
+function rectifyMove(reviewNum){//해당 후기 수정으로 이동
+	location.href="http://211.63.89.140/User/review_process/user_review_write.jsp?reviewNum="+reviewNum;
+}//rectifyMove
 
 /* function changePage(value){                     
 	if(value == "0"){ 								// HOME 버튼 클릭시 첫화면으로 이동                          
