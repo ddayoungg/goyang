@@ -94,7 +94,7 @@
 }
 
 #idWarnMsg, #passWarnMsg, #conpassWarnMsg, #emailWarnMsg, #nameWarnMsg,
-	#phoneWarnMsg, #zcodeWarnMsg, #addrWarnMsg, #deaddrWarnMsg, #passChk, #emailChk, #phoneChk{
+	#phoneWarnMsg, #zipcodeWarnMsg, #addrWarnMsg, #deaddrWarnMsg, #passChk, #emailChk, #phoneChk, #tournumWarnMsg{
 	font-weight: bold;
 	font-size: 15px;
 	color: #FF0000;
@@ -288,23 +288,36 @@
 		}//end if
 		
 		//비밀번호에 입력한 값을 얻는다.
+		var pwdCheck=/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 		var pass=$("#password").val();
 		if( pass.trim() == ""){
 			$("#passWarnMsg").show();
 			$("#password").val("");//입력된 공백 아이디를 초기화한다.
+			$("#conpassword").val("");//입력된 공백 아이디를 초기화한다.
+			$("#password").focus();
 			return;
-		}else{
+		}else if( !pwdCheck.test(pass)){
+			$("#passChk").show();
+			$("#password").val("");//입력된 공백 아이디를 초기화한다.
+			$("#conpassword").val("");//입력된 공백 아이디를 초기화한다.
+			$("#password").focus();
+			return;
+		}else if(pass.trim() != "" && pwdCheck.test(pass)){
 			$("#passWarnMsg").hide();
+			$("#passChk").hide();
 			$("#conpassword").focus();
+			
 		}//end if
 		
-		var pwdCheck=/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+		
 		var pass=$("#password").val();
 		if( !pwdCheck.test(pass)){
 			$("#passChk").show();
 			$("#password").val("");//입력된 공백 아이디를 초기화한다.
+			$("#conpassword").val("");//입력된 공백 아이디를 초기화한다.
+			$("#conpassword").focus();
 			return;
-		}else{
+		}else if(pwdCheck.test(pass)){
 			$("#passChk").hide();
 			$("#conpassword").focus();
 		}//end if
@@ -320,17 +333,23 @@
 		}
 		
 		
+		var emailCheck=/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 		var email=$("#email").val();
 		if( email.trim() == ""){
 			$("#emailWarnMsg").show();
 			$("#email").val("");//입력된 공백 아이디를 초기화한다.
+			$("#email").focus();
 			return;
-		}else{
+		}else if(!emailCheck.test(email)){
+			$("#emailChk").show();
+			$("#email").val("");//입력된 공백 아이디를 초기화한다.
+			$("#email").focus();
+			return;
+		}else if(email.trim() != "" && emailCheck.test(email)){
 			$("#emailWarnMsg").hide();
 			$("#name").focus();
 		}//end if
 		
-		var emailCheck=/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
 		var email=$("#email").val();
 		if(!emailCheck.test(email)){
 			$("#emailChk").show();
@@ -339,6 +358,7 @@
 		}else{
 			$("#emailChk").hide();
 			$("#name").focus();
+
 		}//end if
 		
 		var name=$("#name").val();
@@ -355,6 +375,12 @@
 		if( phone.trim() == ""){
 			$("#phoneWarnMsg").show();
 			$("#phone").val("");//입력된 공백 아이디를 초기화한다.
+			$("#phone").focus();
+			return;
+		}else if($("#phone").val().length !=11 || isNaN($("#phone").val())){
+			$("#phoneChk").show();
+			$("#phone").val("");//입력된 공백 아이디를 초기화한다.
+			$("#phone").focus();
 			return;
 		}else{
 			$("#phoneWarnMsg").hide();
@@ -379,7 +405,7 @@
 			return;
 		}else{
 			$("#zipcodeWarnMsg").hide();
-			$("#address").focus();
+			$("#addr").focus();
 		}//end if
 		
 		var addr=$("#addr").val();
@@ -401,9 +427,15 @@
 			$("#deaddrWarnMsg").hide();
 		}//end if
 		
+		var tournum=$("#tournum").val();
+		if( !tournum.checked){
+			$("#tournumWarnMsg").show();
+			return;
+		}else{
+			$("#tournumWarnMsg").hide();
+		}//end if
 		//아이디와 비밀번호가 모두 입력된 후 form 태그의 action으로 설정된페이지로 요청을
 		//보낸다.
-
 		$("#frm").submit();
 		
 		
@@ -520,14 +552,14 @@
 				<input type="text" name="phone" id="phone" class="inputbox size"
 					placeholder="Phone" maxlength="15" /><br>
 				<div id="phoneWarnMsg">휴대폰번호를 입력해주세요.</div>
-				<div id="phoneChk">숫자만 입력할 수 있습니다.</div>
+				<div id="phoneChk">- 없이 숫자만 11자로 입력해주세요</div>
 
 				<div class="boxname">주소</div>
 				<input type="text" name="zipcode" id="zipcode" class="zipcodebox"
 					placeholder="Zipcode" maxlength="10" readonly="readonly"/> <input type="button"
 					value="우편번호 검색" class="zipbtn" onclick="execDaumPostcode()">
 				<br>
-				<div id="zcodeWarnMsg">우편번호를 입력해주세요.</div>
+				<div id="zipcodeWarnMsg">우편번호를 입력해주세요.</div>
 
 				<input type="text" name="addr" id="addr" class="inputbox size"
 					placeholder="Address" maxlength="50" readonly="readonly" /><br>
@@ -548,6 +580,8 @@
 				%>
 				<input type="radio" name="cose" id="tournum" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
 				<%} %>
+				<div id="tournumWarnMsg">관심코스를 체크해주세요</div>
+				
 				<!--다영수정-->
 				
 				<br> 
