@@ -279,6 +279,7 @@ public class TourReviewDAO {
 				trVO.setReviewImg(rs.getString("review_img"));
 				trVO.setRevWriteDate(rs.getDate("rev_write_date"));
 				trVO.setId(rs.getString("id"));
+				trVO.setTourNum(rs.getInt("tour_num"));
 			}
 		} finally {
 			// 6. 연결 끊기

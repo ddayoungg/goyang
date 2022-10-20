@@ -53,6 +53,8 @@ td{
 <script type="text/javascript">
 
 	$(function () {
+		
+		
 		$("#thumImgFile").change(function () {
 			setFile();
 		});
@@ -218,10 +220,7 @@ function accessChk(){
 							<th>코스</th>
 							<td>
 								<select name="selTour" style="width: 100%; height: 32px; border: 1px solid #ddd;">
-									<option value=-1>코스 선택</option>
-									<% for(int i=0; i<tourNames.size(); i++){ selectedTourName = tourNames.get(i);%>
-									<option value="<%= i %>"><%= tourNames.get(i) %></option>
-									<% } %>
+									<option><%= tourNames.get(reviewVO.getTourNum()-1) %></option>
 								</select>
 							</td>
 						</tr>
