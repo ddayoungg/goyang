@@ -70,13 +70,11 @@ System.out.println(seatNum);
 %>
 
 <script type="text/javascript">
-
 reaserFrmArr=null;
 reaserOutpotArr=null;
 
 $(function(){
-	var totalCnt=${ param.adultCnt + param.otherCnt };
-	var reaserCnt=0;
+	var totalCnt=${ param.adultCnt + param.otherCnt };//예약한 인원 수
 	
 	accessChk();//접근 권한 여부
 	
@@ -86,13 +84,13 @@ $(function(){
 		$("[name='seatNumIn'][value=<%=seat%>]").prop("disabled", true);
 	<%}//end for %>
 	
-	setChkSeat();//체크된 좌석 set
+	setChkSeat(totalCnt);//체크된 좌석 set
 	
 	$("[name='seatNumIn']").click(function(){
 		reaserFrmArr = new Array();
 		reaserOutpotArr = new Array();
 		
-		setChkSeat();//체크된 좌석 set
+		setChkSeat(totalCnt);//체크된 좌석 set
 		
 		//확인된 체크박스만 가져와서 반복(최소화된 반복을 수행)
 		$("[name='seatNumIn']:checked:not(:disabled)").each(function(){
@@ -137,13 +135,16 @@ function accessChk(){
 		
 }//accessChk
 
-function setChkSeat(){//체크된 좌석 set
+function setChkSeat(totalCnt){//체크된 좌석 set
+	var reaserCnt=0;//체크된 좌석 수 저장 값
+	
 	reaserCnt=$("[name='seatNumIn']:checked:not(:disabled)").length;//체크된 좌석 수
 	if(reaserCnt==totalCnt){//예약한 인원 수보다 체크된 좌석 수가 같을 때
 		$("[name='seatNumIn']:not(:checked)").prop("disabled", true);
 	}else {
 		$("[name='seatNumIn']:not(:checked)").prop("disabled", false);
 	}//end else
+	
 }//setSeatChk
 
 function seatChk(reaserFrmArr, totalCnt){
