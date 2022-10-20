@@ -41,17 +41,20 @@
 function fn(){
 	var f=document.frm;
 	if(f.password.value == ""){
-		alert("새 비밀번호를 입력해주세요")
+		alert("새 비밀번호를 입력해주세요");
 		f.password.focus();
 		return false;
 	}
 	if(f.conpassword.value == ""){
-		alert("새 비밀번호 재입력을 입력해주세요")
+		alert("새 비밀번호 재입력을 입력해주세요");
+		$("#conpassword").val("");
 		f.conpassword.focus();
 		return false;
 	}
 	if(f.password.value != f.conpassword.value){
-		alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요")
+		alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+		$("#password").val("");
+		$("#conpassword").val("");
 		f.conpassword.focus();
 		return false;
 	}

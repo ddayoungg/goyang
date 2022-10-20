@@ -32,7 +32,7 @@ if(reName==null){//선택한 파일이 없을 경우 원래 파일명으로 set
 
 String reviewNum = mr.getParameter("reviewNum");
 String title = mr.getParameter("title");
-String revContent = mr.getParameter("revContent");
+String revContent = mr.getParameter("revContent").replace("\n", "<br>");
 String id = mr.getParameter("id");
 String tourNum = mr.getParameter("selTour");
 

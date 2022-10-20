@@ -18,6 +18,5 @@ trDAO.tranReview(Integer.parseInt(reviewNum));
 System.out.println("2");
 %>
 
-alert("삭제 완료");
 location.href="user_review.jsp";
 </script> 

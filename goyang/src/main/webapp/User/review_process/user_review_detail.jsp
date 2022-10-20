@@ -263,7 +263,13 @@ if(session.getAttribute("id")!=null){
 			<%-- 수정 --%>
 			<div style="padding: 30px; border-top: 1px solid #ebebeb; background-color: #fafafa">
 				<%for(int i=0; i<commList.size(); i++){
-						TourReviewVO commVO = commList.get(i);%>
+						TourReviewVO commVO = commList.get(i);
+						System.out.println(upCommendNum);
+						System.out.println(commVO.getCommendNum());
+						if(upCommendNum==null){
+							upCommendNum = "0";
+						}
+						if(Integer.valueOf(upCommendNum) != commVO.getCommendNum()){%>
 					<div id="comm<%=commVO.getCommendNum()%>" style="margin-bottom: 10px;">
 						<div style="display: flex; justify-content: space-between; font-size: 13px;">
 							<div><%= commVO.getId().substring(0, commVO.getId().length()/2) %>**** <span><%= commVO.getComWriteDate() %></span></div>
@@ -277,7 +283,8 @@ if(session.getAttribute("id")!=null){
 						</div>
 						<div style="min-height: 50px; padding: 7px 0 20px 0;"><%= commVO.getComContent() %></div>
 					</div>
-				<%} %>
+				<%} }%>
+				</div>
 		
 				<div style="display: flex; height: 100px; min-width: 885px;">
 					<input type="hidden" name="upCommendNum" value="<%=upCommendNum%>">
@@ -287,7 +294,7 @@ if(session.getAttribute("id")!=null){
 				</div>
 			</div>
 			
-			<div style="display: flex; justify-content: space-between; margin-bottom: 100px; margin: 20px 0px 20px; width: 100%; height: 32px;">
+			<div style="display: flex; justify-content: space-between; margin-bottom: 100px; margin: 20px auto 20px; max-width: 930px; height: 32px;">
 				<div>
 					<%if(reviewIdx>0){ %>
 					<input type="button" value="이전 글" style="margin-left: 10px; width: 70px;" class="mainBtn button222" onclick="location.href='user_review_detail.jsp?reviewNum=<%= reviewNumList.get(reviewIdx-1) %>'">

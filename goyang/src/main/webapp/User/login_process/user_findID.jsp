@@ -126,7 +126,6 @@ $(function(){
 			background: white; ">	
 			<label style="font-size:18px; padding-left:10px;">회원님의 아이디는</label>
 			<label style=" font-size:25px; padding:55px 80px 55px 80px; "><%=result %></label>
-			<label style="font-size:18px;">입니다.</label>
 			</div>
 			
 			<div style="padding-top:13px;">

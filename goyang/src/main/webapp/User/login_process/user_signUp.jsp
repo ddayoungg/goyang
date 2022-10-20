@@ -251,6 +251,7 @@
 				if (extraRoadAddr !== '') {
 					extraRoadAddr = ' (' + extraRoadAddr + ')';
 				}
+			
 
 				// 우편번호와 주소 정보를 해당 필드에 넣는다.
 				document.getElementById('zipcode').value = data.zonecode;
@@ -427,8 +428,9 @@
 			$("#deaddrWarnMsg").hide();
 		}//end if
 		
-		var tournum=$("#tournum").val();
-		if( !tournum.checked){
+		
+		var tournum=$('input[type=radio][name=cose]:checked').val();
+		if( !tournum){
 			$("#tournumWarnMsg").show();
 			return;
 		}else{
@@ -578,7 +580,7 @@
 				<%
 					for(UserVO uVO:tourNames){
 				%>
-				<input type="radio" name="cose" id="tournum" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
+				<input type="radio" name="cose" value="<%=uVO.getTourNum() %>" /><%=uVO.getTourName() %><br>
 				<%} %>
 				<div id="tournumWarnMsg">관심코스를 체크해주세요</div>
 				

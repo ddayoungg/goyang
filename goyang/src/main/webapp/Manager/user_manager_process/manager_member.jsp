@@ -454,6 +454,7 @@ function accessChk(){
 					<%if(detailFlag==0){ %>
 					<input type="button" value="확인" class="mainBtn" onclick="closePopup('popup')">
 					<%}else{ %>
+					<input type="button" value="확인" class="mainBtn" onclick="closePopup('popup')">
 					<input type="button" value="삭제" class="mainBtn" onclick="showPopup(true,'popup2')">
 					<%} %>
 				</div>
