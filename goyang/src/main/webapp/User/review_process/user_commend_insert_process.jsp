@@ -11,15 +11,10 @@ request.setCharacterEncoding("UTF-8");
 
 //commend_num, com_content, com_write_date, com_del_flag, review_num, id, upCommendNum, upComWriteDate
 String reviewNum = request.getParameter("reviewNum");
-System.out.println("reviewNum : "+reviewNum);
 String comContent = request.getParameter("comContent");
-System.out.println("comContent : "+comContent);
 String id = request.getParameter("id");
-System.out.println("id : "+id);
 String upCommendNum = request.getParameter("upCommendNum");
-System.out.println("upCommendNum : "+upCommendNum);
 String upComWriteDate = request.getParameter("upComWriteDate");
-System.out.println("upComWriteDate : "+upComWriteDate);
 
 TourReviewVO commVO = new TourReviewVO();
 commVO.setReviewNum(Integer.valueOf(reviewNum));

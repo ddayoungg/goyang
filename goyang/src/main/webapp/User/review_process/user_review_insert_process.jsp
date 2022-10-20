@@ -10,7 +10,6 @@
 <script type="text/javascript">
 <%
 boolean flag=false;
-
 request.setCharacterEncoding("UTF-8");
 
 File uploadDir=new File("E:/web_service_goyang/images");

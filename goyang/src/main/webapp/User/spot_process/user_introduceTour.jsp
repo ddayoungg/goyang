@@ -133,74 +133,15 @@
 			<li class="_sub"><a href="user_introduceTour.jsp"> <span>시티
 						투어 코스</span>
 			</a></li>
-			<li class="_sub">
-				<%
-				  for (int i=0; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>화요나들이</span>
-			</a>
-			<%break; } %> 
-			</li>
-			<li class="_sub">
 			<%
-				  for (int i=1; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" >  <span>수요나들이</span>
-			</a>
-			<%break; } %> 
-			</li>
+			for(TourListVO tlVO:list){
+			%>
 			<li class="_sub">
-			<%
-				  for (int i=2; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" ><span
-					class="menu_text">목요나들이</span>
+				<a href="user_introduceDay.jsp?tourNum=<%=tlVO.getTourNum()%>" > <span><%=tlVO.getTourName() %></span>
 			</a>
-			<%break; } %> 
 			</li>
-			<li class="_sub">
-			<%
-				  for (int i=3; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span
-					class="menu_text">금요나들이</span>
-			</a>
-			<%break; } %> 
-			</li>
-			<li class="_sub">
-			<%
-				  for (int i=4; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>토요나들이</span>
-			</a>
-			<%break; } %> 
-			</li>
-			<li class="_sub">
-				<%
-				  for (int i=5; i<list.size(); ){ 
-						TourListVO toVO = (TourListVO) list.get(i);	
-						 
-						int tourNum = toVO.getTourNum();
-				%> 
-			<a href="user_introduceDay.jsp?tourNum=<%=tourNum%>" > <span>일요나들이</span>
-			</a>
-			<%break; } %> 
-			</li>
+			<%} %>
+			
 		</ul>
 	</div>
 	<!-- 상단 투어 메뉴 끝 -->

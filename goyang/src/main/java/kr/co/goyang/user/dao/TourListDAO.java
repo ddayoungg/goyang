@@ -42,7 +42,7 @@ public class TourListDAO {
 			conn = dbCon.getConn();
 
 			String sql = " select tour_num, thum_img, tour_name, explain, adult_fee, other_fee" + " from tour t"
-					+ " order by tour_num";
+					+" where run_flag=1"+ " order by tour_num";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 

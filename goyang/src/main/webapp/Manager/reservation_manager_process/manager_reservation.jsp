@@ -59,7 +59,7 @@ $(function(){
 			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp';
 		}else{
 			var sName=$("#searchText").val();
-			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reser_search.jsp?name='+sName;
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reser_search.jsp?name='+sName+'&reserFlags='+$("#reserFlags").val();
 		}
 	}); 
 	
@@ -265,7 +265,7 @@ function accessChk(){
 			<div style="display: flex; justify-content: space-between; align-items: center;">
 				<div>
 				<form action="manager_reser_flags.jsp" method="get">
-					<select name="reserFlags" style="height: 32px; min-width: 120px;">
+					<select id="reserFlags" name="reserFlags" style="height: 32px; min-width: 120px;">
 						<option value="0">상태 검색</option>
 						<option value="1">예약대기</option>
 						<option value="2">예약확정</option>

@@ -394,7 +394,7 @@ marker.setMap(map);
 							<td><%=rmVO.getReviewNum() %></td>
 							<td><%=rmVO.getTourName() %></td>
 							<td><a href="http://211.63.89.140/User/review_process/user_review_detail.jsp?reviewNum=<%= rmVO.getReviewNum() %>"><%= rmVO.getTitle() %></a></td>
-							<td><%=rmVO.getId() %></td>
+							<td><%= rmVO.getId().substring(0,rmVO.getId().length()/2) %>****</td>
 							<td><%=rmVO.getRevDate() %></td>
 						</tr>
 						<%} %>

@@ -59,10 +59,9 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 $(function(){
 	
 	<%
-	int flag = Integer.parseInt(request.getParameter("reserFlags"));
-	if(flag!=0){%>
-		$("#reserFlags option[value='<%=flag %>']").prop("selected",true);
-	<%}%>
+	String flag = request.getParameter("reserFlags");%>
+	$("#reserFlags option[value='<%=flag %>']").prop("selected",true);
+	
 	
 	$("#searchBtn").click(function () {
 		if($("#searchText").val()==""){
