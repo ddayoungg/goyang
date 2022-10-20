@@ -1,5 +1,6 @@
 package kr.co.goyang.user.dao;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import kr.co.goyang.dbConnection.DbConnection;
 import kr.co.goyang.user.vo.MyInfoVO;
+import kr.co.sist.util.cipher.DataEncrypt;
 
 public class MyInfoDAO {
 	private static MyInfoDAO infoDao;
@@ -24,7 +26,7 @@ public class MyInfoDAO {
 		return infoDao;
 	}
 
-	public boolean selectMyPassConfirm(MyInfoVO miVO) throws SQLException { // 비밀번호 확인
+	public boolean selectMyPassConfirm(MyInfoVO miVO) throws SQLException, NoSuchAlgorithmException { // 비밀번호 확인
 
 		boolean flag = false;
 
@@ -47,7 +49,7 @@ public class MyInfoDAO {
 			pstmt = conn.prepareStatement(selectMyPassConfirm.toString());
 
 			pstmt.setString(1, miVO.getId());
-			pstmt.setString(2, miVO.getPassword());
+			pstmt.setString(2, DataEncrypt.messageDigest("MD5", miVO.getPassword()));
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {//결과값이 없으면 false. 있으면 true
@@ -489,7 +491,7 @@ public class MyInfoDAO {
 				.append("	FROM		(SELECT		ROW_NUMBER() OVER (ORDER BY TR.REVIEW_NUM DESC) RNUM, TR.REVIEW_NUM, T.TOUR_NAME, TR.TITLE, TR.REV_WRITE_DATE, TR.ID")
 				.append("				FROM		TOUR_REVIEW TR, TOUR T	")
 				.append("				WHERE		TR.TOUR_NUM=T.TOUR_NUM	")
-				.append("							AND ID=?				")
+				.append("							AND TR.ID=?				")
 				.append("				ORDER BY	TR.REVIEW_NUM DESC		")
 				.append("				)									")
 				.append("	WHERE 		RNUM BETWEEN ? AND ?				");
@@ -567,7 +569,7 @@ public class MyInfoDAO {
 				TOUR_COMMEND
 				.append("	SELECT		*													")
 				.append("	FROM		(SELECT		ROW_NUMBER() OVER (ORDER BY TC.COMMEND_NUM DESC) RNUM,	")
-				.append("							TC.COMMEND_NUM, TR.REV_CONTENT, TC.COM_WRITE_DATE, TC.COM_CONTENT, TR.ID, TC.REVIEW_NUM	")
+				.append("							TC.COMMEND_NUM, TR.REV_CONTENT, TC.COM_WRITE_DATE, TC.COM_CONTENT, TC.ID, TC.REVIEW_NUM	")
 				.append("				FROM		TOUR_COMMEND TC, TOUR_REVIEW TR			")
 				.append("				WHERE 		TC.REVIEW_NUM = TR.REVIEW_NUM			")
 				.append("							AND TC.ID=?								")
