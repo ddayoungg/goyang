@@ -254,26 +254,26 @@ function reviewMove(reviewNum){//해당 후기 상세보기로 이동
 	  <div class="container">
 	    <div class="row">
 	 	  <div class="col-md-6 col-lg-4" >
-			<div class="widget">
+			<div class="widget" style="width:500px">
 				<p style="font-size:20px; font-weight:bold; color:red; font-style:inherit;" >매주 월요일은 정기 휴무입니다.</p>
 				<p style="font-size:50px; font-weight:bold;">Goyang Tour</p>
 				 </div>
 				 
-            <div class="widget">
+            <div class="widget" style="width:500px">
             </div>
           	</div>
           	<div class="col-md-6 col-lg-2 pl-lg-5">
-            <div class="widget">
+            <div class="widget" style="width:500px">
             </div>
           	</div>
           	<div class="col-md-6 col-lg-2">
-            <div class="widget">
+            <div class="widget" style="width:500px">
             
             
             </div>
           </div>
           <div class="col-md-6 col-lg-4">
-            <div class="widget">
+            <div class="widget" style="width:500px">
               <h3 class="heading">고양시티투어 | 3조</h3>
               <ul class="list-unstyled quick-info links">
                 <li class="email"><a href="mailto:goyang@com">goyang@com</a></li>

@@ -176,8 +176,11 @@ function accessChk(){
 
 		<%String id = request.getParameter("id");
 		
+		int detailFlag = 1;
 		if(id!=null){
-			UserManagerVO detailVO = umDAO.selectUser(id);%>
+			UserManagerVO detailVO = umDAO.selectUser(id);
+			detailFlag = detailVO.getOutFlag();
+			%>
 		
 		function showUserDetail(){
 			console.log("detail");
@@ -389,18 +392,18 @@ function accessChk(){
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6 col-lg-4" >
-						<div class="widget">
+						<div class="widget" style="width:500px">
 							<p style="font-size: 20px;font-weight: bold; color: red;font-style:inherit;" >매주 월요일은 정기 휴무입니다.</p>
 								<p style="font-size: 60px;font-weight: bold;">Goyang Tour</p>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-4 " style="margin: 0 0 0 auto">
-						<div class="widget">
+						<div class="widget" style="width:500px">
 							<h3 class="heading">고양시티투어</h3>
 							<ul class="list-unstyled quick-info links">
-								<li class="email"><a href="#">goyang@com</a></li>
-								<li class="phone"><a href="#">010-1234-5678</a></li>
-								<li class="address"><a href="#">경기도 고양시 일산동구 장항동</a></li>
+								<li class="email">goyang@com</li>
+								<li class="phone">010-1234-5678</li>
+								<li class="address">경기도 고양시 일산동구 장항동</li>
 							</ul>
 						</div>
 					</div>
@@ -448,15 +451,15 @@ function accessChk(){
 				</div>
 						
 				<div style="display: flex; align-items: center; justify-content: center; margin-top: 10px;">
-					<input type="button" value="삭제" class="mainBtn" onclick="showPopup(true,'popup2')">
+					<%if(detailFlag==0){ %>
 					<input type="button" value="확인" class="mainBtn" onclick="closePopup('popup')">
+					<%}else{ %>
+					<input type="button" value="삭제" class="mainBtn" onclick="showPopup(true,'popup2')">
+					<%} %>
 				</div>
 			</div>
 		</div>
 	</div>
-		
-		
-	
 	
 	<!-- 팝업창 : manager_member_delete -->
 	<div id="popup2" class="hide popup">
@@ -509,7 +512,7 @@ function accessChk(){
 			
 			<div style="background-color: #f0f6f9;">
 				<div style="font-size: 16px; display: flex; justify-content: center; 
-				align-items: center; height: 70px ;background-color: #f0f6f9;">해d당 회원이 강제탈퇴 되었습니다.</div>
+				align-items: center; height: 70px ;background-color: #f0f6f9;">해당 회원이 강제탈퇴 되었습니다.</div>
 				
 				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
 					<input type="button" value="확인" class="mainBtn" onclick="closePopup('popup4')">

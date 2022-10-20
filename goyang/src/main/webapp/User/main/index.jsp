@@ -393,7 +393,7 @@ marker.setMap(map);
 						<tr>
 							<td><%=rmVO.getReviewNum() %></td>
 							<td><%=rmVO.getTourName() %></td>
-							<td><%=rmVO.getTitle() %></td>
+							<td><a href="http://211.63.89.140/User/review_process/user_review_detail.jsp?reviewNum=<%= rmVO.getReviewNum() %>"><%= rmVO.getTitle() %></a></td>
 							<td><%=rmVO.getId() %></td>
 							<td><%=rmVO.getRevDate() %></td>
 						</tr>
@@ -485,20 +485,20 @@ marker.setMap(map);
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6 col-lg-4">
-						<div class="widget">
+						<div class="widget" style="width:500px">
 							<p
 								style="font-size: 20px; font-weight: bold; color: red; font-style: inherit;">매주
 								월요일은 정기 휴무입니다.</p>
-							<p style="font-size: 60px; font-weight: bold;">Goyan Tour</p>
+							<p style="font-size: 70px; font-weight: bold;">Goyang Tour</p>
 						</div>
 					</div>
 					<div class="col-md-6 col-lg-4 " style="margin: 0 0 0 auto">
-						<div class="widget">
+						<div class="widget" style="width:500px">
 							<h3 class="heading">고양시티투어</h3>
 							<ul class="list-unstyled quick-info links">
-								<li class="email"><a href="#">goyang@com</a></li>
-								<li class="phone"><a href="#">010-1234-5678</a></li>
-								<li class="address"><a href="#">경기도 고양시 일산동구 장항동</a></li>
+								<li class="email">goyang@com</li>
+								<li class="phone">010-1234-5678</li>
+								<li class="address">경기도 고양시 일산동구 장항동</li>
 							</ul>
 						</div>
 					</div>

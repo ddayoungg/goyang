@@ -44,7 +44,7 @@ public class UserManagerDAO {
 			// 3. 쿼리문 생성 객체 얻기
 			StringBuilder selectUser = new StringBuilder();
 			selectUser
-			.append("	select name, email, id, join_date, phone, zipcode, addr, tour_num	")
+			.append("	select name, email, id, join_date, phone, zipcode, addr, tour_num, out_flag	")
 			.append("	from tour_user	")
 			.append("	where id=?	");
 
@@ -66,6 +66,7 @@ public class UserManagerDAO {
 				umVO.setZipcode(rs.getString("zipcode"));
 				umVO.setAddr(rs.getString("addr"));
 				umVO.setTourNum(rs.getInt("tour_num"));
+				umVO.setOutFlag(rs.getInt("out_flag"));
 			}
 			////////////////////////////////////////////////////
 			StringBuilder tourName = new StringBuilder();
