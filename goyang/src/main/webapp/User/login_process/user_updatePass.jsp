@@ -35,8 +35,37 @@
 	
 	
 </style>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script type="text/javascript">
-
+function fn(){
+	var f=document.frm;
+	if(f.password.value == ""){
+		alert("새 비밀번호를 입력해주세요")
+		f.password.focus();
+		return false;
+	}
+	if(f.conpassword.value == ""){
+		alert("새 비밀번호 재입력을 입력해주세요")
+		f.conpassword.focus();
+		return false;
+	}
+	if(f.password.value != f.conpassword.value){
+		alert("비밀번호가 일치하지 않습니다. 다시 입력해주세요")
+		f.conpassword.focus();
+		return false;
+	}
+	
+	var pwdCheck=/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+	var pass=$("#password").val();
+	if( !pwdCheck.test(pass)){
+		alert("비밀번호는 영문자+숫자+특수문자 조합으로 8~25자리 사용해야 합니다")
+		f.password.focus();
+		return;
+	}//end if
+	
+	f.submit();
+}
 </script>
 
 
@@ -59,25 +88,25 @@
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="http://211.63.89.140/User/main/index.jsp" class="logo m-0">고양<span
+				<a href="../main/index.jsp" class="logo m-0">고양<span
 					class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
-					<li class="active"><a href="http://211.63.89.140/User/main/index.jsp">home</a></li>
-					<li><a href="http://211.63.89.140/User/reservation_process/user_reservation_course.jsp">투어예약</a></li>
-					<li><a href="http://211.63.89.140/User/spot_process/user_introduceTour.jsp">관광지소개</a></li>
-					<li><a href="http://211.63.89.140/User/review_process/user_review.jsp">관광지후기</a></li>
-					<li><a href="http://211.63.89.140/User/mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
+					<li class="active"><a href="../main/index.jsp">home</a></li>
+					<li><a href="../reservation_process/user_reservation_course.jsp">투어예약</a></li>
+					<li><a href="../spot_process/user_introduceTour.jsp">관광지소개</a></li>
+					<li><a href="../review_process/user_review.jsp">관광지후기</a></li>
+					<li><a href="../mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
 				</ul>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="http://211.63.89.140/User/login_process/user_signIn.jsp">로그인</a></li>
+						href="../login_process/user_signIn.jsp">로그인</a></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="http://211.63.89.140/User/login_process/user_signUp.jsp">회원가입</a></li>
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
 				</ul>
 				
 				<a href="#"
@@ -109,7 +138,6 @@
 	String id=request.getParameter("id");
 	String name= request.getParameter("name");
 	String email= request.getParameter("email");
-	String passowrd=request.getParameter("password");
 	UserDAO userDAO=new UserDAO();
 	String result = userDAO.selectFindPass(id, name, email);
 	System.out.println("확인============="+id);
@@ -121,20 +149,20 @@
 				<span style="font-size:30px;"><strong>Goyang Citytour</strong></span>
 			</div>
 		</header>
-		<form method="post" action="user_updatePassAction.jsp?id=<%=id%>">
+		<form method="post" action="user_updatePassAction.jsp?id=<%=id%>" name="frm">
 		<%
 		if(result!=null){
 		%>
 		<section style="padding-top:60px; display:flex; flex-direction:column; align-items:center;">
 		
-			<input type="text" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
+			<input type="password" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
 			 placeholder="새 비밀번호" id="password" name="password"></input><br>
-			<input type="text" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
+			<input type="password" style="width:465px; height:48px; font-size:18px; padding-left:10px;  "
 			 placeholder="새 비밀번호 확인" id="conpassword" name="conpassword"></input><br>
 			
 			<div style="padding-top:13px;">
-				<button style="width:465px; height:48px; font-size:18px;
-				border:solid 1px #333;" class="btn btn-primary btn-block" >비밀번호 변경</button>
+				<button type="submit" style="width:465px; height:48px; font-size:18px;
+				border:solid 1px #333;" class="btn btn-primary btn-block" onclick="fn(); return false;" >비밀번호 변경</button>
 			</div>
 			<div style="width:465px; height:48px;">
 			</div>

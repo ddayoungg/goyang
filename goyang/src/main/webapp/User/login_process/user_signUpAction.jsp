@@ -1,4 +1,5 @@
-<%@page import="kr.co.goyang.utility.Utility"%>
+<%@page import="kr.co.sist.util.cipher.DataDecrypt"%>
+<%@page import="kr.co.sist.util.cipher.DataEncrypt"%>
 <%@page import="kr.co.goyang.user.vo.UserVO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -34,7 +35,7 @@ uVO.setTourNum(Integer.parseInt(request.getParameter("cose")));
 /* 다영수정 */
 
 String id=request.getParameter("id");
-String password=Utility.encoding(request.getParameter("password"));
+String password=request.getParameter("password");
 String email=request.getParameter("email");
 String name=request.getParameter("name");
 String phone=request.getParameter("phone");
@@ -42,8 +43,8 @@ String zipcode=request.getParameter("zipcode");
 String addr=request.getParameter("addr");
 String deaddr=request.getParameter("deAddr");
 int tournum=0;
-if(request.getParameter("tournum")!=null){
-	tournum=Integer.parseInt(request.getParameter("tournum"));	
+if(request.getParameter("cose")!=null){
+	tournum=Integer.parseInt(request.getParameter("cose"));	
 }
 
 UserVO User=new UserVO();
@@ -62,7 +63,7 @@ User.setTourNum(tournum);
 
 if(id!=null || password!=null || email!=null ||
 name!=null || phone!=null || zipcode!=null ||
-addr!=null || deaddr!=null || tournum!=0){
+addr!=null || deaddr!=null || tournum != 0){
 	UserDAO dao=UserDAO.getInstance();	
 	int result=dao.insertUser(User);
 	if(result==-1){

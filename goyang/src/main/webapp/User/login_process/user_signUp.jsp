@@ -432,26 +432,26 @@
 	<nav class="site-nav">
 		<div class="container">
 			<div class="site-navigation">
-				<a href="http://211.63.89.140/User/main/index.jsp" class="logo m-0">고양<span
+				<a href="../main/index.jsp" class="logo m-0">고양<span
 					class="text-primary">.</span></a>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-center">
-					<li class="active"><a href="http://211.63.89.140/User/main/index.jsp">home</a></li>
+					<li class="active"><a href="../main/index.jsp">home</a></li>
 					<li><a
-						href="http://211.63.89.140/User/reservation_process/user_reservation_course.jsp">투어예약</a></li>
-					<li><a href="http://211.63.89.140/User/spot_process/user_introduceTour.jsp">관광지소개</a></li>
-					<li><a href="http://211.63.89.140/User/review_process/user_review.jsp">관광지후기</a></li>
-					<li><a href="http://211.63.89.140/User/mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
+						href="../reservation_process/user_reservation_course.jsp">투어예약</a></li>
+					<li><a href="../spot_process/user_introduceTour.jsp">관광지소개</a></li>
+					<li><a href="../review_process/user_review.jsp">관광지후기</a></li>
+					<li><a href="../mypage_process/user_mypage_inner.jsp">마이페이지</a></li>
 				</ul>
 
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="http://211.63.89.140/User/login_process/user_signIn.jsp">로그인</a></li>
+						href="../login_process/user_signIn.jsp">로그인</a></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
-						href="http://211.63.89.140/User/login_process/user_signUp.jsp">회원가입</a></li>
+						href="../login_process/user_signUp.jsp">회원가입</a></li>
 				</ul>
 
 				<a href="#"
@@ -524,13 +524,13 @@
 
 				<div class="boxname">주소</div>
 				<input type="text" name="zipcode" id="zipcode" class="zipcodebox"
-					placeholder="Zipcode" maxlength="10" /> <input type="button"
+					placeholder="Zipcode" maxlength="10" readonly="readonly"/> <input type="button"
 					value="우편번호 검색" class="zipbtn" onclick="execDaumPostcode()">
 				<br>
 				<div id="zcodeWarnMsg">우편번호를 입력해주세요.</div>
 
 				<input type="text" name="addr" id="addr" class="inputbox size"
-					placeholder="Address" maxlength="50" /><br>
+					placeholder="Address" maxlength="50" readonly="readonly" /><br>
 				<div id="addrWarnMsg">주소를 입력해주세요.</div>
 
 				<input type="text" name="deAddr" id="deAddr"

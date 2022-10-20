@@ -97,6 +97,9 @@ $(function(){
 	$("#deleteBtn").click(function(){
 		$("#frm").submit();
 	});
+	
+	$("#thumImgFile").change(function(){//대표 사진 세팅
+		setFile();
 });//ready
 
 function accessChk(){
@@ -108,6 +111,19 @@ function accessChk(){
 		return;
 	}//end if
 }//accessChk
+function setFile(){
+	var fReader = new FileReader();
+	fReader.readAsDataURL($("#thumImgFile")[0].files[0]);
+	fReader.onloadend = function(event) {
+		console.log(event.target.result);
+	$("#thumImgOutput").attr("src", event.target.result);
+		
+	/* 파일명 hidden 세팅*/
+	var fileValue = $("#thumImgFile").val().split("\\");
+	var fileName = fileValue[fileValue.length-1]; // 파일명
+		$("#hiddThumImg").val(fileName);
+	}//end onloadend
+}//setFile
 
 </script>
 <title>관리자화면-후기관리</title>

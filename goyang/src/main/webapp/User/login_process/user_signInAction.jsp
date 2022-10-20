@@ -1,3 +1,4 @@
+<%@page import="kr.co.sist.util.cipher.DataEncrypt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     <%@ page import="kr.co.goyang.user.dao.UserDAO" %>
@@ -8,7 +9,7 @@
 	<%
 	request.setCharacterEncoding("UTF-8");
 	String id= request.getParameter("id");
-	String pass= request.getParameter("password");
+	String pass= DataEncrypt.messageDigest("MD5", request.getParameter("password"));
 	UserDAO userDAO=new UserDAO();
 	int result = userDAO.selectLogin(id, pass);
 	System.out.println(result);

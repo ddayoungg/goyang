@@ -1,5 +1,8 @@
 package kr.co.goyang.user.dao;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -12,6 +15,7 @@ import javax.naming.NamingException;
 
 import kr.co.goyang.dbConnection.DbConnection;
 import kr.co.goyang.user.vo.UserVO;
+import kr.co.sist.util.cipher.DataEncrypt;
 
 public class UserDAO {
 	public static UserDAO userDao;
@@ -68,7 +72,7 @@ public class UserDAO {
 	}
 	
 	//회원가입
-	public int insertUser(UserVO userVo) throws SQLException  {
+	public int insertUser(UserVO userVo) throws SQLException, GeneralSecurityException, UnsupportedEncodingException  {
 		
 		int chk=-1;
 		System.out.println(userVo);
@@ -86,10 +90,13 @@ public class UserDAO {
 			//3.쿼리문 생성객체 얻기
 			String insertUser="insert into TOUR_USER(id,password,email,name,phone,zipcode,addr,de_addr,join_date,tour_num)"
 					+ " values(?,?,?,?,?,?,?,?,sysdate,?)";
+			
+			
+			
 			pstmt=con.prepareStatement(insertUser);//쿼리문을 넣어 쿼리문 실행 객체를 얻는다.
 			//4.바인드 변수에 값 설정
 			pstmt.setString(1, userVo.getId());
-			pstmt.setString(2, userVo.getPassword());
+			pstmt.setString(2, DataEncrypt.messageDigest("DM5", userVo.getPassword()));
 			pstmt.setString(3, userVo.getEmail());
 			pstmt.setString(4, userVo.getName());
 			pstmt.setString(5, userVo.getPhone());
@@ -392,7 +399,7 @@ public class UserDAO {
 			pstmt=con.prepareStatement(updatePass);//쿼리문을 넣어 쿼리문 실행 객체를 얻는다.
 
 		//4.바인드변수 값 설정
-			pstmt.setString(1, password);
+			pstmt.setString(1, DataEncrypt.messageDigest("DM5", password));
 			pstmt.setString(2, id);
 			
 		//5.쿼리문 수행 후 결과 얻기
