@@ -190,7 +190,9 @@ pageContext.setAttribute("resSeatNum", resSeatNum);//예약한 버스 좌석 번
 				</c:if>
 			</table>
 			<div style="margin: 20px 0px 20px; display: flex; justify-content: center; width: 100%; height: 32px;">
-			<input type="button" value="예약취소" id="recCcBtn" onclick="ccPopup(${ param.reserNum })" class="popupBtn">
+			<c:if test="${ reserInfo.reserFlag eq 4 }">
+				<input type="button" value="예약취소" id="recCcBtn" onclick="ccPopup(${ param.reserNum })" class="popupBtn">
+			</c:if>
 			<input type="button" value="닫기" id="closeBtn" class="popupBtn"/>
 			</div>
 </div>

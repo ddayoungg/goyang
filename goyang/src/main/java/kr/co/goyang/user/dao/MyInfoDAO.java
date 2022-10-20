@@ -283,7 +283,7 @@ public class MyInfoDAO {
 			StringBuilder TOUR_RESERVA = new StringBuilder();
 			TOUR_RESERVA
 			.append("	SELECT   	TU.NAME, TU.EMAIL, TU.PHONE,	")
-			.append("			   	TR.RESER_NUM, TR.RESER_DATE, TR.RESER_REGIST, TR.ADULT_CNT, TR.OTHER_CNT,	")
+			.append("			   	TR.RESER_NUM, TR.RESER_DATE, TR.RESER_REGIST, TR.ADULT_CNT, TR.OTHER_CNT, TR.RESER_FLAG,	")
 			.append("			   	T.TOUR_NAME, ADULT_FEE, OTHER_FEE,  RC.CANCEL_REAS	")
 			.append("	FROM		TOUR_USER TU, TOUR_RESERVA TR, TOUR T, RESERVA_CANCEL RC	")
 			.append("	WHERE		TR.ID=TU.ID AND TR.TOUR_NUM=T.TOUR_NUM AND TR.RESER_NUM=RC.RESER_NUM(+)	")
@@ -304,6 +304,7 @@ public class MyInfoDAO {
 				miResultVO.setReserRegist(rs.getDate("RESER_REGIST"));
 				miResultVO.setAdultCnt(rs.getInt("ADULT_CNT"));
 				miResultVO.setOtherCnt(rs.getInt("OTHER_CNT"));
+				miResultVO.setReserFlag(rs.getInt("RESER_FLAG"));
 				miResultVO.setTourName(rs.getString("TOUR_NAME"));
 				miResultVO.setAdultFee(rs.getInt("ADULT_FEE"));
 				miResultVO.setOtherFee(rs.getInt("OTHER_FEE"));
