@@ -45,6 +45,16 @@
 </head>
 
 <body>
+<%
+	/* nsm 22-10-17 세션 추가 시작 */
+	//아이디 세션 
+		String id ="";
+	if(session.getAttribute("id")!=null){
+		id=(String)session.getAttribute("id");
+	}//end if
+	
+%>
+
 
 
 	<div class="site-mobile-menu site-navbar-target">
@@ -73,10 +83,15 @@
 				<ul
 					class="js-clone-nav d-none d-lg-inline-block text-left site-menu float-right">
 					<li></li>
+					<%if(id==""){%>
 					<li style="font-size: 5px; font-weight: bold;"><a
 						href="../login_process/user_signIn.jsp">로그인</a></li>
 					<li style="font-size: 5px; font-weight: bold;"><a
 						href="../login_process/user_signUp.jsp">회원가입</a></li>
+				<%}else{%>
+					<li style="font-size: 5px; font-weight: bold;"><a
+						href="../login_process/user_logout.jsp">로그아웃</a></li>
+				<%}//end else%>
 				</ul>
 
 				<a href="#"
@@ -88,19 +103,11 @@
 		</div>
 	</nav>
 
-<%
-	/* nsm 22-10-17 세션 추가 시작 */
-	//아이디 세션 
-		String id ="";
-	if(session.getAttribute("id")!=null){
-		id=(String)session.getAttribute("id");
-	}//end if
-	
-	TourListDAO tourDAO = TourListDAO.getInstance();
+ <%
+ 	TourListDAO tourDAO = TourListDAO.getInstance();
 	TourListVO tourVO = new TourListVO();
 	List <TourListVO> list = tourDAO.selectAllTour(tourVO);
-	%>
- <%
+ 	
 	int num = Integer.parseInt(request.getParameter("tourNum"));
 	TourListVO toli = new TourListVO();
 	toli= tourDAO.selectTourSpots(num);
