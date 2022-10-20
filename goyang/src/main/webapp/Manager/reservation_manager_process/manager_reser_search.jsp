@@ -47,15 +47,32 @@
 <script type="text/javascript">
 
 <%
+request.setCharacterEncoding("utf-8");
 /* 22-10-17 남상민 아이디 세션 추가 */
 //아이디 세션
 String manageId="";//아이디
 if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오기.
 	manageId = (String) session.getAttribute("manageId");
 }//end if
+
 %>
 $(function(){
 	
+	<%
+	int flag = Integer.parseInt(request.getParameter("reserFlags"));
+	if(flag!=0){%>
+		$("#reserFlags option[value='<%=flag %>']").prop("selected",true);
+	<%}%>
+	
+	$("#searchBtn").click(function () {
+		if($("#searchText").val()==""){
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp';
+		}else{
+			var sName=$("#searchText").val();
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reser_search.jsp?name='+sName;
+		}
+	}); 
+
 	accessChk();//접근 권한 체크
 	$("#searcthBtn").click(function(){
 		/* location.href="http://manager_reser_flags.jsp?reserFlags="+$("#reserFlags").val(); */
@@ -139,7 +156,7 @@ function accessChk(){
 	<div class="container" style="margin-top: 20px;">
 		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 정보 관리 리스트</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 예약관리</p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -154,24 +171,35 @@ function accessChk(){
 	<div class="container">
 
 			<div>
-			<form method="post" action="manager_reser_search.jsp">
-				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-					<input type="text"  name="name" placeholder="고객명을 입력하세요.">
-					<input type="submit" value="검색" class="mainBtn">
+			<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+					<input type="text"  name="name" placeholder="고객명을 입력하세요." id="searchText">
+					<input type="button" value="검색" class="mainBtn" id="searchBtn">
 				</div>
-				</form>
 				<!-- <div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
 					<input type="text" placeholder="고객명을 입력하세요.">
 					<input type="submit" value="검색" class="mainBtn">
 				</div> -->
 				<%
-				 request.setCharacterEncoding("utf-8");
-				String name_1 = request.getParameter("name");
+				 
 				ReservaManagerVO reserVO = new ReservaManagerVO();
-				/* ArrayList <ReservaManagerVO> list = reserDAO.selectSearchReserva(); */
+				String name_1 = request.getParameter("name");
+				int resFlag=Integer.parseInt(request.getParameter("reserFlags"));
 				reserVO.setName(name_1);
 				 ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance(); 
 				List <ReservaManagerVO> membersList = reserDAO.Listmembers ( reserVO );
+				List <ReservaManagerVO> reserMembersList=new ArrayList<ReservaManagerVO>();
+				
+				if(resFlag!=0){
+					for(ReservaManagerVO rmVO:membersList){
+						if(rmVO.getReserFlag()==resFlag){
+							ReservaManagerVO reVO=new ReservaManagerVO();
+							reVO=rmVO;
+							reserMembersList.add(reVO);
+						}
+					}
+					membersList=reserMembersList;
+				}
+				
 				
 				int total = 0;
 				int totalPage = 0;
@@ -189,7 +217,9 @@ function accessChk(){
 						<th>기타내용</th>
 					</tr>
 					<%
+					int pageCnt=0;
 				 for (int i=0; i<membersList.size(); i++){ 
+					 pageCnt+=1;
 						 ReservaManagerVO reVO = (ReservaManagerVO) membersList.get(i);	
 						 
 						  int reserNum = reVO.getReserNum();
@@ -262,7 +292,7 @@ function accessChk(){
 						<td><%= flagContent%></td>
 						<td><a href="#void"><span onclick="location.href='manager_reser_cancel.jsp?reserNum=<%=reVO.getReserNum() %>'"><%= cancelReas %></span></a></td>
 				</tr> 
-	<%
+		<%
 					}}	
 			%> 
 				</table>
@@ -304,7 +334,7 @@ function accessChk(){
 				</div>
 
 				<div>
-					총 <span><%=total%></span>건의 예약 
+					총 <span><%=pageCnt%></span>건의 예약 
 				</div>
 			</div>
 

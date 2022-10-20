@@ -371,7 +371,7 @@ $(function(){
          			</div>
       		</div>
 				<div style="display: flex; align-items: center; justify-content: center; padding-bottom: 10px;">
-					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_spot_list.jsp'">
+					<input type="button" value="확인" class="popupBtn" onclick="location.href='manager_spot_list.jsp?selTour=<%=tourName%>'">
 				</div>
 			</div>
 		</div>

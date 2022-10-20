@@ -54,6 +54,14 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 }//end if
 %>
 $(function(){
+	$("#searchBtn").click(function () {
+		if($("#searchText").val()==""){
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp';
+		}else{
+			var sName=$("#searchText").val();
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reser_search.jsp?name='+sName;
+		}
+	}); 
 	
 	accessChk();//접근 권한 체크
 });//ready
@@ -142,7 +150,7 @@ function accessChk(){
 	<div class="container" style="margin-top: 20px;">
 		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 정보 관리 리스트</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 예약관리</p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -160,12 +168,10 @@ function accessChk(){
 			<hr> -->
 
 			<div>
-			<form method="post" action="manager_reser_search.jsp">
-				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-					<input type="text"  name="name" placeholder="고객명을 입력하세요.">
-					<input type="submit" value="검색" class="mainBtn">
+			<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+					<input type="text"  name="name" placeholder="고객명을 입력하세요." id="searchText">
+					<input type="button" value="검색" class="mainBtn" id="searchBtn">
 				</div>
-				</form>
 				<form id="popupFrm" action="manager_reser_all.jsp"> 
 				<table class="member" style="width: 100%">
 					<tr>

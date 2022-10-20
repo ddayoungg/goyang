@@ -134,7 +134,7 @@ function accessChk(){
 	<div class="container" style="margin-top: 20px;">
 		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 정보 관리 리스트</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 예약관리</p>
 	</div>
 	<!-- 대제목 끝 -->
 

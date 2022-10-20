@@ -54,6 +54,20 @@ if(session.getAttribute("manageId") !=null){//세션에서 아이디 가져오�
 }//end if
 %>
 $(function(){
+	<%
+	int flag = Integer.parseInt(request.getParameter("reserFlags"));
+	if(flag!=0){%>
+		$("#reserFlags option[value='<%=flag %>']").prop("selected",true);
+	<%}%>
+	
+	$("#searchBtn").click(function () {
+		if($("#searchText").val()==""){
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reservation.jsp';
+		}else{
+			var sName=$("#searchText").val();
+			location.href='http://211.63.89.140/Manager/reservation_manager_process/manager_reser_search.jsp?name='+sName+"&reserFlags="+$("#reserFlags").val();
+		}
+	}); 
 	
 	accessChk();//접근 권한 체크
 	
@@ -139,7 +153,7 @@ function accessChk(){
 	<div class="container" style="margin-top: 20px;">
 		<img src="../../images/bullet_Tues_sub_style_green.png" alt=image>
 		<p
-			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 정보 관리 리스트</p>
+			style="font-size: 20px; font-weight: bold; padding-top: 20px; margin-bottom: 0;">투어 예약관리</p>
 	</div>
 	<!-- 대제목 끝 -->
 
@@ -157,17 +171,15 @@ function accessChk(){
 			<hr> -->
 
 			<div>
-			<form method="post" action="manager_reser_search.jsp">
-				<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
-					<input type="text"  name="name" placeholder="고객명을 입력하세요.">
-					<input type="submit" value="검색" class="mainBtn">
+			<div style="display: flex; justify-content: end; margin-bottom: 5px; margin-top: 20px;">
+					<input type="text"  name="name" placeholder="고객명을 입력하세요." id="searchText">
+					<input type="button" value="검색" class="mainBtn" id="searchBtn">
 				</div>
-				</form>
 				<form id="popupFrm" action="manager_reser_all.jsp"> 
 				<table class="member" style="width: 100%">
 				<%
 				request.setCharacterEncoding("utf-8");
-				int flag = Integer.parseInt(request.getParameter("reserFlags"));
+				
 				ReservaManagerVO reserVO = new ReservaManagerVO();
 				ReservaManagerDAO reserDAO = ReservaManagerDAO.getInstance();
 				/* reserVO.setReserFlag(flag); */
@@ -175,7 +187,7 @@ function accessChk(){
 				
 				//System.out.println(reserFlagsList);
 				
-				 int total = 0;
+				int total = 0;
 				int totalPage = 0; 
 				String flagContent="";
 				%>
@@ -191,7 +203,9 @@ function accessChk(){
 					</tr>
 			<%
 			ReservaManagerVO reVO=null;
-			for (int i=0; i<reserFlagsList.size(); i++){
+			int pageCnt=0;
+			 for (int i=0; i<reserFlagsList.size(); i++){ 
+				 pageCnt+=1;
 				reVO= (ReservaManagerVO) reserFlagsList.get(i);
 				
 				  int reserNum = reVO.getReserNum();
@@ -310,7 +324,7 @@ function accessChk(){
 				</div>
 
 				<div>
-					총 <span><%=total%></span>건의 예약 
+					총 <span><%=pageCnt%></span>건의 예약 
 				</div>
 			</div>
 

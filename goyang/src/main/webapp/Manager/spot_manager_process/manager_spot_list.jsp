@@ -86,7 +86,7 @@ $(function(){
 	
 	<%
 	String tourName=request.getParameter("selTour");
-	if(tourName==null){ //기본값은 화요나들이.(테스트)
+	if(tourName==null||tourName.equals("none")){ //기본값은 화요나들이.(테스트)
 		tourName="화요나들이(벽제)";
 	}
 	SpotListDAO spotDAO=SpotListDAO.getInstance();

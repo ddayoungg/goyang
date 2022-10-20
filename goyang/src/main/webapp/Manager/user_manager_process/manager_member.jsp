@@ -354,8 +354,8 @@ function accessChk(){
 				<div style="display: flex; justify-content: end; margin-bottom: 5px">
 					<select name="listSearch">
 						<option id="선택">선택</option>
-						<option id="이름">이름</option>
 						<option id="아이디">아이디</option>
+						<option id="이름">이름</option>
 						<option id="가입일자">가입일자</option>
 					</select>
 					<input id="textSearch" name="textSearch" type="text" placeholder="내용을 입력해주세요.">
@@ -365,8 +365,8 @@ function accessChk(){
 			
 			<table id="member" class="member" style="width: 100%">
 				<tr>
-					<th>이름</th>
 					<th>아이디</th>
+					<th>이름</th>
 					<th>가입일자</th>
 					<th>탈퇴여부</th>
 					<th>상세보기</th>

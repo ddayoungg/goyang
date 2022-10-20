@@ -351,32 +351,31 @@ public class ReservaManagerDAO {
 		try {
 			conn = dbCon.getConn();
 			/* conn = DriverManager.getConnection(url, uid, upw ); */
-			String sql = "select distinct r.reser_num, u.name, r.reser_date, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
-					+ "c.cancel_reas "
-					+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
-					+ " where u.id = r.id (+)"
-					+ " and r.reser_num = b.reser_num (+)"
-					+ " and r.tour_num = t.tour_num (+)"
-					+ " and r.reser_num = c.reser_num (+)"
-					+ "order by r.reser_num desc ";
-			if ((name_1 != null && name_1.length() != 0 )) {
+			String sql ="";
+			if((name_1 != null && name_1.length() != 0 )) {
 				sql ="select distinct r.reser_num, u.name, r.reser_date, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
 						+ "c.cancel_reas "
 						+ " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c"
-						+" where u.name=? "
+						+" where u.name like ? "
 						+ " and u.id = r.id (+)"
 						+ " and r.reser_num = b.reser_num (+)"
 						+ " and r.tour_num = t.tour_num (+)"
 						+ " and r.reser_num = c.reser_num (+)"
 						+ "order by r.reser_num desc ";
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, name_1);
-			} else {
+				pstmt.setString(1, '%'+name_1+'%');
+			}else{
+				sql = "select distinct r.reser_num, u.name, r.reser_date, r.reser_regist, t.tour_name, r.adult_cnt, t.adult_fee, r.other_cnt, t.other_fee, r.reser_flag,"
+						  + "c.cancel_reas " +
+						  " from tour_user u, tour_reserva r, bus_seat b, tour t, reserva_cancel c" +
+						  " where u.id = r.id (+)" +
+						  " and r.reser_num = b.reser_num (+)" + " and r.tour_num = t.tour_num (+)" +
+						  " and r.reser_num = c.reser_num (+)" + "order by r.reser_num desc ";
 				pstmt = conn.prepareStatement(sql);
 			}
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
-				
+				  
 				  int reserNum = rs.getInt("reser_num"); 
 				  String name = rs.getString("name");
 				  String reserDate = rs.getString("reser_date");
